@@ -1,7 +1,7 @@
 #pragma once
-#include "GameNObjects.h"
+#include "GameObject.h"
 class Character :
-    private GameNObjects
+    private GameObject
 {
 };
 

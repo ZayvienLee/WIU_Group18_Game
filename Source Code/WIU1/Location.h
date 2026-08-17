@@ -1,7 +1,7 @@
 #pragma once
-#include "GameNObjects.h"
+#include "GameObject.h"
 class Location :
-    private GameNObjects
+    private GameObject
 {
 };
 

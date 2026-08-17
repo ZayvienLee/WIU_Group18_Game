@@ -1,0 +1,275 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Location.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\Location.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Item.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\Item.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Inventory.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\Inventory.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\GameObject.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\GameObject.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Event.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\Event.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Dialogue.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\Dialogue.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Character.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\Character.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\GameObject.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\GameObject.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Weapon.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\Weapon.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\StoryManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\StoryManager.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Quest.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\Quest.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\PoliceStation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\PoliceStation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Ammunition.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\Ammunition.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Walker.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8AA977FD-CB20-41CD-A279-F144DDAEF359}|WIU1\\WIU1.vcxproj|solutionrelative:WIU1\\Walker.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 8,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "GameObject.cpp",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\GameObject.cpp",
+              "RelativeDocumentMoniker": "WIU1\\GameObject.cpp",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\GameObject.cpp",
+              "RelativeToolTip": "WIU1\\GameObject.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-08-17T08:46:32.621Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Weapon.cpp",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Weapon.cpp",
+              "RelativeDocumentMoniker": "WIU1\\Weapon.cpp",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Weapon.cpp",
+              "RelativeToolTip": "WIU1\\Weapon.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-08-17T08:46:03.979Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Character.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Character.h",
+              "RelativeDocumentMoniker": "WIU1\\Character.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Character.h",
+              "RelativeToolTip": "WIU1\\Character.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:44:40.228Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Dialogue.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Dialogue.h",
+              "RelativeDocumentMoniker": "WIU1\\Dialogue.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Dialogue.h",
+              "RelativeToolTip": "WIU1\\Dialogue.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:44:22.892Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Event.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Event.h",
+              "RelativeDocumentMoniker": "WIU1\\Event.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Event.h",
+              "RelativeToolTip": "WIU1\\Event.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:44:18.706Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Inventory.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Inventory.h",
+              "RelativeDocumentMoniker": "WIU1\\Inventory.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Inventory.h",
+              "RelativeToolTip": "WIU1\\Inventory.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:44:03.665Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Item.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Item.h",
+              "RelativeDocumentMoniker": "WIU1\\Item.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Item.h",
+              "RelativeToolTip": "WIU1\\Item.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:43:58.799Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Location.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Location.h",
+              "RelativeDocumentMoniker": "WIU1\\Location.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Location.h",
+              "RelativeToolTip": "WIU1\\Location.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:43:54.545Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Player.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Player.h",
+              "RelativeDocumentMoniker": "WIU1\\Player.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Player.h",
+              "RelativeToolTip": "WIU1\\Player.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:43:45.102Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "PoliceStation.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\PoliceStation.h",
+              "RelativeDocumentMoniker": "WIU1\\PoliceStation.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\PoliceStation.h",
+              "RelativeToolTip": "WIU1\\PoliceStation.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:43:43.678Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Quest.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Quest.h",
+              "RelativeDocumentMoniker": "WIU1\\Quest.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Quest.h",
+              "RelativeToolTip": "WIU1\\Quest.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:43:31.183Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Walker.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Walker.h",
+              "RelativeDocumentMoniker": "WIU1\\Walker.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Walker.h",
+              "RelativeToolTip": "WIU1\\Walker.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:43:21.494Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "GameObject.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\GameObject.h",
+              "RelativeDocumentMoniker": "WIU1\\GameObject.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\GameObject.h",
+              "RelativeToolTip": "WIU1\\GameObject.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:42:20.117Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "StoryManager.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\StoryManager.h",
+              "RelativeDocumentMoniker": "WIU1\\StoryManager.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\StoryManager.h",
+              "RelativeToolTip": "WIU1\\StoryManager.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:42:08.796Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Ammunition.h",
+              "DocumentMoniker": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Ammunition.h",
+              "RelativeDocumentMoniker": "WIU1\\Ammunition.h",
+              "ToolTip": "C:\\Users\\zayvi\\OneDrive\\Documents\\GitHub\\WIU_Group18_Game\\Source Code\\WIU1\\Ammunition.h",
+              "RelativeToolTip": "WIU1\\Ammunition.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2026-08-17T08:40:48.396Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

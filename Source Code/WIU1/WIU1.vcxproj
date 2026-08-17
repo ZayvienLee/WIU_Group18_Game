@@ -145,7 +145,7 @@
     <ClCompile Include="Dialogue.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Food.cpp" />
-    <ClCompile Include="GameNObjects.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Hospital.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -172,7 +172,7 @@
     <ClInclude Include="Dialogue.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Food.h" />
-    <ClInclude Include="GameNObjects.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Hospital.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Item.h" />
