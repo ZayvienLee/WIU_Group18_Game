@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="WIU1/WIU1.vcxproj" Id="8aa977fd-cb20-41cd-a279-f144ddaef359" />
+  <Project Path="Project3/Project3.vcxproj" />
 </Solution>
