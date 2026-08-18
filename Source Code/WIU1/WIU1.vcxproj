@@ -127,26 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Ammunition.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="Food.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Item.h" />
-    <ClInclude Include="Location.h" />
-    <ClInclude Include="Medicine.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Quest.h" />
-    <ClInclude Include="StoryManager.h" />
-    <ClInclude Include="Water.h" />
-    <ClInclude Include="Zombie.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Ammunition.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Food.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Location.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Medicine.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Quest.cpp" />
@@ -154,6 +141,21 @@
     <ClCompile Include="StoryManager.cpp" />
     <ClCompile Include="Water.cpp" />
     <ClCompile Include="Zombie.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Ammunition.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Food.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="Location.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Medicine.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Quest.h" />
+    <ClInclude Include="StoryManager.h" />
+    <ClInclude Include="Water.h" />
+    <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

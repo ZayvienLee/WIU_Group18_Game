@@ -1,7 +1,7 @@
 #pragma once
 #include "Item.h"
-class Food :
-    private Item
-{
-};
 
+class Food : public Item
+{
+
+};

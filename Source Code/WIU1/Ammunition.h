@@ -1,7 +1,7 @@
 #pragma once
 #include "Item.h"
-class Ammunition :
-    public Item
-{
-};
 
+class Ammunition : public Item
+{
+	
+};
