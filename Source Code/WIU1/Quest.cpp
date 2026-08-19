@@ -1,9 +1,21 @@
 #include "Quest.h"
 
+
 void Quest::completeQuest() {
     Completed = true;
 }
 
 bool Quest::isCompleted() const {
-    return Completed;
+    return Completed; 
 }
+
+std::string Quest::getName() const {
+    return questName;
+}
+
+std::string Quest::getDescription() const {
+    return questDescription;
+}
+
+Quest::Quest(const std::string& name, const std::string& description)
+    : Completed(false), questName(name), questDescription(description) {}
