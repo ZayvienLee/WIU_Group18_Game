@@ -47,79 +47,6 @@ void StoryManager::RadioMessage()
     EventTimer = 120;
 }
 
-StoryManager::StoryManager() :
-
-       // Quests
-
-       // QUEST NAME, QUEST DESCRIPTION
-       killZombieQuest("Kill 3 Zombies", "Kill 3 Zombies somewhere inthe city"),
-
-       findMissingPersonQuest("Find Timothy", "Find Timothy somewhere in the city"),
-    
-       findPharmacyQuest("Search for Temozolomide", "Search for Temozolomide in the Pharmacy section of the Supermarket"),
-
-       // NPCS
-
-       // NAME, DESCRIPTION, X, Y, SYMBOL, DIALOGUE, QUEST
-       zombieNPC("Alexa", "A survivor who is looking for help", 0, 0, 'AL', "There is a bunch of zombies in the city, please kill them before they attack anyone else!", &killZombieQuest),
-
-       missingpersonNPC("George", "A police officer searching for a missing civilian", 0, 0, 'GG', "Someone went missing during the outbreak. Please find them and bring them back to me.", &findMissingPersonQuest),
-
-       pharmacyNPC("Dr. Chen", "A doctor who is looking for a cure", 0, 0, 'DC', "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me", &findPharmacyQuest) {}
-
-NPC& StoryManager::getZombieNPC()
-{
-    return zombieNPC;
-}
-
-NPC& StoryManager::getmissingpersonNPC()
-{
-    return missingpersonNPC;
-}
-
-NPC& StoryManager::getpharmacyNPC()
-{
-    return pharmacyNPC;
-}
-
-Quest& StoryManager::getkillZombieQuest()
-{
-    return killZombieQuest;
-}
-
-Quest& StoryManager::getfindMissingPersonQuest()
-{
-    return findMissingPersonQuest;
-}
-
-Quest& StoryManager::getfindPharmacyQuest()
-{
-    return findPharmacyQuest;
-}
-
-int StoryManager::getCompletedQuestsCount() const {
-
-    int count = 0;
-
-    if (killZombieQuest.isCompleted()) {
-        count++;
-    }
-
-    if (findMissingPersonQuest.isCompleted()) {
-        count++;
-    }
-
-    if (findPharmacyQuest.isCompleted()) {
-        count++;
-    }
-    return count;
-
-}
-      
-bool StoryManager::allQuestsCompleted() const {
-    return getCompletedQuestsCount() == 3;
-}
-
 void StoryManager::Dialogue()
 {
     int NPC = 0; // Delete this once initialised in NPC.h and NPC.cpp
@@ -129,14 +56,14 @@ void StoryManager::Dialogue()
     std::string decision;
     if (NPC == 1)
     {
-        if (Reputation == 0 && SideQuest == 0)
+        if (Reputation == 0 and SideQuest == 0)
         {
             std::cout << "Hello there. Do you need any help? " << std::endl <<
                 "(1) Recruit them" << std::endl << "(2) Ignore them" << std::endl <<
                 "(3) Trade with them" << std::endl << "(4) Help them" << std::endl <<
                 "(5) Betray them";
             std::cin >> decision;
-            if (decision == "1" || decision == "(1)")
+            if (decision == "1" or decision == "(1)")
             {
                 std::cout << "Oh really? I would love to, thanks for recruiting me!";
                 Reputation += 1;
