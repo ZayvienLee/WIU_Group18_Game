@@ -5,6 +5,7 @@ class StoryManager
 private:
 	int TimeToNextEvent = 0;
 	int MessageRand = 0;
+	int DoneSideQuests = 0;
 protected:
 	int EventTimer = 0;
 	int SideQuest = 0;
