@@ -17,6 +17,7 @@ void NPC::talk() {
 Quest* NPC::getQuest() const {
     return quest;
 }
-NPC::NPC(const std::string& name, const std::string& description, int x, int y, char symbol, const std::string& dialogue, Quest* quest)
-    : GameObject(name, description, x, y, symbol), dialogue(dialogue), quest(quest) {
+NPC::NPC(std::string name, std::string description, int x, int y, char symbol, std::string dialogue, Quest* quest)
+{
+
 }

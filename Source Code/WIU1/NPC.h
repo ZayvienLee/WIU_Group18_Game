@@ -11,7 +11,7 @@ private:
     Quest* quest;  
  
 public:
-    NPC(const std::string& name, const std::string& description, int x, int y, char symbol, const std::string& dialogue, Quest* quest);
+    NPC(std::string name, std::string description, int x, int y, char symbol, std::string dialogue, Quest* quest);
     void talk();
     Quest* getQuest() const;
 

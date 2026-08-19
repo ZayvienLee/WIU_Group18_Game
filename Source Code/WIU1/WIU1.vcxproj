@@ -136,6 +136,7 @@
     <ClCompile Include="Location.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Medicine.cpp" />
+    <ClCompile Include="NPC.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="Source.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Location.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Medicine.h" />
+    <ClInclude Include="NPC.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="StoryManager.h" />

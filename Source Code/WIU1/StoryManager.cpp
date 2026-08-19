@@ -1,6 +1,9 @@
 #include "StoryManager.h"
 #include <cstdlib>
 #include <iostream>
+#include "NPC.h"
+#include "Quest.h"
+#include <string>
 
 int StoryManager::GetTimeToNextEvent() const
 {
@@ -61,11 +64,11 @@ StoryManager::StoryManager() :
        // NPCS
 
        // NAME, DESCRIPTION, X, Y, SYMBOL, DIALOGUE, QUEST
-       zombieNPC("Alexa", "A survivor who is looking for help", 0, 0, 'AL', "There is a bunch of zombies in the city, please kill them before they attack anyone else!", &killZombieQuest),
+       zombieNPC("Alexa", "A survivor who is looking for help", 0, 0, 'A', "There is a bunch of zombies in the city, please kill them before they attack anyone else!", &killZombieQuest),
 
-       missingpersonNPC("George", "A police officer searching for a missing civilian", 0, 0, 'GG', "Someone went missing during the outbreak. Please find them and bring them back to me.", &findMissingPersonQuest),
+       missingpersonNPC("George", "A police officer searching for a missing civilian", 0, 0, 'G', "Someone went missing during the outbreak. Please find them and bring them back to me.", &findMissingPersonQuest),
 
-       pharmacyNPC("Dr. Chen", "A doctor who is looking for a cure", 0, 0, 'DC', "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me", &findPharmacyQuest) {}
+       pharmacyNPC("Dr. Chen", "A doctor who is looking for a cure", 0, 0, 'D', "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me", &findPharmacyQuest) {}
 
 NPC& StoryManager::getZombieNPC()
 {
