@@ -16,11 +16,8 @@ private:
 
 	int TimeToNextEvent = 0;
 	int MessageRand = 0;
-<<<<<<< Updated upstream
 	int DoneSideQuests = 0;
-=======
-
->>>>>>> Stashed changes
+    
 protected:
 	int EventTimer = 0;
 	int SideQuest = 0;
