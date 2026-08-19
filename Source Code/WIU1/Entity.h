@@ -8,4 +8,5 @@ class Entity : public GameObject
 		int maxHealth;
 		int attackPower;
 		bool isAlive;
+		int test;
 };
