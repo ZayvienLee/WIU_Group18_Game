@@ -22,9 +22,9 @@ public:
 
 	// Pure Virtual Function: Every Item type MUST define what happens when used
 	virtual bool use(Entity* target) = 0;
+	virtual void consume(Player& player) = 0;
 
 	int getQuantity() const;
-	virtual void consume(Player& player) = 0;
 
 	// Synchronize item position to match player's coordinates
 	void syncWithPlayer(int playerX, int playerY);

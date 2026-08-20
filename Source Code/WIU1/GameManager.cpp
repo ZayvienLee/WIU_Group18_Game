@@ -178,3 +178,17 @@ void GameManager::rewardPlayerFromNPC(Player& player, Map& currentMap, Item* que
         currentMap.addGroundItem(questReward);
     }
 }
+
+void GameManager::render(int viewWidth, int viewHeight) const
+{
+    if (isInBuilding && currentBuilding != nullptr)
+    {
+        // Renders 10x10 interior grid centered on player indoor coordinates
+        currentBuilding->displayInterior(player->getIndoorX(), player->getIndoorY());
+    }
+    else
+    {
+        // Renders outdoor map viewport centered on player outdoor coordinates
+        outdoorMap.displayMap(player->getOutdoorX(), player->getOutdoorY(), viewWidth, viewHeight, *player);
+    }
+}

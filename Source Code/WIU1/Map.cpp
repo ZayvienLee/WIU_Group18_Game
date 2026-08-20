@@ -177,7 +177,7 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Pl
 
 			if (r == playerY && c == playerX) // To render the Player
 			{
-				std::cout << player.getName() << " "; // Player character
+				std::cout << player.getSymbol() << " "; // Player character
 			}
 			else if (grounditem != nullptr)
 			{

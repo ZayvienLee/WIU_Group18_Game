@@ -30,4 +30,7 @@ public:
 	void handleItemPickup(Player& player, Map& currentMap) const;
 	void handleItemDrop(Player& player, Map& currentMap, int slotNumber) const;
 	void rewardPlayerFromNPC(Player& player, Map& currentMap, Item* questReward) const;
+
+	// Renders either the camera viewport or building interior
+	void render(int viewWidth = 15, int viewHeight = 9) const;
 };
