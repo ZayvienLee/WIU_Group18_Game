@@ -12,7 +12,7 @@ private:
 public:
     void completeQuest();
     bool isCompleted() const;
-    Quest(const std::string& name, const std::string& description);
+    Quest(std::string name, std::string description);
 
     std::string getName() const;
     std::string getDescription() const; 

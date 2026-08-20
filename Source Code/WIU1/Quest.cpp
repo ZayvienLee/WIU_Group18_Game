@@ -17,5 +17,4 @@ std::string Quest::getDescription() const {
     return questDescription;
 }
 
-Quest::Quest(const std::string& name, const std::string& description)
-    : Completed(false), questName(name), questDescription(description) {}
+Quest::Quest(std::string name, std::string description) {}
