@@ -1,11 +1,11 @@
 #include "Zombie.h"
 
-Zombie::Zombie(std::string n, int h, int maxH)
+Zombie::Zombie(std::string n, std::string desc, char sym, int h, int maxH, int atk, bool alive)
 {
 	// GameObject variables
 	name = n;
-	description = "Description";
-	symbol = 'Z';
+	description = desc;
+	symbol = sym;
 
 	// Entity variables
 	health = h;
@@ -18,6 +18,12 @@ Zombie::Zombie(std::string n, int h, int maxH)
 	ZombIndoorX = 0;
 	ZombIndoorY = 0;
 }
+
+std::string Zombie::getName() const
+{
+	return name;
+}
+
 int Zombie::getZOutdoorX() const
 {
 	return ZombOutdoorX;

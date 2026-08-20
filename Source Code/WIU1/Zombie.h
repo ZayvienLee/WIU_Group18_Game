@@ -8,7 +8,13 @@ private:
 	int ZombOutdoorX, ZombOutdoorY;
 	int ZombIndoorX, ZombIndoorY;
 public:
-	Zombie(std::string n, int h, int maxH);
+	Zombie(std::string n, std::string desc, char sym, int h, int maxH, int atk, bool alive);
+
+	/* Overidden from Entity class */
+	void update() override;
+
+	/* Variable Accessors */
+	std::string getName() const;
 
 	/* Outdoor Position Accessors */
 	int getZOutdoorX() const;
