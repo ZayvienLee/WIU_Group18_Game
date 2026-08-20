@@ -14,7 +14,7 @@ public:
 	void update() override;
 
 	/* Variable Accessors */
-	std::string getName() const;
+	std::string getZName() const;
 
 	/* Outdoor Position Accessors */
 	int getZOutdoorX() const;
