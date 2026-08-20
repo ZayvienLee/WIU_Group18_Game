@@ -5,6 +5,24 @@
 #include "Quest.h"
 #include <string>
 
+void StoryManager::storyIntro() {
+
+    std::cout << "Three weeks ago, a mysterious virus spread across the city." << std::endl;
+    std::cout << "At first, infected people became extremely aggresive. Within hours, hospitals were overwhelemed. The government declared an emergency and ordered everyone to remain indoors." << std::endl;
+    std::cout << "Then the power went out." << std::endl;
+    std::cout << "The military abandoned the city." << std::endl;
+    std::cout << "The internet disappeared" << std::endl;
+    std::cout << "And the dead started walking" << std::endl;
+    std::cout << "You play as Alex, a survivor trapped inside an apartment building with only a small amount of food and water." << std::endl;
+    std::cout << "One night, your radio suddenly turns on" << std::endl;
+    std::cout << "\033[1mThis is Haven-7. We have survivors. We have medicine. We are leaving the city in 48 hours." << std::endl;
+    std::cout << "Then the transmission cuts out" << std::endl;
+    std::cout << "You have two days to reach Haven-7" << std::endl;
+    std::cout << "But there is one problem." << std::endl;
+    std::cout << "\033[1mHaven-7 is on the other side of the city." << std::endl;
+    
+}
+
 int StoryManager::GetTimeToNextEvent() const
 {
     return TimeToNextEvent;
