@@ -37,6 +37,8 @@ public:
 
     int getCompletedQuestsCount() const;
 
+    void storyIntro();
+
 	int GetTimeToNextEvent() const;
 	int GetMessageRand() const;
 	void SetTimeToNextEvent();
