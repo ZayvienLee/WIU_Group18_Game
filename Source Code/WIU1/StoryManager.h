@@ -9,9 +9,9 @@ private:
     Quest findMissingPersonQuest;
     Quest findPharmacyQuest;
     
-    NPC zombieNPC;
-    NPC missingpersonNPC;
-    NPC pharmacyNPC;
+    NPC zombieNPC; // The NPC which gives the quest to kill zombies
+    NPC missingpersonNPC; // Gives the player a quest to find a missing person
+    NPC pharmacyNPC; // gives quest to find Temozolomide in the pharmacy
 
 
 	int TimeToNextEvent = 0;
