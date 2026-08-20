@@ -1,5 +1,6 @@
 #pragma once
 #include "Item.h"
+#include "Player.h"
 
 class Food : public Item
 {
@@ -9,5 +10,5 @@ private:
 public:
 	Food();
 
-	void Consume(Player& player) override;
+	void consume(Player& player) override;
 };

@@ -138,7 +138,7 @@ Item* Player::getItemByNumber(int slotNumber)
 	}
 	else
 	{
-		return inventory[slotNumber];
+		return inventory[arrayIndex];
 	}
 }
 

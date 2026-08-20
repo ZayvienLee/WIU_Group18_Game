@@ -19,12 +19,12 @@ GameObject::GameObject(std::string n, std::string desc, int x, int y, char sym)
 	symbol = sym;
 }
 
-std::string GameObject::getName()
+std::string GameObject::getName() const
 {
 	return name;
 }
 
-char GameObject::getSymbol()
+char GameObject::getSymbol() const
 {
 	return symbol;
 }

@@ -30,7 +30,7 @@ public:
 	char getTileAt(int x, int y) const;
 
 	// Render the map based on the position of the player
-	void displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Player& player, Map& map) const;
+	void displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Player& player) const;
 
 	Location* getBuildingAt(int x, int y);
 

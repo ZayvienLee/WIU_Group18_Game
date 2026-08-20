@@ -1,5 +1,12 @@
 #include "Food.h"
+#include "Player.h"
 
-void Food::Consume(Player& player)
+Food::Food()
 {
+	
+}
+
+void Food::consume(Player& player)
+{
+
 }

@@ -19,6 +19,11 @@ Zombie::Zombie(std::string n, std::string desc, char sym, int h, int maxH, int a
 	ZombIndoorY = 0;
 }
 
+void Zombie::update()
+{
+	
+}
+
 std::string Zombie::getZName() const
 {
 	return name;

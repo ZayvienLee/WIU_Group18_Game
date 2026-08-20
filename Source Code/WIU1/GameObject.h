@@ -14,6 +14,6 @@ public:
 	GameObject(std::string n, std::string desc, int x, int y, char sym);
 
 	/* Accessor Functions */
-	std::string getName();
-	char getSymbol();
+	std::string getName() const;
+	char getSymbol() const;
 };

@@ -159,7 +159,7 @@ void Map::generateRandomObstacles(int obstacleCount)
 	}
 }
 
-void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Player& player, Map& map) const
+void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Player& player) const
 {
 	// Calculate raw top-left offset
 	int rawCamX = playerX - (viewWidth / 2);
@@ -173,7 +173,7 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Pl
 	for (int r = camY; r < camY + viewHeight; ++r) {
 		for (int c = camX; c < camX + viewWidth; ++c) {
 
-			Item* grounditem = map.getGroundItemAt(c, r);
+			Item* grounditem = getGroundItemAt(c, r);
 
 			if (r == playerY && c == playerX) // To render the Player
 			{

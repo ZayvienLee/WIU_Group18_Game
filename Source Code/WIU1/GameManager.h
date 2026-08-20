@@ -4,6 +4,8 @@
 #include "Location.h"
 #include "Item.h"
 
+class Player; // Forward declaration to avoid circular include
+
 class GameManager
 {
 private:
