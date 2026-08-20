@@ -53,4 +53,6 @@ class Player : public Entity
 
 		int getHunger() const;
 		int getThirst() const;
+		void setHunger(int Hunger);
+		void setThirst(int Thirst);
 };

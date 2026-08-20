@@ -241,3 +241,13 @@ int Player::getThirst() const
 {
 	return thirst;
 }
+
+void Player::setHunger(int Hunger)
+{
+	hunger = Hunger;
+}
+
+void Player::setThirst(int Thirst)
+{
+	thirst = Thirst;
+}
