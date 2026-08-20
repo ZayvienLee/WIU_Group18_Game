@@ -100,7 +100,7 @@ void GameManager::enterBuilding(Location* building) {
     // Set indoor starting spawn (e.g., bottom center of the building interior array)
     player->setIndoorPosition(building->getSpawnX(), building->getSpawnY());
 
-    std::cout << "[ENTERED] Welcome to " << building->getName() << std::endl;
+    std::cout << "[ENTERED] Welcome inside the " << building->getName() << std::endl;
 }
 
 // Transition out of a building
@@ -112,20 +112,22 @@ void GameManager::exitBuilding() {
     player->setOutdoorPosition(savedOutdoorX, savedOutdoorY);
 }
 
-void GameManager::handleItemPickup(Player& player, Map& currentMap)
+void GameManager::handleItemPickup(Player& player, Map& currentMap) const
 {
-    int pX = player.getOutdoorX();
-    int pY = player.getOutdoorY();
+    int pX = isInBuilding ? player.getIndoorX() : player.getOutdoorX();
+    int pY = isInBuilding ? player.getIndoorY() : player.getOutdoorY();
 
     Item* groundItem = currentMap.pickupItemAt(pX, pY);
     if (groundItem != nullptr) {
         // Sync item position to player coordinates
         groundItem->syncWithPlayer(pX, pY);
 
-        if (player.addItem(groundItem)) {
+        if (player.addItem(groundItem))
+        {
             std::cout << "[PICKUP] Added " << groundItem->getName() << " to inventory!" << std::endl;
         }
-        else {
+        else
+        {
             // Inventory full: place back on the ground
             currentMap.addGroundItem(groundItem);
             std::cout << "[FULL] Inventory full! Could not pick up item." << std::endl;
@@ -133,35 +135,46 @@ void GameManager::handleItemPickup(Player& player, Map& currentMap)
     }
 }
 
-void GameManager::handleItemDrop(Player& player, Map& currentMap, int slotNumber)
+void GameManager::handleItemDrop(Player& player, Map& currentMap, int slotNumber) const
 {
     Item* droppedItem = player.getItemByNumber(slotNumber);
 
+    int xPosLoc = isInBuilding ? player.getIndoorX() : player.getOutdoorX();
+    int yPosLoc = isInBuilding ? player.getIndoorY() : player.getOutdoorY();
+
     if (droppedItem != nullptr) {
-        // 1. Remove from inventory array slot
-        player.removeItemSlot(slotNumber);
+        // Remove from inventory array slot
+        player.removeItem(droppedItem, slotNumber);
 
-        // 2. Set item position to player's current location
-        droppedItem->setPosition(player.getOutdoorX(), player.getOutdoorY());
+        // Set item position to player's current location
+        droppedItem->setPosition(xPosLoc, yPosLoc);
 
-        // 3. Add to map ground list (now visible on rendering)
+        // Add to map ground list (now visible on rendering)
         currentMap.addGroundItem(droppedItem);
 
         std::cout << "[DROPPED] " << droppedItem->getName() << " placed on ground." << std::endl;
     }
+    else
+    {
+        std::cout << "[INVALID] The target slot does not have any item." << std::endl;
+    }
 }
 
-void GameManager::rewardPlayerFromNPC(Player& player, Map& currentMap, Item* questReward) {
+void GameManager::rewardPlayerFromNPC(Player& player, Map& currentMap, Item* questReward) const
+{
     std::cout << "[NPC] 'Here, take this " << questReward->getName() << " for your help.'" << std::endl;
 
-    // Item starts directly in inventory, matching player position
-    questReward->syncWithPlayer(player.getOutdoorX(), player.getOutdoorY());
+    int xPosLoc = isInBuilding ? player.getIndoorX() : player.getOutdoorX();
+    int yPosLoc = isInBuilding ? player.getIndoorY() : player.getOutdoorY();
+
+    // Item starts directly in inventory, matching player position based on the area the player is at
+    questReward->syncWithPlayer(xPosLoc, yPosLoc);
     questReward->setInInventory(true);
 
     if (!player.addItem(questReward)) {
         // Fallback: If inventory is full when NPC gives reward, drop it at player's feet
         std::cout << "[NPC] 'Your bags are full. I'll leave it right here on the ground.'" << std::endl;
-        questReward->setPosition(player.getOutdoorX(), player.getOutdoorY());
+        questReward->setPosition(xPosLoc, yPosLoc);
         currentMap.addGroundItem(questReward);
     }
 }

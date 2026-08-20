@@ -1,8 +1,21 @@
 #include <vector>
 #include "Item.h"
 #include <string>
+#include "Player.h"
 
-Item::Item(std::string n, std::string desc, int xPos, int yPos, char sym, bool inInvent, int wght, int qty)
+Item::Item()
+{
+	name = "Item Name";
+	description = "Item Description";
+	x = -1;
+	y = -1;
+	symbol = '?';
+	inInventory = false;
+	weight = 0;
+	quantity = 0;
+}
+
+Item::Item(std::string n, std::string desc, int xPos, int yPos, char sym, int wght, int qty, bool inInvent)
 {
 	name = n;
 	description = desc;
@@ -17,14 +30,6 @@ Item::Item(std::string n, std::string desc, int xPos, int yPos, char sym, bool i
 int Item::getQuantity() const
 {
 	return quantity;
-}
-
-void Item::consume()
-{
-	if (quantity > 0)
-	{
-		quantity--;
-	}
 }
 
 void Item::syncWithPlayer(int playerX, int playerY)

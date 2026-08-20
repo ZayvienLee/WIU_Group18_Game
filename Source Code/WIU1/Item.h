@@ -2,7 +2,9 @@
 #include "GameObject.h"
 #include <string>
 
-class Entity; // Forward declaration to avoid circular include
+
+class Entity; /* Forward declaration to avoid circular include */
+class Player; /* Forward declaration to avoid circular include */
 
 class Item : public GameObject
 {
@@ -13,7 +15,8 @@ protected:
 	int quantity;
 
 public:
-	Item(std::string n, std::string desc, int xPos, int yPos, char sym, bool inInvent = false, int wght, int qty);
+	Item();
+	Item(std::string n, std::string desc, int xPos, int yPos, char sym, int wght, int qty, bool inInvent = false);
 
 	virtual ~Item() = default;
 
@@ -21,7 +24,7 @@ public:
 	virtual bool use(Entity* target) = 0;
 
 	int getQuantity() const;
-	void consume();
+	virtual void consume(Player& player) = 0;
 
 	// Synchronize item position to match player's coordinates
 	void syncWithPlayer(int playerX, int playerY);

@@ -32,7 +32,7 @@ class Player : public Entity
 
 		/* To manage the Inventory */
 		bool addItem(Item* item); // Pick up item when have space. Don't if inventory full.
-		void removeItem(Item* item); // Drop item and remove it from the inventory.
+		void removeItem(Item* item, int slot); // Drop item and remove it from the inventory.
 		Item* getItemByNumber(int slotNumber); // Get the item based on the number inside the inventory
 		void showInventory() const; // Display the Inventory Contents
 		int getItemCount() const;

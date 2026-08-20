@@ -90,7 +90,6 @@ bool Player::addItem(Item* item)
 {
 	if (itemCount >= maxItems)
 	{
-		std::cout << "[INVENTORY FULL] Cannot Pickup Item" << std::endl;
 		return false;
 	}
 
@@ -101,7 +100,7 @@ bool Player::addItem(Item* item)
 		{
 			inventory[i] = item;
 			itemCount++;
-			std::cout << "[ADDED] Item to inventory slot " << (i + 1) << std::endl;
+
 			return true;
 		}
 	}
@@ -109,9 +108,16 @@ bool Player::addItem(Item* item)
 	return false;
 }
 
-void Player::removeItem(Item* item)
+void Player::removeItem(Item* item, int slot)
 {
-	
+	if (inventory[slot] != nullptr)
+	{
+		if (inventory[slot] == item) // Check if the target item what we are looking for
+		{
+			inventory[slot] = nullptr; // Set to a null pointer
+			itemCount--;
+		}
+	}
 }
 
 // Get Item Pointer based on User Number Input (1-indexed selection)
@@ -132,7 +138,7 @@ Item* Player::getItemByNumber(int slotNumber)
 	}
 	else
 	{
-		return inventory[slotNumber];
+		return inventory[arrayIndex];
 	}
 }
 

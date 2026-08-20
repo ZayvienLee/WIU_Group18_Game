@@ -4,6 +4,8 @@
 #include "Location.h"
 #include "Item.h"
 
+class Player; // Forward declaration to avoid circular include
+
 class GameManager
 {
 private:
@@ -25,7 +27,7 @@ public:
 	void exitBuilding();
 
 	/* To handle Item management */
-	void handleItemPickup(Player& player, Map& currentMap);
-	void handleItemDrop(Player& player, Map& currentMap, int slotNumber);
-	void rewardPlayerFromNPC(Player& player, Map& currentMap, Item* questReward);
+	void handleItemPickup(Player& player, Map& currentMap) const;
+	void handleItemDrop(Player& player, Map& currentMap, int slotNumber) const;
+	void rewardPlayerFromNPC(Player& player, Map& currentMap, Item* questReward) const;
 };
