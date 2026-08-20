@@ -225,3 +225,13 @@ void Player::setIndoorPosition(int x, int y)
 
 	syncItemsLocation(indoorX, indoorY); // Syncronise the location of the items to the player's location.
 }
+
+int Player::getHunger() const
+{
+	return hunger;
+}
+
+int Player::getThirst() const
+{
+	return thirst;
+}

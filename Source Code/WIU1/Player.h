@@ -50,4 +50,7 @@ class Player : public Entity
 		int getIndoorX() const;
 		int getIndoorY() const;
 		void setIndoorPosition(int x, int y);
+
+		int getHunger() const;
+		int getThirst() const;
 };
