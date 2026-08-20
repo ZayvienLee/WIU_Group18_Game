@@ -2,6 +2,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "Location.h"
+#include "Item.h"
 
 class GameManager
 {
@@ -23,4 +24,8 @@ public:
 	void enterBuilding(Location* Building);
 	void exitBuilding();
 
+	/* To handle Item management */
+	void handleItemPickup(Player& player, Map& currentMap);
+	void handleItemDrop(Player& player, Map& currentMap, int slotNumber);
+	void rewardPlayerFromNPC(Player& player, Map& currentMap, Item* questReward);
 };

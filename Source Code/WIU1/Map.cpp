@@ -3,6 +3,8 @@
 #include <string>
 #include <algorithm>
 #include "Location.h"
+#include "Item.h"
+#include "Player.h"
 
 Map::Map()
 {
@@ -157,7 +159,7 @@ void Map::generateRandomObstacles(int obstacleCount)
 	}
 }
 
-void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight) const
+void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Player& player, Map& map) const
 {
 	// Calculate raw top-left offset
 	int rawCamX = playerX - (viewWidth / 2);
@@ -171,10 +173,18 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight) co
 	for (int r = camY; r < camY + viewHeight; ++r) {
 		for (int c = camX; c < camX + viewWidth; ++c) {
 
-			if (r == playerY && c == playerX) {
-				std::cout << "P "; // Player character
+			Item* grounditem = map.getGroundItemAt(c, r);
+
+			if (r == playerY && c == playerX) // To render the Player
+			{
+				std::cout << player.getName() << " "; // Player character
 			}
-			else {
+			else if (grounditem != nullptr)
+			{
+				std::cout << grounditem->getSymbol() << " ";
+			}
+			else
+			{
 				std::cout << activeGrid[r][c] << " "; // Tile + space
 			}
 		}
@@ -206,4 +216,33 @@ Location* Map::getBuildingAt(int x, int y)
 	}
 
 	return nullptr; // No building found adjacent to coordinates
+}
+
+void Map::addGroundItem(Item* item)
+{
+	item->setInInventory(false);
+	groundItems.push_back(item);
+}
+
+Item* Map::pickupItemAt(int playerX, int playerY)
+{
+	for (auto it = groundItems.begin(); it != groundItems.end(); ++it) {
+		if ((*it)->getX() == playerX && (*it)->getY() == playerY) {
+			Item* picked = *it;
+			groundItems.erase(it); // Remove from map list so it no longer renders
+			picked->setInInventory(true);
+			return picked;
+		}
+	}
+	return nullptr;
+}
+
+Item* Map::getGroundItemAt(int x, int y) const
+{
+	for (Item* item : groundItems) {
+		if (item->getX() == x && item->getY() == y) {
+			return item;
+		}
+	}
+	return nullptr;
 }

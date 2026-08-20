@@ -8,10 +8,10 @@ class NPC :
 {
 private:
     std::string dialogue;
-    Quest* quest;  
+    Quest* quest;
  
 public:
-    NPC(std::string name, std::string description, int x, int y, char symbol, std::string dialogue, Quest* quest);
+    NPC(std::string n, std::string desc, int x, int y, char sym, std::string dial, Quest* qst);
     void talk();
     Quest* getQuest() const;
 

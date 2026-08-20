@@ -1,5 +1,8 @@
 #include "NPC.h"
+#include "GameObject.h"
 #include <iostream>
+#include <string>
+#include "Quest.h"
  
 void NPC::talk() {
     std::cout << name << ": " << dialogue << std::endl;   
@@ -17,7 +20,14 @@ void NPC::talk() {
 Quest* NPC::getQuest() const {
     return quest;
 }
-NPC::NPC(std::string name, std::string description, int x, int y, char symbol, std::string dialogue, Quest* quest)
-{
 
+NPC::NPC(std::string n, std::string desc, int x, int y, char sym, std::string dial, Quest* qst)
+{
+    name = n;
+    description = desc;
+    positionX = x;
+    positionY = y;
+    symbol = sym;
+    dialogue = dial;
+    quest = qst;
 }

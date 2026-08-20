@@ -19,16 +19,27 @@ class Player : public Entity
 		int indoorX, indoorY;
 
 	public:
-		Player(std::string n, int h, int maxH, int hun, int thi, int capacity); // Overloaded constructor for Player
+		Player(std::string n, std::string desc, char sym, int h, int maxH, int hung, int thir, int atk, bool alive, int capacity); // Overloaded constructor for Player
 		~Player(); // Deconstructor to prevent memory leaks
 
+		void syncItemsLocation(int playerLocX, int playerLocY); // Move the items to the player accordingly
+
+		/* Overidden from Entity class */
+		void update() override;
+
+		/* Class Specific methods */
+		void restoreHunger(int amount);
+
 		/* To manage the Inventory */
-		void addItem(Item* item); // Pick up item when have space. Don't if inventory full.
+		bool addItem(Item* item); // Pick up item when have space. Don't if inventory full.
+		void removeItem(Item* item); // Drop item and remove it from the inventory.
 		Item* getItemByNumber(int slotNumber); // Get the item based on the number inside the inventory
 		void showInventory() const; // Display the Inventory Contents
-
 		int getItemCount() const;
 		int getInventoryCapacity() const;
+
+		/* Variable Accessors */
+		std::string getName() const;
 
 		/* Outdoor Position Accessors */
 		int getOutdoorX() const;

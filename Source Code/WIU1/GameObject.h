@@ -10,4 +10,10 @@ protected:
 	int positionY;
 	char symbol;
 public:
+	GameObject();
+	GameObject(std::string n, std::string desc, int x, int y, char sym);
+
+	/* Accessor Functions */
+	std::string getName();
+	char getSymbol();
 };

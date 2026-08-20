@@ -2,22 +2,24 @@
 #include "Item.h"
 #include <string>
 #include <iostream>
+#include <algorithm>
 
-Player::Player(std::string n, int h, int maxH, int hun, int thi, int capacity)
+Player::Player(std::string n, std::string desc, char sym, int h, int maxH, int hung, int thir, int atk, bool alive, int capacity)
 {
 	// GameObject variables
 	name = n;
-	description = "Description";
-	symbol = 'P';
+	description = desc;
+	symbol = sym;
 
 	// Entity variables
 	health = h;
 	maxHealth = maxH;
-	isAlive = true; // Entity is alive by default. Always
+	attackPower = atk;
+	isAlive = alive; // Entity is alive by default. Always
 
 	// Player variables
-	hunger = hun;
-	thirst = thi;
+	hunger = hung;
+	thirst = thir;
 	maxItems = capacity;
 	itemCount = 0;
 
@@ -61,12 +63,35 @@ Player::~Player()
 	}
 }
 
-void Player::addItem(Item* item)
+void Player::syncItemsLocation(int playerLocX, int playerLocY)
+{
+	// Keep item positions synchronized with player coordinates in background
+	for (int i = 0; i < maxItems; ++i) {
+		if (inventory[i] != nullptr) {
+			inventory[i]->syncWithPlayer(playerLocX, playerLocY);
+		}
+	}
+}
+
+void Player::update()
+{
+	// Player turn logic: decrease hunger/thirst every step
+	hunger = std::max(0, hunger - 1);
+	thirst = std::max(0, thirst - 2);
+}
+
+void Player::restoreHunger(int amount)
+{
+	hunger = std::min(100, hunger + amount);
+	std::cout << name << " restored " << amount << " Hunger!" << std::endl;
+}
+
+bool Player::addItem(Item* item)
 {
 	if (itemCount >= maxItems)
 	{
 		std::cout << "[INVENTORY FULL] Cannot Pickup Item" << std::endl;
-		return;
+		return false;
 	}
 
 	// Find the first empty slot
@@ -77,11 +102,16 @@ void Player::addItem(Item* item)
 			inventory[i] = item;
 			itemCount++;
 			std::cout << "[ADDED] Item to inventory slot " << (i + 1) << std::endl;
-			return;
+			return true;
 		}
 	}
 
-	return;
+	return false;
+}
+
+void Player::removeItem(Item* item)
+{
+	
 }
 
 // Get Item Pointer based on User Number Input (1-indexed selection)
@@ -155,6 +185,11 @@ int Player::getInventoryCapacity() const
 	return maxItems;
 }
 
+std::string Player::getName() const
+{
+	return name;
+}
+
 int Player::getOutdoorX() const
 {
 	return outdoorX;
@@ -169,6 +204,8 @@ void Player::setOutdoorPosition(int x, int y)
 {
 	outdoorX = x;
 	outdoorY = y;
+
+	syncItemsLocation(outdoorX, outdoorY); // Syncronise the location of the items to the player's location.
 }
 
 int Player::getIndoorX() const
@@ -185,4 +222,6 @@ void Player::setIndoorPosition(int x, int y)
 {
 	indoorX = x;
 	indoorY = y;
+
+	syncItemsLocation(indoorX, indoorY); // Syncronise the location of the items to the player's location.
 }
