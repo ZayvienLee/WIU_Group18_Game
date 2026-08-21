@@ -314,15 +314,3 @@ Item* Map::getGroundItemAt(int x, int y) const
 	}
 	return nullptr;
 }
-
-Location* Map::getLocationByName(std::string name) 
-{
-	for (Location* location : locations)
-	{
-		if (location->getName() == name)
-		{
-			return location;
-		}
-	}
-	return nullptr;
-}
