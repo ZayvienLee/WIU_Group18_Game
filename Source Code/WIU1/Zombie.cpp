@@ -11,7 +11,8 @@ Zombie::Zombie(std::string n, std::string desc, char sym, int h, int maxH, int a
 	// Entity variables
 	health = h;
 	maxHealth = maxH;
-	isAlive = true; // Entity is alive by default. Always
+	attackPower = atk;
+	isAlive = alive; // Entity is alive by default. Always
 
 	// Set up the coordinates
 	ZombOutdoorX = 1;
