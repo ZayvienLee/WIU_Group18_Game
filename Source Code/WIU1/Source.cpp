@@ -39,7 +39,7 @@ int main(void)
             clearConsole();
 
             if (choice == '1') {
-
+                                                
                 StoryManager story;
                 std::cout << std::endl;
 

@@ -3,6 +3,7 @@
 #include "Item.h"
 #include <vector>
 #include "Player.h"
+#include"NPC.h"
 
 class Map
 {
@@ -17,6 +18,8 @@ private:
 	std::vector<Location*> locations;
 
 	std::vector<Item*> groundItems; // Items currently lying on the ground
+
+	std::vector<NPC*> npcs;
 
 public:
 	Map();
@@ -41,4 +44,6 @@ public:
 
 	// Helper for map rendering
 	Item* getGroundItemAt(int x, int y) const;
+
+	void addNPC(NPC* npc);
 };

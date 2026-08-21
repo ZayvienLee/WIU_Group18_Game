@@ -17,6 +17,10 @@ GameManager::GameManager()
 	currentBuilding = nullptr;
 	savedOutdoorX = 0;
 	savedOutdoorY = 0;
+
+    outdoorMap.addNPC(&storyManager.getZombieNPC());
+    outdoorMap.addNPC(&storyManager.getmissingpersonNPC());
+    outdoorMap.addNPC(&storyManager.getpharmacyNPC());
 }
 
 GameManager::~GameManager()

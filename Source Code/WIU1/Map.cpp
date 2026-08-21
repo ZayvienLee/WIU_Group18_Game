@@ -188,14 +188,34 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Pl
 			{
 				std::cout << player.getSymbol() << " "; // Player character
 			}
-			else if (grounditem != nullptr)
-			{
-				std::cout << grounditem->getSymbol() << " ";
-			}
 			else
 			{
-				std::cout << activeGrid[r][c] << " "; // Tile + space
+				NPC* npcAtPosition = nullptr;
+
+				for (NPC* npc : npcs)
+				{
+					if (npc->getX() == c && npc->getY() == r)
+					{
+						npcAtPosition = npc;
+						break;
+					}
+				}
+
+				if (npcAtPosition != nullptr)
+				{
+					std::cout << npcAtPosition->getSymbol() << " ";
+				}
+
+				else if (grounditem != nullptr)
+				{
+					std::cout << grounditem->getSymbol() << " ";
+				}
+				else
+				{
+					std::cout << activeGrid[r][c] << " "; // Tile + space
+				}
 			}
+			
 		}
 		std::cout << std::endl;
 	}
@@ -254,4 +274,9 @@ Item* Map::getGroundItemAt(int x, int y) const
 		}
 	}
 	return nullptr;
+}
+
+void Map::addNPC(NPC* npc)
+{
+	npcs.push_back(npc);
 }
