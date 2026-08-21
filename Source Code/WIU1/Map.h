@@ -45,5 +45,5 @@ public:
 	// Helper for map rendering
 	Item* getGroundItemAt(int x, int y) const;
 
-	void addNPC(NPC* npc);
+	Location* getLocationByName(std::string name);
 };
