@@ -4,6 +4,14 @@
 Water::Water()
 {
 	waterPt = 40;
+	name = "Water";
+	description = "Decrease thirsty";
+	x = -1;
+	y = -1;
+	symbol = 'w';
+	inInventory = true;
+	weight = 0;
+	quantity = 0;
 }
 
 void Water::consume(Player& player)
@@ -15,16 +23,3 @@ void Water::consume(Player& player)
 		player.setThirst(100);
 	}
 }
-
-///*
-//bool Water::use(Entity* target)
-//{
-//	Player* player = dynamic_cast<Player*>(target);
-//	if (player != nullptr)
-//	{
-//		player->setThirst(player->getThirst() + waterPt);
-//		return true;
-//	}
-//	return false;
-//}
-//*/

@@ -4,6 +4,14 @@
 Medicine::Medicine()
 {
 	recoverHp = 30;
+	name = "Medicine";
+	description = "let the player to recover Hp";
+	x = -1;
+	y = -1;
+	symbol = 'm';
+	inInventory = true;
+	weight = 0;
+	quantity = 0;
 }
 
 void Medicine::consume(Player& player)

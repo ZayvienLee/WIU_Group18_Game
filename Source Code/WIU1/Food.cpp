@@ -4,6 +4,14 @@
 Food::Food()
 {
 	foodPt = 30;
+	name = "Food";
+	description = "Increase satiety";
+	x = -1;
+	y = -1;
+	symbol = 'f';
+	inInventory = true;
+	weight = 0;
+	quantity = 0;
 }
 
 void Food::consume(Player& player)
@@ -15,16 +23,3 @@ void Food::consume(Player& player)
 		player.setHunger(100);
 	}
 }
-
-///*
-//bool Food::use(Entity* target)
-//{
-//	Player* player = dynamic_cast<Player*>(target);
-//	if (player != nullptr)
-//	{
-//		player->setHunger(player->getHunger() + foodPt);
-//		return true;
-//	}
-//	return false;
-//}
-//*/
