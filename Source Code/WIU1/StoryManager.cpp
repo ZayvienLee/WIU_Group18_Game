@@ -8,7 +8,7 @@
 void StoryManager::storyIntro() {
 
     std::cout << "Three weeks ago, a mysterious virus spread across the city." << std::endl;
-    std::cout << "At first, infected people became extremely aggresive. Within hours, hospitals were overwhelemed. The government declared an emergency and ordered everyone to remain indoors." << std::endl;
+    std::cout << "At first, infected people became extremely aggressive. Within hours, hospitals were overwhelmed. The government declared an emergency and ordered everyone to remain indoors." << std::endl;
     std::cout << "Then the power went out." << std::endl;
     std::cout << "The military abandoned the city." << std::endl;
     std::cout << "The internet disappeared" << std::endl;
@@ -16,7 +16,7 @@ void StoryManager::storyIntro() {
     std::cout << "You play as Alex, a survivor trapped inside an apartment building with only a small amount of food and water." << std::endl;
     std::cout << "One night, your radio suddenly turns on" << std::endl;
     std::cout << "\033[1mThis is Haven-7. We have survivors. We have medicine. We are leaving the city in 48 hours." << std::endl;
-    std::cout << "Then the transmission cuts out" << std::endl;
+    std::cout << "\033[0mThen the transmission cuts out" << std::endl;
     std::cout << "You have two days to reach Haven-7" << std::endl;
     std::cout << "But there is one problem." << std::endl;
     std::cout << "\033[1mHaven-7 is on the other side of the city." << std::endl;
@@ -82,11 +82,11 @@ StoryManager::StoryManager() :
        // NPCS
 
        // NAME, DESCRIPTION, X, Y, SYMBOL, DIALOGUE, QUEST
-       zombieNPC("Alexa", "A survivor who is looking for help", 0, 0, 'A', "There is a bunch of zombies in the city, please kill them before they attack anyone else!", &killZombieQuest),
+       zombieNPC("Iris", "A survivor who is looking for help", 18, 7, 'i', "There is a bunch of zombies in the city, please kill them before they attack anyone else!", &killZombieQuest),
 
-       missingpersonNPC("George", "A police officer searching for a missing civilian", 0, 0, 'G', "Someone went missing during the outbreak. Please find them and bring them back to me.", &findMissingPersonQuest),
+       missingpersonNPC("Hank", "A police officer searching for a missing civilian", 4, 15, 'h', "Someone went missing during the outbreak. Please find them and bring them back to me.", &findMissingPersonQuest),
 
-       pharmacyNPC("Dr. Chen", "A doctor who is looking for a cure", 0, 0, 'D', "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me", &findPharmacyQuest) {}
+       pharmacyNPC("Dr. Chen", "A doctor who is looking for a cure", 18, 14, 'd', "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me", &findPharmacyQuest) {}
 
 void StoryManager::Dialogue()
 {
