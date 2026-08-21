@@ -1,14 +1,18 @@
 #pragma once
 #include <string>
 #include "Item.h"
+
 class Weapon : public Item
 {
 private:
     int atkRange;
-    int dmg;
+    int wDamage;
 
 public:
     Weapon();
-    Weapon(std::string, std::string, char, int, int);
+    Weapon(std::string name, std::string desc, char sym, int dmg, int atkR);
+
+	int getDamage() const;
+	int getAtkRange() const;
 };
 
