@@ -7,16 +7,16 @@ protected:
     std::string name;
     char symbol; // 'A', 'S', 'H', 'P', 'G', 'C', 'F', 'M', 'V'
 
-    static const int INTERIOR_HEIGHT = 10;
-    static const int INTERIOR_WIDTH = 10;
-    char interiorGrid[INTERIOR_HEIGHT][INTERIOR_WIDTH];
+    int INTERIOR_HEIGHT;
+    int INTERIOR_WIDTH;
+    char** interiorGrid;
 
     int spawnX; // Interior entry X coordinate
     int spawnY; // Interior entry Y coordinate
 
 public:
-    Location(std::string locName = "Unknown Location", char locSymbol = '?');
-    virtual ~Location() = default;
+    Location(std::string locName = "Unknown Location", char locSymbol = '?', int sizeX = 10, int sizeY = 10);
+    virtual ~Location();
 
     // Variable Accessors
     std::string getName() const;

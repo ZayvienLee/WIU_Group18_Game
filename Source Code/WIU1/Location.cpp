@@ -2,12 +2,25 @@
 #include <string>
 #include <iostream>
 
-Location::Location(std::string locName, char locSymbol)
+Location::Location(std::string locName, char locSymbol, int sizeX, int sizeY)
 {
     name = locName;
     symbol = locSymbol;
-    spawnX = 5;
-    spawnY = 8;
+
+    INTERIOR_WIDTH = sizeX;
+    INTERIOR_HEIGHT = sizeY;
+
+    /* Set the spawn to the space above the entrance of the building */
+    spawnX = sizeX / 2;
+    spawnY = sizeY - 2;
+
+
+    // Initialise the grid accordingly
+    interiorGrid = new char* [INTERIOR_HEIGHT]; // Rows
+    
+    for (int i = 0; i < INTERIOR_HEIGHT; ++i) {
+        interiorGrid[i] = new char[INTERIOR_WIDTH]; // Columns
+    }
 
     // Fill the interior with the floor spaces and perimeter walls
     for (int r = 0; r < INTERIOR_HEIGHT; ++r) {
@@ -21,8 +34,19 @@ Location::Location(std::string locName, char locSymbol)
         }
     }
 
-    // Default exit door at bottom wall
-    interiorGrid[9][5] = 'E';
+    // Default exit door at bottom wall at the center of the building
+    interiorGrid[INTERIOR_HEIGHT - 1][INTERIOR_WIDTH / 2] = 'E';
+}
+
+Location::~Location()
+{
+    for (int i = 0; i < INTERIOR_HEIGHT; ++i) {
+        delete[] interiorGrid[i]; // Deallocate Columns
+        interiorGrid[i] = nullptr;
+    }
+
+    delete[] interiorGrid; // Deallocate Rows
+    interiorGrid = nullptr;
 }
 
 bool Location::isIndoorWalkable(int x, int y) const

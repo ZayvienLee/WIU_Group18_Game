@@ -5,6 +5,7 @@
 #include "Location.h"
 #include "Item.h"
 #include "Player.h"
+#include <cstdlib>
 
 Map::Map()
 {
@@ -62,14 +63,14 @@ Map::Map()
 	}
 
 	// Initialize building instances
-	locations.push_back(new Location("Apartment", 'A'));
-	locations.push_back(new Location("Supermarket", 'S'));
-	locations.push_back(new Location("Hospital", 'H'));
-	locations.push_back(new Location("Police Station", 'P'));
-	locations.push_back(new Location("Gas Station", 'G'));
-	locations.push_back(new Location("School", 'C'));
-	locations.push_back(new Location("Safe House", 'F'));
-	locations.push_back(new Location("Military Base", 'M'));
+	locations.push_back(new Location("Apartment", 'A', 8, 10));
+	locations.push_back(new Location("Supermarket", 'S', 20, 15));
+	locations.push_back(new Location("Hospital", 'H', 12, 15));
+	locations.push_back(new Location("Police Station", 'P', 7, 9));
+	locations.push_back(new Location("Gas Station", 'G', 15, 8));
+	locations.push_back(new Location("School", 'C', 12, 12));
+	locations.push_back(new Location("Safe House", 'F', 9, 9));
+	locations.push_back(new Location("Military Base", 'M', 25, 20));
 	locations.push_back(new Location("Evacuation Point", 'V'));
 }
 

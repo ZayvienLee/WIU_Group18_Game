@@ -52,7 +52,7 @@ Player::~Player()
 			// Delete each item object inside the inventory
 			if (inventory[i] != nullptr)
 			{
-				delete inventory[i];
+				delete[] inventory[i];
 				inventory[i] = nullptr;
 			}
 		}

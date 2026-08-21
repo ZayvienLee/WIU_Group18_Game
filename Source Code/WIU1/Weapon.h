@@ -9,6 +9,6 @@ private:
 
 public:
     Weapon();
-    Weapon(std::string, std::string, char, int, int);
+    Weapon(std::string n, std::string desc, char sym, int atk, int atkR);
 };
 
