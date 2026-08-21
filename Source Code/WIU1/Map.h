@@ -4,6 +4,7 @@
 #include <vector>
 #include "Player.h"
 #include"NPC.h"
+#include <string>
 
 class Map
 {
@@ -40,4 +41,5 @@ public:
 	void addGroundItem(Item* item);
 	Item* pickupItemAt(int playerX, int playerY); // Search and remove item from ground when picked up
 	Item* getGroundItemAt(int x, int y) const; // Helper for map rendering
+	Location* getLocationByName(std::string name);
 };

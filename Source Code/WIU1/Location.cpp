@@ -1,6 +1,7 @@
 #include "Location.h"
 #include <string>
 #include <iostream>
+#include "NPC.h"
 
 Location::Location(std::string locName, char locSymbol, int sizeX, int sizeY)
 {
