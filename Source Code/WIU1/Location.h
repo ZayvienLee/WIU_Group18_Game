@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <vector>
+#include "NPC.h"
 
 class Location
 {
@@ -13,6 +15,9 @@ protected:
 
     int spawnX; // Interior entry X coordinate
     int spawnY; // Interior entry Y coordinate
+
+    std::vector<NPC*> npcs;
+
 
 public:
     Location(std::string locName = "Unknown Location", char locSymbol = '?', int sizeX = 10, int sizeY = 10);
@@ -30,4 +35,6 @@ public:
     void setTileAt(int x, int y, char tile);
     void displayInterior(int playerX, int playerY) const;
 	
+    void addNPC(NPC* npc);
+    NPC* getNPCat(int x, int y) const;
 };

@@ -16,4 +16,7 @@ public:
 	/* Accessor Functions */
 	std::string getName() const;
 	char getSymbol() const;
+
+	int getX() const;
+	int getY() const;
 };

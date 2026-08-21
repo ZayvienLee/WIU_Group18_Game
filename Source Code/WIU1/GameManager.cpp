@@ -17,6 +17,20 @@ GameManager::GameManager()
 	currentBuilding = nullptr;
 	savedOutdoorX = 0;
 	savedOutdoorY = 0;
+
+    Location* supermarket = outdoorMap.getLocationByName("Supermarket");
+    Location* policeStation = outdoorMap.getLocationByName("Police Station");
+    Location* hospital = outdoorMap.getLocationByName("Hospital");
+
+    if (supermarket != nullptr) {
+        supermarket->addNPC(&storyManager.getZombieNPC());
+    }
+    if (policeStation != nullptr) {
+        policeStation->addNPC(&storyManager.getmissingpersonNPC());
+    }
+    if (hospital != nullptr) {
+        hospital->addNPC(&storyManager.getpharmacyNPC());
+    }
 }
 
 GameManager::~GameManager()

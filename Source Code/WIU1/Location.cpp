@@ -72,8 +72,13 @@ void Location::displayInterior(int playerX, int playerY) const {
     std::cout << "=== " << name << " Interior ===" << std::endl;
     for (int r = 0; r < INTERIOR_HEIGHT; ++r) {
         for (int c = 0; c < INTERIOR_WIDTH; ++c) {
+            NPC* npc = getNPCat(c, r);
+
             if (r == playerY && c == playerX) {
                 std::cout << "P "; // Player inside building
+            }
+            else if (npc != nullptr) {
+                std::cout << npc->getSymbol() << " ";
             }
             else {
                 std::cout << interiorGrid[r][c] << " ";
@@ -101,4 +106,22 @@ int Location::getSpawnX() const
 int Location::getSpawnY() const
 {
     return spawnY;
+}
+
+void Location::addNPC(NPC* npc)
+{
+    npcs.push_back(npc);
+}
+
+NPC* Location::getNPCat(int x, int y) const
+{
+    for (NPC* npc : npcs)
+    {
+        if (npc->getX() == x && npc->getY() == y)
+        {
+            return npc;
+        }
+    }
+
+    return nullptr;
 }

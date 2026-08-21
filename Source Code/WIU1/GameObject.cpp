@@ -28,3 +28,13 @@ char GameObject::getSymbol() const
 {
 	return symbol;
 }
+
+int GameObject::getX() const
+{
+	return positionX;
+}
+
+int GameObject::getY() const
+{
+	return positionY;
+}

@@ -231,7 +231,7 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Pl
 			else
 			{
 				std::cout << activeGrid[r][c] << " "; // Tile + space
-			}
+			}	
 		}
 		std::cout << std::endl;
 	}
@@ -310,6 +310,18 @@ Item* Map::getGroundItemAt(int x, int y) const
 	{
 		if (item->getX() == x && item->getY() == y) {
 			return item;
+		}
+	}
+	return nullptr;
+}
+
+Location* Map::getLocationByName(std::string name) 
+{
+	for (Location* location : locations)
+	{
+		if (location->getName() == name)
+		{
+			return location;
 		}
 	}
 	return nullptr;

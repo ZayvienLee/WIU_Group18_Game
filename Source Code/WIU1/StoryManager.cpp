@@ -82,11 +82,11 @@ StoryManager::StoryManager() :
        // NPCS
 
        // NAME, DESCRIPTION, X, Y, SYMBOL, DIALOGUE, QUEST
-       zombieNPC("Iris", "A survivor who is looking for help", 18, 7, 'i', "There is a bunch of zombies in the city, please kill them before they attack anyone else!", &killZombieQuest),
+       zombieNPC("Iris", "A survivor who is looking for help", 1, 1, 'i', "There is a bunch of zombies in the city, please kill them before they attack anyone else!", &killZombieQuest),
 
-       missingpersonNPC("Hank", "A police officer searching for a missing civilian", 4, 15, 'h', "Someone went missing during the outbreak. Please find them and bring them back to me.", &findMissingPersonQuest),
+       missingpersonNPC("Hank", "A police officer searching for a missing civilian", 1, 1, 'h', "Someone went missing during the outbreak. Please find them and bring them back to me.", &findMissingPersonQuest),
 
-       pharmacyNPC("Dr. Chen", "A doctor who is looking for a cure", 18, 14, 'd', "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me", &findPharmacyQuest) {}
+       pharmacyNPC("Dr. Chen", "A doctor who is looking for a cure", 1, 1, 'd', "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me", &findPharmacyQuest) {}
 
 void StoryManager::Dialogue()
 {
