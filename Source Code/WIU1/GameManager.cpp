@@ -192,3 +192,7 @@ void GameManager::render(int viewWidth, int viewHeight) const
         outdoorMap.displayMap(player->getOutdoorX(), player->getOutdoorY(), viewWidth, viewHeight, *player);
     }
 }
+
+StoryManager& GameManager::getStoryManager() {
+    return storyManager;
+}

@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Location.h"
 #include "Item.h"
+#include "StoryManager.h"
 
 class Player; // Forward declaration to avoid circular include
 
@@ -18,6 +19,8 @@ private:
 	// Save the outdoor coordinates when stepping inside
 	int savedOutdoorX;
 	int savedOutdoorY;
+	
+	StoryManager storyManager;
 
 public:
 	GameManager();
@@ -33,4 +36,6 @@ public:
 
 	// Renders either the camera viewport or building interior
 	void render(int viewWidth = 15, int viewHeight = 9) const;
+
+	StoryManager& getStoryManager();
 };

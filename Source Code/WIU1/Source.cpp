@@ -52,8 +52,12 @@ int main(void)
 
                 // 2. Prompt user input
                 std::cout << std::endl << "Enter command (W/A/S/D/E/Q): ";
+                // 3. For Quest UI
+                std::cout << " Quests Done: " << game.getStoryManager().getCompletedQuestsCount() << "/3" << std::endl;
                 std::cin >> input;
                 input = static_cast<char>(toupper(input));
+
+
 
                 // 3. Process commands
                 if (input == 'Q')
