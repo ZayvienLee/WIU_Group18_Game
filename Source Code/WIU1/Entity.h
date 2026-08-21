@@ -30,4 +30,5 @@ public:
     // Accessory Functions
     bool getIsAlive() const;
     int getHealth() const;
+    void setHealth(int Health);
 };

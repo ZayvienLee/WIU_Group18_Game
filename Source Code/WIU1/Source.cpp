@@ -10,6 +10,14 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
+// This is needed to clear the console
+static void clearConsole()
+{
+    // \033[H moves the cursor to the top-left corner
+   // \033[2J clears the entire screen
+    std::cout << "\033[H\033[2J" << std::flush;
+}
+
 int main(void)
 {
     {
@@ -28,6 +36,8 @@ int main(void)
             std::cout << "Enter your choice:";
             std::cin >> choice;
 
+            clearConsole();
+
             if (choice == '1') {
 
                 StoryManager story;
@@ -40,9 +50,14 @@ int main(void)
                 std::cin.ignore();
                 std::cin.get();
 
+                clearConsole();
+
                 GameManager game;
                 char input = ' ';
                 bool isRunning = true;
+
+                // Add the obstacles to the map
+                game.getMap().generateRandomObstacles(30); // Stating the number of obstacles to include
 
                 std::cout << "========================================" << std::endl;
                 std::cout << "    POST-APOCALYPTIC SURVIVAL GAME      " << std::endl;
@@ -55,15 +70,25 @@ int main(void)
 
                 while (isRunning)
                 {
-                    // 1. Render map viewport with camera centered on Player
+
+                    // Render map viewport with camera centered on Player
                     game.render(15, 9);
 
-                    // 2. Prompt user input
+                    // Prompt user input
                     std::cout << std::endl << "Enter command (W/A/S/D/E/Q): ";
+
+                    // For Quest UI
+                    std::cout << " Quests Done: " << game.getStoryManager().getCompletedQuestsCount() << "/3" << std::endl;
+
+                    // Get the input from the player
                     input = _getch();
                     input = static_cast<char>(toupper(input));
 
-                    // 3. Process commands
+                    clearConsole();
+
+                    std::cout << std::endl << "Action: " << input << std::endl;
+
+                    // Process commands
                     if (input == 'Q')
                     {
                         isRunning = false;
@@ -76,6 +101,9 @@ int main(void)
                     else
                     {
                         std::cout << "[INVALID] Input not recognized. Use W, A, S, D, E, or Q." << std::endl;
+
+                        std::cin.ignore();
+                        std::cin.get();
                     }
 
                     std::cout << std::endl;
@@ -115,10 +143,17 @@ int main(void)
                 std::cin.ignore();
                 std::cin.get();
 
+                clearConsole();
             }
-            else {
+            else
+            {
                 std::cout << "Invalid choice! Pick either 1 or 2." << std::endl;
                 std::cout << std::endl;
+
+                std::cin.ignore();
+                std::cin.get();
+
+                clearConsole();
             }
 
         }

@@ -59,3 +59,8 @@ int Entity::getHealth() const
 	return health;
 }
 
+void Entity::setHealth(int Health)
+{
+	health = Health;
+}
+

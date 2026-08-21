@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cctype>
 #include "Item.h"
+#include "StoryManager.h"
 
 // To add later on with the map and location, etc. To fix the warning and errors and add the 
 // necessary logic for each of them.
@@ -191,4 +192,14 @@ void GameManager::render(int viewWidth, int viewHeight) const
         // Renders outdoor map viewport centered on player outdoor coordinates
         outdoorMap.displayMap(player->getOutdoorX(), player->getOutdoorY(), viewWidth, viewHeight, *player);
     }
+}
+
+StoryManager& GameManager::getStoryManager()
+{
+    return storyManager;
+}
+
+Map& GameManager::getMap()
+{
+    return outdoorMap;
 }

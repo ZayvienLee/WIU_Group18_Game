@@ -6,6 +6,7 @@
 #include "Item.h"
 #include "Player.h"
 #include <cstdlib>
+#include <random>
 
 Map::Map()
 {
@@ -117,6 +118,12 @@ char Map::getTileAt(int x, int y) const
 
 void Map::generateRandomObstacles(int obstacleCount)
 {
+	// The lines needed to randomize the numbers
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution distrXPos(0, WIDTH);
+	std::uniform_int_distribution distrYPos(0, HEIGHT);
+
 	// The array of the obstacle types to be randomly placed and allocated
 	char obstacleTypes[] = { 'C', 'r', '~' };
 	int numTypes = sizeof(obstacleTypes) / sizeof(obstacleTypes[0]);
@@ -124,17 +131,18 @@ void Map::generateRandomObstacles(int obstacleCount)
 	int placed = 0;
 	while (placed < obstacleCount)
 	{
-		int randY = rand() % HEIGHT;
-		int randX = rand() % WIDTH;
+		int randY = distrXPos(gen);
+		int randX = distrYPos(gen);
 
 		// Check to ensure that the tile is a street tile '_'
 		if (baseGrid[randY][randX] == '_')
 		{
 			// Next check to ensure that it is not adjacent to an entrance to the building '.'
+			// Also ensuring that no three obstacles have any chance to suround the entrance to the door
 			bool nearDoor = false;
-			for (int dy = -1; dy <= 1; ++dy)
+			for (int dy = -3; dy <= 3; ++dy)
 			{
-				for (int dx = -1; dx <= 1; ++dx)
+				for (int dx = -3; dx <= 3; ++dx)
 				{
 					int checkY = randY + dy;
 					int checkX = randX + dx;

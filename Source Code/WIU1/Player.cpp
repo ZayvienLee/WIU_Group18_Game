@@ -26,8 +26,8 @@ Player::Player(std::string n, std::string desc, char sym, int h, int maxH, int h
 	// Set up the coordinates
 	outdoorX = 1;
 	outdoorY = 1;
-	indoorX = 0;
-	indoorY = 0;
+	indoorX = 5;
+	indoorY = 5;
 
 	// Inventory system
 	if (maxItems <= 0) // Should the number be not a positive number, set to default accordingly

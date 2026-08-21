@@ -1,4 +1,5 @@
 #include "Quest.h"
+#include <string>
 
 
 void Quest::completeQuest() {
