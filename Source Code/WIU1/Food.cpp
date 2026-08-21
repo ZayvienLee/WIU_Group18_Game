@@ -10,8 +10,8 @@ Food::Food()
 	y = -1;
 	symbol = 'f';
 	inInventory = true;
-	weight = 0;
-	quantity = 0;
+	weight = 200;
+	quantity = 5;
 }
 
 void Food::consume(Player& player)

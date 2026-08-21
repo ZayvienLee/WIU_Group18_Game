@@ -4,6 +4,9 @@
 #include <algorithm>
 #include "Location.h"
 #include "Item.h"
+#include "Food.h"
+#include "Water.h"
+#include "Medicine.h"
 #include "Player.h"
 #include <cstdlib>
 #include <random>
@@ -75,12 +78,18 @@ Map::Map()
 	locations.push_back(new Location("Evacuation Point", 'V'));
 }
 
+// Delete ALL of the dynamic locations and ground items, free up the memory
 Map::~Map()
 {
 	for (Location* loc : locations) {
 		delete loc;
 	}
 	locations.clear();
+
+	for (Item* item : groundItems) {
+		delete item;
+	}
+	groundItems.clear();
 }
 
 bool Map::isWalkable(int x, int y) const
@@ -96,13 +105,8 @@ bool Map::isWalkable(int x, int y) const
 	// The tiles the player are allowed to move are the following:
 	// '_' Walkable street
 	// '.' Building entrance door
-	if (tile == '_' || tile == '.')
-	{
-		return true;
-	}
-
 	// Impassable tiles: '*', '#', 'X', labels ('A', 'S', etc.), and obstacles ('C', 'r', '~')
-	return false;
+	return (tile == '_' || tile == '.');
 }
 
 bool Map::isEntrance(int x, int y) const
@@ -113,7 +117,7 @@ bool Map::isEntrance(int x, int y) const
 
 char Map::getTileAt(int x, int y) const
 {
-	return 0;
+	return activeGrid[y][x];
 }
 
 void Map::generateRandomObstacles(int obstacleCount)
@@ -168,6 +172,36 @@ void Map::generateRandomObstacles(int obstacleCount)
 	}
 }
 
+void Map::spawnRandomItems(int itemCount)
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> distrX(0, WIDTH - 1);
+	std::uniform_int_distribution<int> distrY(0, HEIGHT - 1);
+
+	int spawned = 0;
+	while (spawned < itemCount)
+	{
+		int randX = distrX(gen);
+		int randY = distrY(gen);
+
+		// Allowed, walkable path '_'
+		if (activeGrid[randY][randX] == '_' && getGroundItemAt(randX, randY) == nullptr)
+		{
+			int type = rand() % 3;
+			Item* newItem = nullptr;
+
+			if (type == 0) newItem = new Food();
+			else if (type == 1) newItem = new Water();
+			else if (type == 2) newItem = new Medicine();
+
+			newItem->setPosition(randX, randY);
+			addGroundItem(newItem);
+			spawned++;
+		}
+	}
+}
+
 void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Player& player) const
 {
 	// Calculate raw top-left offset
@@ -179,8 +213,10 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Pl
 	int camY = std::clamp(rawCamY, 0, HEIGHT - viewHeight);
 
 	std::cout << "========================================" << std::endl;
-	for (int r = camY; r < camY + viewHeight; ++r) {
-		for (int c = camX; c < camX + viewWidth; ++c) {
+	for (int r = camY; r < camY + viewHeight; ++r)
+	{
+		for (int c = camX; c < camX + viewWidth; ++c)
+		{
 
 			Item* grounditem = getGroundItemAt(c, r);
 
@@ -190,7 +226,7 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Pl
 			}
 			else if (grounditem != nullptr)
 			{
-				std::cout << grounditem->getSymbol() << " ";
+				std::cout << grounditem->getSymbol() << " "; // Item to render
 			}
 			else
 			{
@@ -229,13 +265,35 @@ Location* Map::getBuildingAt(int x, int y)
 
 void Map::addGroundItem(Item* item)
 {
+	if (item == nullptr) return;
 	item->setInInventory(false);
+
+	// Prevent overlapping: if target space already has an item, drop in adjacent walkable spot
+	if (getGroundItemAt(item->getX(), item->getY()) != nullptr)
+	{
+		int dx[] = { 1, -1, 0, 0, 1, -1, 1, -1 };
+		int dy[] = { 0, 0, 1, -1, 1, 1, -1, -1 };
+
+		for (int i = 0; i < 8; ++i)
+		{
+			int newX = item->getX() + dx[i];
+			int newY = item->getY() + dy[i];
+
+			if (isWalkable(newX, newY) && getGroundItemAt(newX, newY) == nullptr)
+			{
+				item->setPosition(newX, newY);
+				break;
+			}
+		}
+	}
+
 	groundItems.push_back(item);
 }
 
 Item* Map::pickupItemAt(int playerX, int playerY)
 {
-	for (auto it = groundItems.begin(); it != groundItems.end(); ++it) {
+	for (auto it = groundItems.begin(); it != groundItems.end(); ++it)
+	{
 		if ((*it)->getX() == playerX && (*it)->getY() == playerY) {
 			Item* picked = *it;
 			groundItems.erase(it); // Remove from map list so it no longer renders
@@ -248,7 +306,8 @@ Item* Map::pickupItemAt(int playerX, int playerY)
 
 Item* Map::getGroundItemAt(int x, int y) const
 {
-	for (Item* item : groundItems) {
+	for (Item* item : groundItems)
+	{
 		if (item->getX() == x && item->getY() == y) {
 			return item;
 		}

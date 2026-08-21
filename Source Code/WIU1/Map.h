@@ -23,6 +23,7 @@ public:
 	~Map();
 
 	void generateRandomObstacles(int obstacleCount);
+	void spawnRandomItems(int itemCount);
 
 	/* Core Logic Checks */
 	bool isWalkable(int x, int y) const;
@@ -31,14 +32,9 @@ public:
 
 	// Render the map based on the position of the player
 	void displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Player& player) const;
-
 	Location* getBuildingAt(int x, int y);
 
 	void addGroundItem(Item* item);
-
-	// Search and remove item from ground when picked up
-	Item* pickupItemAt(int playerX, int playerY);
-
-	// Helper for map rendering
-	Item* getGroundItemAt(int x, int y) const;
+	Item* pickupItemAt(int playerX, int playerY); // Search and remove item from ground when picked up
+	Item* getGroundItemAt(int x, int y) const; // Helper for map rendering
 };

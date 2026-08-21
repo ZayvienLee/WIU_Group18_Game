@@ -10,8 +10,8 @@ Medicine::Medicine()
 	y = -1;
 	symbol = 'm';
 	inInventory = true;
-	weight = 0;
-	quantity = 0;
+	weight = 500;
+	quantity = 1;
 }
 
 void Medicine::consume(Player& player)

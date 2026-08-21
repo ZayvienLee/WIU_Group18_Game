@@ -52,7 +52,7 @@ Player::~Player()
 			// Delete each item object inside the inventory
 			if (inventory[i] != nullptr)
 			{
-				delete[] inventory[i];
+				delete inventory[i];
 				inventory[i] = nullptr;
 			}
 		}
@@ -80,12 +80,6 @@ void Player::update()
 	thirst = std::max(0, thirst - 2);
 }
 
-void Player::restoreHunger(int amount)
-{
-	hunger = std::min(100, hunger + amount);
-	std::cout << name << " restored " << amount << " Hunger!" << std::endl;
-}
-
 bool Player::addItem(Item* item)
 {
 	if (itemCount >= maxItems)
@@ -110,12 +104,16 @@ bool Player::addItem(Item* item)
 
 void Player::removeItem(Item* item, int slot)
 {
-	if (inventory[slot] != nullptr)
+	int arrayIndex = slot - 1;
+	if (arrayIndex >= 0 && arrayIndex < maxItems)
 	{
-		if (inventory[slot] == item) // Check if the target item what we are looking for
+		if (inventory[arrayIndex] != nullptr)
 		{
-			inventory[slot] = nullptr; // Set to a null pointer
-			itemCount--;
+			if (inventory[arrayIndex] == item) // Check if the target item what we are looking for
+			{
+				inventory[arrayIndex] = nullptr; // Set to a null pointer
+				itemCount--;
+			}
 		}
 	}
 }
@@ -128,56 +126,43 @@ Item* Player::getItemByNumber(int slotNumber)
 	// Check the bounds and Null pointer
 	if (arrayIndex < 0 || arrayIndex >= maxItems)
 	{
-		std::cout << "Invalid Slot. Slot " << slotNumber << " is NOT a valid inventory slot number! Try Again." << std::endl;
 		return nullptr;
 	}
-	else if (inventory[arrayIndex] == nullptr)
-	{
-		std::cout << "[NO ITEM] No item exists at slot " << slotNumber << ". Try Again." << std::endl;
-		return nullptr;
-	}
-	else
-	{
-		return inventory[arrayIndex];
-	}
+	return inventory[arrayIndex];
 }
 
 // Display Inventory Contents
 void Player::showInventory() const
 {
-	std::cout
-		<< std::endl << "========================================" << std::endl
-		<< "          PLAYER INVENTORY (" << itemCount << "/" << maxItems << ")" << std::endl
+	std::cout << std::endl << "========================================" << std::endl
+		<< "          PLAYER INVENTORY (" << itemCount << "/" << maxItems << " Slots)" << std::endl
+		<< "          Total Weight: " << getTotalWeight() << " g" << std::endl
 		<< "========================================" << std::endl;
-
+	
 	if (itemCount == 0)
 	{
-		std::cout << "  (Your inventory is currently empty)" << std::endl;
+		std::cout << "  (Your inventory is empty)" << std::endl;
 	}
 	else
 	{
 		for (int i = 0; i < maxItems; ++i)
 		{
-			if (inventory[i] != nullptr) {
-				std::cout << "  [" << (i + 1) << "] " << "Name of Item"
-					<< " (Qty: " << "Quantity of item" << ")" << std::endl;;
+			if (inventory[i] != nullptr)
+			{
+				// Example:
+				// [1] Water ()  (Qty: 5, Wt: 20 g)
+				// Helps you to hydrate
+				std::cout << "  [" << (i + 1) << "] " << inventory[i]->getName()
+					<< " (Qty: " << inventory[i]->getQuantity()
+					<< ", Wt: " << (inventory[i]->getWeight() * inventory[i]->getQuantity()) << "g)"
+					<< "\n      \"" << inventory[i]->getDescription() << "\"\n";
 			}
-			else {
+			else
+			{
 				std::cout << "  [" << (i + 1) << "] --- Empty ---" << std::endl;
 			}
-
-			/*
-			if (inventory[i] != nullptr) {
-				std::cout << "  [" << (i + 1) << "] " << inventory[i]->getName()
-					<< " (Qty: " << inventory[i]->getQuantity() << ")\n";
-			}
-			else {
-				std::cout << "  [" << (i + 1) << "] --- Empty ---\n";
-			}
-			*/
 		}
 	}
-
 	std::cout << "========================================" << std::endl;
 }
 
@@ -189,6 +174,21 @@ int Player::getItemCount() const
 int Player::getInventoryCapacity() const
 {
 	return maxItems;
+}
+
+int Player::getTotalWeight() const
+{
+	int total = 0;
+
+	for (int i = 0; i < maxItems; ++i)
+	{
+		if (inventory[i] != nullptr)
+		{
+			total += (inventory[i]->getWeight() * inventory[i]->getQuantity());
+		}
+	}
+
+	return total;
 }
 
 std::string Player::getName() const

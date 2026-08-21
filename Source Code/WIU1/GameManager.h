@@ -15,28 +15,30 @@ private:
 	Player* player;
 
 	bool isInBuilding;
-
-	// Save the outdoor coordinates when stepping inside
-	int savedOutdoorX;
-	int savedOutdoorY;
+	int savedOutdoorX; // Save the outdoor coordinates of X when stepping inside
+	int savedOutdoorY; // Save the outdoor coordinates of Y when stepping inside
 	
 	StoryManager storyManager;
 
 public:
 	GameManager();
 	~GameManager();
+
 	void handlePlayerInput(char moveCommand); // Route movement depends on the player location
+	void checkGroundItemInspection(); // needed to check if the item is on the same space as the player after moving
+
 	void enterBuilding(Location* Building);
 	void exitBuilding();
 
 	/* To handle Item management */
-	void handleItemPickup(Player& player, Map& currentMap) const;
-	void handleItemDrop(Player& player, Map& currentMap, int slotNumber) const;
-	void rewardPlayerFromNPC(Player& player, Map& currentMap, Item* questReward) const;
+	void handleItemPickup();
+	void handleItemDrop(int slotNumber);
+	void rewardPlayerFromNPC(Player& playerRef, Map& mapRef, Item* questReward) const;
 
 	// Renders either the camera viewport or building interior
 	void render(int viewWidth = 15, int viewHeight = 9) const;
 
+	Player* getPlayer();
 	StoryManager& getStoryManager();
 	Map& getMap();
 };

@@ -5,13 +5,13 @@ Water::Water()
 {
 	waterPt = 40;
 	name = "Water";
-	description = "Decrease thirsty";
+	description = "Keep yourself Hydrated";
 	x = -1;
 	y = -1;
 	symbol = 'w';
 	inInventory = true;
-	weight = 0;
-	quantity = 0;
+	weight = 500;
+	quantity = 5;
 }
 
 void Water::consume(Player& player)

@@ -23,20 +23,17 @@ class Player : public Entity
 		~Player(); // Deconstructor to prevent memory leaks
 
 		void syncItemsLocation(int playerLocX, int playerLocY); // Move the items to the player accordingly
-
-		/* Overidden from Entity class */
-		void update() override;
-
-		/* Class Specific methods */
-		void restoreHunger(int amount);
+		void update() override; /* Overidden from Entity class */
 
 		/* To manage the Inventory */
 		bool addItem(Item* item); // Pick up item when have space. Don't if inventory full.
 		void removeItem(Item* item, int slot); // Drop item and remove it from the inventory.
 		Item* getItemByNumber(int slotNumber); // Get the item based on the number inside the inventory
 		void showInventory() const; // Display the Inventory Contents
+
 		int getItemCount() const;
 		int getInventoryCapacity() const;
+		int getTotalWeight() const;
 
 		/* Variable Accessors */
 		std::string getName() const;

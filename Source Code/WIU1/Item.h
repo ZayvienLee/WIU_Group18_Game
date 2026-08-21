@@ -2,7 +2,6 @@
 #include "GameObject.h"
 #include <string>
 
-
 class Entity; /* Forward declaration to avoid circular include */
 class Player; /* Forward declaration to avoid circular include */
 
@@ -21,14 +20,14 @@ public:
 	virtual ~Item() = default;
 
 	// Pure Virtual Function: Every Item type MUST define what happens when used
-	virtual bool use(Entity* target) = 0;
 	virtual void consume(Player& player) = 0;
 
 	int getQuantity() const;
+	void setQuantity(int qty);
+	int getWeight() const;
+	std::string getDescription() const;
 
-	// Synchronize item position to match player's coordinates
-	void syncWithPlayer(int playerX, int playerY);
-
+	void syncWithPlayer(int playerX, int playerY);// Synchronize item position to match player's coordinates
 	void setInInventory(bool status);
 	bool getInInventory() const;
 

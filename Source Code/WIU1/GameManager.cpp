@@ -89,6 +89,22 @@ void GameManager::handlePlayerInput(char moveCommand)
     }
 }
 
+void GameManager::checkGroundItemInspection()
+{
+    int pX = isInBuilding ? player->getIndoorX() : player->getOutdoorX();
+    int pY = isInBuilding ? player->getIndoorY() : player->getOutdoorY();
+    
+    Item* groundItem = outdoorMap.getGroundItemAt(pX, pY);
+    if (groundItem != nullptr)
+    {
+        std::cout << "\n[GROUND ITEM DETECTED]" << std::endl
+            << "  Name: " << groundItem->getName() << std::endl
+            << "  Qty: " << groundItem->getQuantity() << " | Weight: " << groundItem->getWeight() << " g" << std::endl
+            << "  Info: " << groundItem->getDescription() << std::endl
+            << "  -> Press [E] to pick up this item." << std::endl;
+    }
+}
+
 // Transition into a building
 void GameManager::enterBuilding(Location* building) {
     isInBuilding = true;
@@ -113,45 +129,44 @@ void GameManager::exitBuilding() {
     player->setOutdoorPosition(savedOutdoorX, savedOutdoorY);
 }
 
-void GameManager::handleItemPickup(Player& player, Map& currentMap) const
+void GameManager::handleItemPickup()
 {
-    int pX = isInBuilding ? player.getIndoorX() : player.getOutdoorX();
-    int pY = isInBuilding ? player.getIndoorY() : player.getOutdoorY();
+    int pX = isInBuilding ? player->getIndoorX() : player->getOutdoorX();
+    int pY = isInBuilding ? player->getIndoorY() : player->getOutdoorY();
 
-    Item* groundItem = currentMap.pickupItemAt(pX, pY);
-    if (groundItem != nullptr) {
-        // Sync item position to player coordinates
-        groundItem->syncWithPlayer(pX, pY);
-
-        if (player.addItem(groundItem))
-        {
-            std::cout << "[PICKUP] Added " << groundItem->getName() << " to inventory!" << std::endl;
-        }
-        else
-        {
-            // Inventory full: place back on the ground
-            currentMap.addGroundItem(groundItem);
-            std::cout << "[FULL] Inventory full! Could not pick up item." << std::endl;
-        }
+    Item* groundItem = outdoorMap.pickupItemAt(pX, pY);
+    if (groundItem == nullptr)
+    {
+        std::cout << "[PICKUP] No item to pick up here!" << std::endl;
+        return;
+    }
+    else if (player->addItem(groundItem))
+    {
+        std::cout << "[PICKUP] Added " << groundItem->getName() << " to inventory!" << std::endl;
+    }
+    else
+    {
+        // Inventory is full: place item back onto ground
+        outdoorMap.addGroundItem(groundItem);
+        std::cout << "[FULL] Inventory full! Could not pick up item." << std::endl;
     }
 }
 
-void GameManager::handleItemDrop(Player& player, Map& currentMap, int slotNumber) const
+void GameManager::handleItemDrop(int slotNumber)
 {
-    Item* droppedItem = player.getItemByNumber(slotNumber);
+    Item* droppedItem = player->getItemByNumber(slotNumber);
 
-    int xPosLoc = isInBuilding ? player.getIndoorX() : player.getOutdoorX();
-    int yPosLoc = isInBuilding ? player.getIndoorY() : player.getOutdoorY();
+    int xPosLoc = isInBuilding ? player->getIndoorX() : player->getOutdoorX();
+    int yPosLoc = isInBuilding ? player->getIndoorY() : player->getOutdoorY();
 
-    if (droppedItem != nullptr) {
-        // Remove from inventory array slot
-        player.removeItem(droppedItem, slotNumber);
-
-        // Set item position to player's current location
-        droppedItem->setPosition(xPosLoc, yPosLoc);
+    if (droppedItem != nullptr)
+    {
+        player->removeItem(droppedItem, slotNumber); // Remove from inventory array slot
+        droppedItem->setPosition(xPosLoc, yPosLoc); // Set item position to player's current location
 
         // Add to map ground list (now visible on rendering)
-        currentMap.addGroundItem(droppedItem);
+        // Also to handle the non-overlapping placement
+        outdoorMap.addGroundItem(droppedItem);
 
         std::cout << "[DROPPED] " << droppedItem->getName() << " placed on ground." << std::endl;
     }
@@ -161,22 +176,22 @@ void GameManager::handleItemDrop(Player& player, Map& currentMap, int slotNumber
     }
 }
 
-void GameManager::rewardPlayerFromNPC(Player& player, Map& currentMap, Item* questReward) const
+void GameManager::rewardPlayerFromNPC(Player& playerRef, Map& mapRef, Item* questReward) const
 {
     std::cout << "[NPC] 'Here, take this " << questReward->getName() << " for your help.'" << std::endl;
 
-    int xPosLoc = isInBuilding ? player.getIndoorX() : player.getOutdoorX();
-    int yPosLoc = isInBuilding ? player.getIndoorY() : player.getOutdoorY();
+    int xPosLoc = isInBuilding ? playerRef.getIndoorX() : playerRef.getOutdoorX();
+    int yPosLoc = isInBuilding ? playerRef.getIndoorY() : playerRef.getOutdoorY();
 
     // Item starts directly in inventory, matching player position based on the area the player is at
     questReward->syncWithPlayer(xPosLoc, yPosLoc);
     questReward->setInInventory(true);
 
-    if (!player.addItem(questReward)) {
+    if (!playerRef.addItem(questReward)) {
         // Fallback: If inventory is full when NPC gives reward, drop it at player's feet
         std::cout << "[NPC] 'Your bags are full. I'll leave it right here on the ground.'" << std::endl;
         questReward->setPosition(xPosLoc, yPosLoc);
-        currentMap.addGroundItem(questReward);
+        mapRef.addGroundItem(questReward);
     }
 }
 
@@ -192,6 +207,11 @@ void GameManager::render(int viewWidth, int viewHeight) const
         // Renders outdoor map viewport centered on player outdoor coordinates
         outdoorMap.displayMap(player->getOutdoorX(), player->getOutdoorY(), viewWidth, viewHeight, *player);
     }
+}
+
+Player* GameManager::getPlayer()
+{
+    return player;
 }
 
 StoryManager& GameManager::getStoryManager()

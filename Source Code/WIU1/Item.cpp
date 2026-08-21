@@ -12,7 +12,7 @@ Item::Item()
 	symbol = '?';
 	inInventory = false;
 	weight = 0;
-	quantity = 0;
+	quantity = 1;
 }
 
 Item::Item(std::string n, std::string desc, int xPos, int yPos, char sym, int wght, int qty, bool inInvent)
@@ -30,6 +30,21 @@ Item::Item(std::string n, std::string desc, int xPos, int yPos, char sym, int wg
 int Item::getQuantity() const
 {
 	return quantity;
+}
+
+void Item::setQuantity(int qty)
+{
+	quantity = qty;
+}
+
+int Item::getWeight() const
+{
+	return weight;
+}
+
+std::string Item::getDescription() const
+{
+	return description;
 }
 
 void Item::syncWithPlayer(int playerX, int playerY)
