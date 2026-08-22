@@ -45,23 +45,23 @@ void StoryManager::SetMessageRand()
 
 void StoryManager::RadioMessage()
 {
-    if (MessageRand = 0)
+    if (MessageRand == 0)
     {
         std::cout << "*Unintelligible Noises*" << std::endl;
     }
-    if (MessageRand = 1)
+    else if (MessageRand == 1)
     {
         std::cout << "The supermarket is now supplying food and water for now. We can't hold supplies and keep out zombies for long so get them ASAP if possible." << std::endl;
     }
-    if (MessageRand = 2)
+    else if (MessageRand == 2)
     {
         std::cout << "We have successfully cleared out the subway of zombies. We can't hold them out for long so please head there as soon as possible in an orderly manner." << std::endl;
     }
-    if (MessageRand = 3)
+    else if (MessageRand == 3)
     {
         std::cout << "Someone is trapped inside the hospital. They say they have a cure." << std::endl;
     }
-    if (MessageRand = 4)
+    else if (MessageRand == 4)
     {
         std::cout << "This is Dr. Chen. Do not trust anyone wearing a military uniform." << std::endl;
     }
@@ -73,7 +73,7 @@ StoryManager::StoryManager() :
        // Quests
 
        // QUEST NAME, QUEST DESCRIPTION
-       killZombieQuest("Kill 3 Zombies", "Kill 3 Zombies somewhere inthe city"),
+       killZombieQuest("Kill 3 Zombies", "Kill 3 Zombies somewhere in the city"),
 
        findMissingPersonQuest("Find Timothy", "Find Timothy somewhere in the city"),
     
@@ -230,6 +230,7 @@ int StoryManager::getCompletedQuestsCount() const {
     if (findPharmacyQuest.isCompleted()) {
         count++;
     }
+
     return count;
 
 }

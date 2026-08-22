@@ -148,7 +148,7 @@ void GameManager::handleItemPickup()
     int pX = isInBuilding ? player->getIndoorX() : player->getOutdoorX();
     int pY = isInBuilding ? player->getIndoorY() : player->getOutdoorY();
 
-    Item* groundItem = outdoorMap.pickupItemAt(pX, pY);
+    Item* groundItem = isInBuilding ? currentBuilding->pickupItemAt(pX, pY) : outdoorMap.pickupItemAt(pX, pY);
     if (groundItem == nullptr)
     {
         std::cout << "[PICKUP] No item to pick up here!" << std::endl;
@@ -161,7 +161,7 @@ void GameManager::handleItemPickup()
     else
     {
         // Inventory is full: place item back onto ground
-        outdoorMap.addGroundItem(groundItem);
+        isInBuilding ? currentBuilding->addFloorItem(groundItem) : outdoorMap.addGroundItem(groundItem);
         std::cout << "[FULL] Inventory full! Could not pick up item." << std::endl;
     }
 }
@@ -180,7 +180,7 @@ void GameManager::handleItemDrop(int slotNumber)
 
         // Add to map ground list (now visible on rendering)
         // Also to handle the non-overlapping placement
-        outdoorMap.addGroundItem(droppedItem);
+        isInBuilding ? currentBuilding->addFloorItem(droppedItem) : outdoorMap.addGroundItem(droppedItem);
 
         std::cout << "[DROPPED] " << droppedItem->getName() << " placed on ground." << std::endl;
     }
@@ -221,6 +221,11 @@ void GameManager::render(int viewWidth, int viewHeight) const
         // Renders outdoor map viewport centered on player outdoor coordinates
         outdoorMap.displayMap(player->getOutdoorX(), player->getOutdoorY(), viewWidth, viewHeight, *player);
     }
+}
+
+bool GameManager::getLocationStatus() const
+{
+    return isInBuilding;
 }
 
 Player* GameManager::getPlayer()

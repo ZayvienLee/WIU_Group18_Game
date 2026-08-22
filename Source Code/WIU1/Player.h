@@ -37,19 +37,16 @@ class Player : public Entity
 
 		/* Variable Accessors */
 		std::string getName() const;
-
-		/* Outdoor Position Accessors */
 		int getOutdoorX() const;
 		int getOutdoorY() const;
 		void setOutdoorPosition(int x, int y);
-
-		/* Indoor Position Accessors */
 		int getIndoorX() const;
 		int getIndoorY() const;
 		void setIndoorPosition(int x, int y);
-
 		int getHunger() const;
 		int getThirst() const;
+
+		/* Set the data of the variables */
 		void setHunger(int Hunger);
 		void setThirst(int Thirst);
 };

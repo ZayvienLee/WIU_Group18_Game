@@ -9,8 +9,8 @@
 class Map
 {
 private:
-	static const int HEIGHT = 37;
-	static const int WIDTH = 26;
+	static const int HEIGHT = 40;
+	static const int WIDTH = 41;
 
 	char baseGrid[HEIGHT][WIDTH]; // Static Layout (walls, buildings, paths)
 	char activeGrid[HEIGHT][WIDTH]; // Active layout (includes dynamic obstacles and the player)

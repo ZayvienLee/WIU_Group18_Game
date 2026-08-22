@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "NPC.h"
+#include "Item.h"
 
 class Location
 {
@@ -11,10 +12,14 @@ protected:
 
     int INTERIOR_HEIGHT;
     int INTERIOR_WIDTH;
+
     char** interiorGrid;
+    char** interiorGridActive;
 
     int spawnX; // Interior entry X coordinate
     int spawnY; // Interior entry Y coordinate
+
+    std::vector<Item*> floorItems; // Items on the floor of the location
 
     std::vector<NPC*> npcs;
 
@@ -34,6 +39,10 @@ public:
 	char getTileAt(int x, int y) const;
     void setTileAt(int x, int y, char tile);
     void displayInterior(int playerX, int playerY) const;
+
+    void addFloorItem(Item* item); // Search and remove item from ground when picked up
+    Item* pickupItemAt(int playerX, int playerY); // Helper for map rendering
+    Item* getFloorItemAt(int x, int y) const;
 	
     void addNPC(NPC* npc);
     NPC* getNPCat(int x, int y) const;

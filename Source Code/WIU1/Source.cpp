@@ -11,7 +11,7 @@
 #include <crtdbg.h>
 #include "Item.h"
 
-// This is needed to clear the console
+// This is needed to 'clear' the console
 static void clearConsole()
 {
     // \033[H moves the cursor to the top-left corner
@@ -73,6 +73,11 @@ int main(void)
             std::cout << "  [X]       - Quit Game" << std::endl;
             std::cout << "========================================" << std::endl << std::endl;
 
+            std::cin.ignore();
+            std::cin.get();
+
+            clearConsole();
+
             while (isRunning)
             {
 
@@ -108,11 +113,12 @@ int main(void)
                 }
                 else if (input == 'E')
                 {
-                    // Check door interaction first; if not entering, attempt pickup
-                    int pX = game.getPlayer()->getOutdoorX();
-                    int pY = game.getPlayer()->getOutdoorY();
+                    // Check door interaction first; if not entering,
+                    // Attempt pickup, depending on location
+                    int pX = game.getLocationStatus() ? game.getPlayer()->getIndoorX() : game.getPlayer()->getOutdoorX();
+                    int pY = game.getLocationStatus() ? game.getPlayer()->getIndoorY() : game.getPlayer()->getOutdoorY();
 
-                    if (game.getMap().isEntrance(pX, pY))
+                    if (!game.getLocationStatus() && game.getMap().isEntrance(pX, pY))
                     {
                         game.handlePlayerInput('E');
                     }
@@ -124,6 +130,11 @@ int main(void)
                 else if (input == 'I')
                 {
                     game.getPlayer()->showInventory();
+
+                    std::cin.ignore();
+                    std::cin.get();
+
+                    clearConsole();
                 }
                 else if (input == 'U')
                 {
@@ -152,6 +163,12 @@ int main(void)
                             }
                         }
                     }
+
+                    std::cin.ignore();
+                    std::cin.get();
+
+                    clearConsole();
+
                 }
                 else if (input == 'Q')
                 {
@@ -162,6 +179,11 @@ int main(void)
                     {
                         game.handleItemDrop(slot);
                     }
+
+                    std::cin.ignore();
+                    std::cin.get();
+
+                    clearConsole();
                 }
                 else
                 {

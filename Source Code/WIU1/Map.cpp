@@ -16,44 +16,47 @@ Map::Map()
 	// Needed to set up the map
 	const std::string layout[HEIGHT] =
 	{
-		// Each row has 26 columns
-		"**************************", // Row 1
-		"*________________________*", // Row 2
-		"*_####A.A##_____####S.S#_*", // Row 3
-		"*_#XXXXXXX#_____#XXXXXX#_*", // Row 4
-		"*_#XXXXXXX#_____#XXXXXX#_*", // Row 5
-		"*_#########_____########_*", // Row 6
-		"*________________________*", // Row 7
-		"*________________________*", // Row 8
-		"*__########_____#######__*", // Row 9
-		"*__#XXXXXXG_____HXXXXX#__*", // Row 10
-		"*__#XXXXXX._____.XXXXX#__*", // Row 11
-		"*__#XXXXXXG_____HXXXXX#__*", // Row 12
-		"*__########_____#######__*", // Row 13
-		"*________________________*", // Row 14
-		"*________________________*", // Row 15
-		"*_####P.S##______######__*", // Row 16
-		"*_#XXXXXXX#______#XXXX#__*", // Row 17
-		"*_#XXXXXXX#______#XXXX#__*", // Row 18
-		"*_#########______#XXXX#__*", // Row 19
-		"*________________#C.C##__*", // Row 20
-		"*________________________*", // Row 21
-		"*______#########_________*", // Row 22
-		"*______#XXXXXXX#_________*", // Row 23
-		"*______#XXXXXXX#_________*", // Row 24
-		"*______#XXXXXXX#_________*", // Row 25
-		"*______###F.F###_________*", // Row 26
-		"*________________________*", // Row 27
-		"*________________________*", // Row 28
-		"*_###########____________*", // Row 29
-		"*_#XXXXXXXXXM____________*", // Row 30
-		"*_#XXXXXXXXX.____________*", // Row 31
-		"*_#XXXXXXXXXM____________*", // Row 32
-		"*_###########____________*", // Row 33
-		"*________________________*", // Row 34
-		"*________________________*", // Row 35
-		"*________________________*", // Row 36
-		"********#V.V#*************"  // Row 37
+		// Each row has 41 columns
+		"*****************************************", // Row 1
+		"*_________________#####_________________*", // Row 2
+		"*_________________#XXX#_________________*", // Row 3
+		"*_________________#XXX#_________________*", // Row 4
+		"*_________________#A.A#_________________*", // Row 5
+		"*___________________________####S.S####_*", // Row 6
+		"*___________________________#XXXXXXXXX#_*", // Row 7
+		"*_#########_________________#XXXXXXXXX#_*", // Row 8
+		"*_#XXXXXXX#_________________#XXXXXXXXX#_*", // Row 9
+		"*_#XXXXXXX#_________________#XXXXXXXXX#_*", // Row 10
+		"*_#XXXXXXX#_________________###########_*", // Row 11
+		"*_#XXXXXXX#_____________________________*", // Row 12
+		"*_###XXX###__________________#########__*", // Row 13
+		"*___#C.C#____________________#XXXXXXX#__*", // Row 14
+		"*____________________________#XXXXXXX#__*", // Row 15
+		"*____________________________#XXXXXXX#__*", // Row 16
+		"*____________________________###G.G###__*", // Row 17
+		"*_______________________________________*", // Row 18
+		"*_______________________________________*", // Row 19
+		"*______________________###############__*", // Row 20
+		"*__###_#H.H#_###_______#XXXXXXXXXXXXX#__*", // Row 21
+		"*__#X###XXX###X#_______#XXXXXXXXXXXXX#__*", // Row 22
+		"*__#XXXXXXXXXXX#_______#XXXXXXXXXXXXX#__*", // Row 23
+		"*__#X###XXX###X#_______#XXXXXXXXXXXXX#__*", // Row 24
+		"*__###_#H.H#_###_______#XXXXXXXXXXXXX#__*", // Row 25
+		"*______________________#XXXXXXXXXXXXX#__*", // Row 26
+		"*______________________######M.M######__*", // Row 27
+		"*_______________________________________*", // Row 28
+		"*__####P.S##____________________________*", // Row 29
+		"*__#XXXXXXX#____________________________*", // Row 30
+		"*__#XXXXXXX#____________________________*", // Row 31
+		"*__#########____________________________*", // Row 32
+		"*_______________________________________*", // Row 33
+		"*______________________________#######__*", // Row 34
+		"*______________________________#XXXXX#__*", // Row 35
+		"*______________________________#XXXXX#__*", // Row 36
+		"*______________________________##F.F##__*", // Row 37
+		"*_______________________________________*", // Row 38
+		"*_______________________________________*", // Row 39
+		"******************#V.V#******************"  // Row 40
 	};
 
 	// Assign all of the characters of the map
@@ -81,7 +84,8 @@ Map::Map()
 // Delete ALL of the dynamic locations and ground items, free up the memory
 Map::~Map()
 {
-	for (Location* loc : locations) {
+	for (Location* loc : locations)
+	{
 		delete loc;
 	}
 	locations.clear();
@@ -125,8 +129,8 @@ void Map::generateRandomObstacles(int obstacleCount)
 	// The lines needed to randomize the numbers
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution distrXPos(0, WIDTH);
-	std::uniform_int_distribution distrYPos(0, HEIGHT);
+	std::uniform_int_distribution distrXPos(0, WIDTH - 1);
+	std::uniform_int_distribution distrYPos(0, HEIGHT - 1);
 
 	// The array of the obstacle types to be randomly placed and allocated
 	char obstacleTypes[] = { 'C', 'r', '~' };
@@ -135,8 +139,8 @@ void Map::generateRandomObstacles(int obstacleCount)
 	int placed = 0;
 	while (placed < obstacleCount)
 	{
-		int randY = distrXPos(gen);
-		int randX = distrYPos(gen);
+		int randX = distrXPos(gen);
+		int randY = distrYPos(gen);
 
 		// Check to ensure that the tile is a street tile '_'
 		if (baseGrid[randY][randX] == '_')
@@ -220,16 +224,13 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Pl
 
 			Item* grounditem = getGroundItemAt(c, r);
 
-			if (r == playerY && c == playerX) // To render the Player
-			{
+			if (r == playerY && c == playerX) { // To render the Player
 				std::cout << player.getSymbol() << " "; // Player character
 			}
-			else if (grounditem != nullptr)
-			{
+			else if (grounditem != nullptr) {
 				std::cout << grounditem->getSymbol() << " "; // Item to render
 			}
-			else
-			{
+			else {
 				std::cout << activeGrid[r][c] << " "; // Tile + space
 			}	
 		}

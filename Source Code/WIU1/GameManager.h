@@ -38,6 +38,8 @@ public:
 	// Renders either the camera viewport or building interior
 	void render(int viewWidth = 15, int viewHeight = 9) const;
 
+	/* Variable Acessors */
+	bool getLocationStatus() const;
 	Player* getPlayer();
 	StoryManager& getStoryManager();
 	Map& getMap();
