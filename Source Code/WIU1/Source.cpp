@@ -29,6 +29,7 @@ static void instructionControls()
     std::cout << "  [W/A/S/D] - Move Up / Left / Down / Right" << std::endl;
     std::cout << "  [E]       - Interact / Enter Door / Pick Up Item" << std::endl;
     std::cout << "  [I]       - Open Inventory" << std::endl;
+    std::cout << "  [G]       - Open Quest Menu" << std::endl;
     std::cout << "  [F]       - Attack" << std::endl;
     std::cout << "  [U]       - Use / Consume Item / Equip Weapon" << std::endl;
     std::cout << "  [Q]       - Drop Item" << std::endl;
