@@ -18,7 +18,19 @@ std::string Quest::getDescription() const {
     return questDescription;
 }
 
-Quest::Quest(std::string name, std::string description) : Completed(false), questName(name), questDescription(description)
+Quest::Quest(std::string name, std::string description) : Completed(false), questName(name), questDescription(description), accepted(false)
 {
 
 }
+
+void Quest::accept()
+{
+    accepted = true;
+}
+
+bool Quest::isAccepted() const
+{
+    return accepted;
+}
+
+

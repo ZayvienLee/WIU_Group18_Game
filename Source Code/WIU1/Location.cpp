@@ -363,9 +363,12 @@ NPC* Location::getNPCat(int x, int y) const
 {
     for (NPC* npc : npcs)
     {
-        if (npc->getX() == x && npc->getY() == y)
+        if (npc != nullptr)
         {
-            return npc;
+            if (npc->getX() == x && npc->getY() == y)
+            {
+                return npc;
+            }
         }
     }
 

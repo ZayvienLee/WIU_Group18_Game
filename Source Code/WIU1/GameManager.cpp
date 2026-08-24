@@ -382,3 +382,36 @@ Map& GameManager::getMap()
 {
     return outdoorMap;
 }
+
+void GameManager::interactWithNPC()
+{
+    if (!isInBuilding || currentBuilding == nullptr)
+    {
+        return;
+    }
+
+    int playerX = player->getIndoorX();
+    int playerY = player->getIndoorY();
+
+    NPC* npc = currentBuilding->getNPCat(playerX + 1, playerY);
+
+    if (npc == nullptr)
+    {
+        npc = currentBuilding->getNPCat(playerX - 1, playerY);
+    }
+
+    if (npc == nullptr)
+    {
+        npc = currentBuilding->getNPCat(playerX, playerY + 1);
+    }
+
+    if (npc == nullptr)
+    {
+        npc = currentBuilding->getNPCat(playerX, playerY - 1);
+    }
+
+    if (npc != nullptr)
+    {
+        npc->talk();
+    }
+}

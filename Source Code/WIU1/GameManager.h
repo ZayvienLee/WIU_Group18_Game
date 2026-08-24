@@ -33,6 +33,8 @@ public:
 	void checkZombieAttacks();
 	void updateZombiePositions();
 
+	void interactWithNPC();
+
 	/* If the player does not find or use the supplies, penalise the player */
 	void applySurvivalPenalties();
 

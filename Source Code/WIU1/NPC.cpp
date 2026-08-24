@@ -6,14 +6,12 @@
  
 void NPC::talk() {
     std::cout << name << ": " << dialogue << std::endl;   
-    if (quest != nullptr) {
-        if (!quest ->isCompleted()) {
-            std::cout << "Quest: " << quest->getName() << std::endl;
-            std::cout << quest->getDescription() << std::endl;
-        }
-        else {
-            std::cout << "Quest Completed!" << std::endl;
-        }
+    if (quest != nullptr)
+    {
+        quest->accept();
+
+        std::cout << "Quest: " << quest->getName() << std::endl;
+        std::cout << quest->getDescription() << std::endl;
     }
 }
 
