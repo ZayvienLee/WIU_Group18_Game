@@ -12,9 +12,10 @@ Weapon::Weapon()
 	symbol = '?';
 	atkRange = 1;
 	wDamage = 0;
+	weight = 0;
 }
 
-Weapon::Weapon(std::string n, std::string desc, char sym, int atk, int atkR)
+Weapon::Weapon(std::string n, std::string desc, char sym, int atk, int atkR, int wght)
 {
 	// GameObject var
 	name = n;
@@ -23,6 +24,7 @@ Weapon::Weapon(std::string n, std::string desc, char sym, int atk, int atkR)
 
 	atkRange = atkR;
 	wDamage = atk;
+	weight = wght;
 }
 
 void Weapon::consume(Player& player)

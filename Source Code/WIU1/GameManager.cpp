@@ -17,8 +17,8 @@ GameManager::GameManager()
     player = new Player("Name", "The Player", 'P', 100, 100, 100, 100, 10, true, 20);
 	isInBuilding = false;
 	currentBuilding = nullptr;
-	savedOutdoorX = 0;
-	savedOutdoorY = 0;
+	savedOutdoorX = 20;
+	savedOutdoorY = 4;
 
     Location* supermarket = outdoorMap.getLocationByName("Supermarket");
     Location* policeStation = outdoorMap.getLocationByName("Police Station");
@@ -42,10 +42,7 @@ GameManager::GameManager()
         currentBuilding = apartment;
         player->setIndoorPosition(apartment->getSpawnX(), apartment->getSpawnY());
 
-        savedOutdoorX = player->getOutdoorX();
-        savedOutdoorY = player->getOutdoorY();
-
-        player->equipWeapon(new Weapon("Knife", "A rusty kitchen knife. Reliable up close.", 'k', 15, 1));
+        player->equipWeapon(new Weapon("Knife", "A rusty kitchen knife. Reliable up close.", 'k', 15, 1, 200));
     }
 }
 
@@ -110,7 +107,7 @@ void GameManager::handlePlayerInput(char moveCommand)
             
             // Decrease hunger and thirst accordingly
             player->setHunger(player->getHunger() - 1);
-            player->setThirst(player->getThirst() - 2);
+            player->setThirst(player->getThirst() - 1);
             applySurvivalPenalties();
         }
         else if (outdoorMap.getZombieAt(nextX, nextY) != nullptr)
@@ -132,16 +129,7 @@ void GameManager::handlePlayerInput(char moveCommand)
         }
     }
 
-    // Check if the player is in building or not
-    if (isInBuilding) {
-        if (currentBuilding != nullptr)
-        {
-            currentBuilding->updateZombies(player->getIndoorX(), player->getIndoorY());
-        }
-    }
-    else {
-        outdoorMap.updateZombies(player->getOutdoorX(), player->getOutdoorY());
-    }
+    updateZombiePositions();
 
     checkZombieAttacks();       // zombies now next to you get a hit in
     applySurvivalPenalties();   // starving/dehydrated damage, if applicable
@@ -152,14 +140,14 @@ void GameManager::checkGroundItemInspection()
     int pX = isInBuilding ? player->getIndoorX() : player->getOutdoorX();
     int pY = isInBuilding ? player->getIndoorY() : player->getOutdoorY();
     
-    Item* groundItem = outdoorMap.getGroundItemAt(pX, pY);
+    Item* groundItem = isInBuilding ? currentBuilding->getFloorItemAt(pX, pY) : outdoorMap.getGroundItemAt(pX, pY);
     if (groundItem != nullptr)
     {
-        std::cout << std::endl << "[GROUND ITEM DETECTED]" << std::endl
-            << "  Name: " << groundItem->getName() << std::endl
-            << "  Qty: " << groundItem->getQuantity() << " | Weight: " << groundItem->getWeight() << " g" << std::endl
-            << "  Info: " << groundItem->getDescription() << std::endl
-            << "  -> Press [E] to pick up this item." << std::endl;
+        std::cout << std::endl << "[ITEM DETECTED]" << std::endl
+                               << "  Name: " << groundItem->getName() << std::endl
+                               << "  Qty: " << groundItem->getQuantity() << " | Weight: " << groundItem->getWeight() << " g" << std::endl
+                               << "  Info: " << groundItem->getDescription() << std::endl
+                               << "  -> Press [E] to pick up this item." << std::endl;
     }
 }
 
@@ -209,6 +197,19 @@ void GameManager::checkZombieAttacks()
             player->takeDamage(zombie->getAttackPower());
             std::cout << "[ZOMBIE] " << zombie->getName() << " claws at you!" << std::endl;
         }
+    }
+}
+
+void GameManager::updateZombiePositions()
+{
+    // Check if the player is in building or not
+    if (isInBuilding) {
+        if (currentBuilding != nullptr) {
+            currentBuilding->updateZombies(player->getIndoorX(), player->getIndoorY());
+        }
+    }
+    else {
+        outdoorMap.updateZombies(player->getOutdoorX(), player->getOutdoorY());
     }
 }
 
@@ -336,11 +337,16 @@ void GameManager::handlePlayerAttack(char choice)
                 std::cout << "[ATTACK] " << target->getName() << " is attacked!" << std::endl;
                 std::cout << "Damage: " << weapon->getDamage() << ", " << target->getName() << " Health: " << target->getHealth() << std::endl;
             }
+
+            checkZombieAttacks();   // zombies now next to you get a hit on the player
+
             return;
         }
         if (!isRanged) break; // melee only checks the one adjacent tile
     }
     std::cout << "[ATTACK] No target in range." << std::endl;
+
+    updateZombiePositions();
 }
 
 void GameManager::render(int viewWidth, int viewHeight) const

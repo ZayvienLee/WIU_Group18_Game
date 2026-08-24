@@ -29,8 +29,7 @@ public:
 	Map();
 	~Map();
 
-	void generateRandomObstacles(int obstacleCount);
-	void spawnRandomItems(int itemCount);
+	void generateRandomLayout(int obstacleCount, int itemCount);
 	void spawnRandomZombies(int zombieCount);
 	void randomizeAllLocationLayouts(int furnitureCount = 5, int itemCount = 4);
 
@@ -41,6 +40,8 @@ public:
 	bool isWalkable(int x, int y) const;
 	bool isEntrance(int x, int y) const;
 	char getTileAt(int x, int y) const;
+
+	
 
 	// Render the map based on the position of the player
 	void displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Player& player) const;

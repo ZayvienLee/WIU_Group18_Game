@@ -31,6 +31,7 @@ public:
 	void exitBuilding();
 
 	void checkZombieAttacks();
+	void updateZombiePositions();
 
 	/* If the player does not find or use the supplies, penalise the player */
 	void applySurvivalPenalties();

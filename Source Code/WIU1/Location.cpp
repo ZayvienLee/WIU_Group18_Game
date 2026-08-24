@@ -10,6 +10,8 @@
 #include "Food.h"
 #include "Water.h"
 #include "Medicine.h"
+#include "Ammunition.h"
+#include <cstdlib>
 
 Location::Location(std::string locName, char locSymbol, int sizeX, int sizeY)
 {
@@ -96,7 +98,7 @@ void Location::spawnRandomZombies(int zombieCount)
         int randomX = distrX(gen);
         int randomY = distrY(gen);
 
-        if (isIndoorWalkable(randomX, randomY) && getZombieAt(randomX, randomY) == nullptr && getNPCat(randomX, randomY) == nullptr)
+        if (interiorGrid[randomY][randomX] == '.' && getZombieAt(randomX, randomY) == nullptr && getNPCat(randomX, randomY) == nullptr)
         {
             zombies.push_back(new Zombie("Zombie", "A shambling infected corpse.", randomX, randomY, 'Z', 40, 40, 10));
             spawned++;
@@ -117,7 +119,7 @@ void Location::updateZombies(int playerX, int playerY)
         {
             zombie->moveRandomly(0, 0, INTERIOR_WIDTH - 1, INTERIOR_HEIGHT - 1, [this, playerX, playerY](int x, int y)
                 {
-                    return isIndoorWalkable(x, y) && getZombieAt(x, y) == nullptr && !(x == playerX && y == playerY);
+                    return isIndoorWalkable(x, y) && getZombieAt(x, y) == nullptr && getNPCat(x, y) == nullptr && !(x == playerX && y == playerY);
                 }
             );
         }
@@ -265,20 +267,23 @@ int Location::getSpawnY() const
 
 void Location::generateRandomLayout(int furnitureCount, int itemCount)
 {
-    std::random_device rd; std::mt19937 gen(rd());
+    std::random_device rd;
+    std::mt19937 gen(rd());
     std::uniform_int_distribution<int> distrX(1, INTERIOR_WIDTH - 2);
     std::uniform_int_distribution<int> distrY(1, INTERIOR_HEIGHT - 2);
 
-    int placed = 0;
     int attempts = 0;
+
+    int placed = 0;
     while (placed < furnitureCount && attempts < furnitureCount)
     {
-        int rx = distrX(gen), ry = distrY(gen);
-        bool isSpawn = (rx == spawnX && ry == spawnY);
-        if (!isSpawn && interiorGrid[ry][rx] == '.')
+        int randomX = distrX(gen);
+        int randomY = distrY(gen);
+        bool isSpawn = (randomX == spawnX && randomY == spawnY);
+        if (!isSpawn && interiorGrid[randomY][randomX] == '.')
         {
-            interiorGrid[ry][rx] = '#';
-            interiorGridActive[ry][rx] = '#';
+            interiorGrid[randomY][randomX] = '#';
+            interiorGridActive[randomY][randomX] = '#';
             placed++;
             attempts = 0;
         }
@@ -291,15 +296,56 @@ void Location::generateRandomLayout(int furnitureCount, int itemCount)
     int spawned = 0;
     while (spawned < itemCount && attempts < itemCount)
     {
-        int rx = distrX(gen), ry = distrY(gen);
-        if (isIndoorWalkable(rx, ry) && getFloorItemAt(rx, ry) == nullptr)
+        int randomX = distrX(gen);
+        int randomY = distrY(gen);
+        if (isIndoorWalkable(randomX, randomY) && getFloorItemAt(randomX, randomY) == nullptr)
         {
-            int type = rand() % 3;
-            Item* newItem = (type == 0) ? (Item*)new Food() : (type == 1) ? (Item*)new Water() : (Item*)new Medicine();
-            newItem->setPosition(rx, ry);
-            addFloorItem(newItem);
-            spawned++;
-            attempts = 0;
+            // Next check to ensure that it is not adjacent to an entrance to the building '.'
+            // Nor near any obstacles.
+            // Also ensuring that no obstacles encase an item and make it in accessable
+            bool nearDoorOrObstacle = false;
+            for (int dy = -1; dy <= 1; ++dy)
+            {
+                for (int dx = -1; dx <= 1; ++dx)
+                {
+                    int checkY = randomX + dy;
+                    int checkX = randomY + dx;
+
+                    if (checkY >= 0 && checkY < INTERIOR_HEIGHT && checkX >= 0 && checkX < INTERIOR_WIDTH)
+                    {
+                        if (interiorGridActive[checkY][checkX] == 'E' ||
+                            interiorGridActive[checkY][checkX] == 'C' ||
+                            interiorGridActive[checkY][checkX] == 'r' ||
+                            interiorGridActive[checkY][checkX] == '~'
+                            )
+                        {
+                            nearDoorOrObstacle = true;
+                        }
+                    }
+                }
+            }
+
+            // If it is safe, add the item into the map
+            if (!nearDoorOrObstacle)
+            {
+                int type = rand() % 4;
+                Item* newItem = nullptr;
+
+                if (type == 0) newItem = new Food();
+                else if (type == 1) newItem = new Water();
+                else if (type == 2) newItem = new Medicine();
+                else if (type == 3) newItem = new Ammunition();
+
+                newItem->setPosition(randomX, randomY);
+                addFloorItem(newItem);
+
+                spawned++;
+                attempts = 0;
+            }
+            else
+            {
+                attempts++;
+            }
         }
         else
         {

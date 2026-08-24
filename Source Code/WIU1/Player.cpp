@@ -152,14 +152,14 @@ void Player::showInventory() const
 
 	if (equippedWeapon != nullptr)
 	{
-		std::cout << "Weapon: " << equippedWeapon->getName() << std::endl;
-		std::cout << "Attack Power: " << equippedWeapon->getDamage() << std::endl;
-		std::cout << "Attack Range: " << equippedWeapon->getAtkRange() << std::endl;
+		std::cout << "  Weapon: " << equippedWeapon->getName() << std::endl;
+		std::cout << "  Attack Power: " << equippedWeapon->getDamage() << std::endl;
+		std::cout << "  Attack Range: " << equippedWeapon->getAtkRange() << std::endl;
 		
 	}
 	else
 	{
-		std::cout << "There is no weapon equipped" << std::endl;
+		std::cout << "  There is no weapon equipped" << std::endl;
 	}
 
 	std::cout << "========================================" << std::endl;
