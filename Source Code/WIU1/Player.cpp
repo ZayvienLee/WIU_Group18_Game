@@ -87,7 +87,7 @@ void Player::update()
 {
 	// Player turn logic: decrease hunger/thirst every step
 	hunger = std::max(0, hunger - 1);
-	thirst = std::max(0, thirst - 2);
+	thirst = std::max(0, thirst - 1);
 }
 
 bool Player::addItem(Item* item)

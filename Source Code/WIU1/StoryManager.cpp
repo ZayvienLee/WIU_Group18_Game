@@ -4,6 +4,9 @@
 #include "NPC.h"
 #include "Quest.h"
 #include <string>
+constexpr auto RESET = "\033[37m";
+constexpr auto RED = "\033[31m";      /* Red */
+constexpr auto GREEN = "\033[32m";      /* Green */
 
 void StoryManager::storyIntro() {
 
@@ -183,6 +186,68 @@ void StoryManager::Dialogue()
         }
 
     }
+}
+
+void StoryManager::showQuests() const
+{
+    std::cout << "========================================" << std::endl
+              << "          Quests          " << std::endl
+              << "========================================" << std::endl;
+
+    bool hasQuest = false;
+
+    if (killZombieQuest.isAccepted())
+    {
+        hasQuest = true;
+        
+        std::cout << "1. " << killZombieQuest.getName() << std::endl;
+        std::cout << "   " << killZombieQuest.getDescription() << std::endl;
+
+        if (killZombieQuest.isCompleted())
+        {
+            std::cout << "   Status: " << GREEN << "Completed" << RESET << std::endl << std::endl;
+        }
+        else
+        {
+            std::cout << "   Status: " << RED << "Incomplete" << RESET << std::endl << std::endl;
+        }
+    }
+
+    if (findMissingPersonQuest.isAccepted())
+    {
+        hasQuest = true;
+
+        std::cout << "2. " << findMissingPersonQuest.getName() << std::endl;
+        std::cout << "   " << findMissingPersonQuest.getDescription() << std::endl;
+
+        if (findMissingPersonQuest.isCompleted())
+        {
+            std::cout << "   Status: " << GREEN << "Completed" << RESET << std::endl << std::endl;
+        }
+        else
+        {
+            std::cout << "   Status: " << RED << "Incomplete" << RESET << std::endl << std::endl;
+        }
+    }
+
+    if (findPharmacyQuest.isAccepted())
+    {
+        hasQuest = true;
+
+        std::cout << "3. " << findPharmacyQuest.getName() << std::endl;
+        std::cout << "   " << findPharmacyQuest.getDescription() << std::endl;
+
+        if (findPharmacyQuest.isCompleted())
+        {
+            std::cout << "   Status: " << GREEN << "Completed" << RESET << std::endl << std::endl;
+        }
+        else
+        {
+            std::cout << "   Status: " << RED << "Incomplete" << RESET << std::endl << std::endl;
+        }
+    }
+
+    
 }
 
 NPC& StoryManager::getZombieNPC()

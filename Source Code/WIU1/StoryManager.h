@@ -37,6 +37,8 @@ public:
 
     int getCompletedQuestsCount() const;
 
+    void showQuests() const;
+
     void storyIntro(); // gives intro to the story before game starts
 
 	int GetTimeToNextEvent() const;

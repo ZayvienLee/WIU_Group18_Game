@@ -168,6 +168,8 @@ int main(void)
                     {
                         game.handleItemPickup();
                     }
+
+                    game.interactWithNPC();
                 }
                 else if (input == 'I')
                 {
@@ -288,6 +290,14 @@ int main(void)
                         }
                     }
 
+                    std::cin.ignore();
+                    std::cin.get();
+
+                    clearConsole();
+                }
+                else if (input == 'G')
+                {
+                    game.getStoryManager().showQuests();
                     std::cin.ignore();
                     std::cin.get();
 
