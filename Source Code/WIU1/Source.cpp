@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 #include "Item.h"
+#include "Weapon.h"
 
 // This is needed to 'clear' the console
 static void clearConsole()
@@ -17,6 +18,54 @@ static void clearConsole()
     // \033[H moves the cursor to the top-left corner
    // \033[2J clears the entire screen
     std::cout << "\033[H\033[2J" << std::flush;
+}
+
+static void instructionControls()
+{
+    /*std::cout << "========================================" << std::endl;
+    std::cout << "    POST-APOCALYPTIC SURVIVAL GAME      " << std::endl;
+    std::cout << "========================================" << std::endl;*/
+    std::cout << "Controls:" << std::endl;
+    std::cout << "  [W/A/S/D] - Move Up / Left / Down / Right" << std::endl;
+    std::cout << "  [E]       - Interact / Enter Door / Pick Up Item" << std::endl;
+    std::cout << "  [I]       - Open Inventory" << std::endl;
+    std::cout << "  [F]       - Attack" << std::endl;
+    std::cout << "  [U]       - Use / Consume Item / Equip Weapon" << std::endl;
+    std::cout << "  [Q]       - Drop Item" << std::endl;
+    std::cout << "  [T]       - Controls & Legend" << std::endl;
+    std::cout << "  [O]       - Unequip Weapon" << std::endl;
+    std::cout << "  [X]       - Quit Game" << std::endl;
+    std::cout << "========================================" << std::endl << std::endl;
+
+    std::cout << std::endl;
+}
+
+static void showLegend()
+{
+    std::cout << std::endl
+        << "Legend: " << std::endl
+        << "  P - Player"
+        << "  Z - Zombie" << std::endl
+        << "  A - Apartment (Starting Point)"
+        << "  S - Supermarket" << std::endl
+        << "  H - Hospital" << std::endl
+        << "  PS - Police Station" << std::endl
+        << "  C - School" << std::endl
+        << "  G - Gas Station" << std::endl
+        << "  F - Safe House" << std::endl
+        << "  M - Military Base" << std::endl
+        << "  E - Evacuation Point" << std::endl
+        << "  f - Food" << std::endl
+        << "  w - Water" << std::endl
+        << "  m - Medicine" << std::endl
+        << "  a - Ammunition" << std::endl
+        << "  g - Gun / Firearm" << std::endl
+        << "  k - Knife" << std::endl
+        << "  i - Iris / NPC" << std::endl
+        << "  h - Hank (Police Officer) / NPC" << std::endl
+        << "  d - Dr. Chen / NPC" << std::endl;
+
+    std::cout << std::endl;
 }
 
 int main(void)
@@ -32,8 +81,8 @@ int main(void)
                   << std::endl;
 
         std::cout << "1. Start Game" << std::endl
-            << "2. Legend" << std::endl
-            << "Enter your choice: ";
+                  << "2. Legend" << std::endl
+                  << "Enter your choice: ";
 
         std::cin >> choice;
 
@@ -60,18 +109,10 @@ int main(void)
             // Add the obstacles to the map
             game.getMap().generateRandomObstacles(30); // Stating the number of obstacles to include
             game.getMap().spawnRandomItems(15); // Stating the number of items to include
+            game.getMap().randomizeAllLocationLayouts(6, 4);
+            game.getMap().spawnRandomZombies(10);
 
-            std::cout << "========================================" << std::endl;
-            std::cout << "    POST-APOCALYPTIC SURVIVAL GAME      " << std::endl;
-            std::cout << "========================================" << std::endl;
-            std::cout << "Controls:" << std::endl;
-            std::cout << "  [W/A/S/D] - Move Up / Left / Down / Right" << std::endl;
-            std::cout << "  [E]       - Interact / Enter Door / Pick Up Item" << std::endl;
-            std::cout << "  [I]       - Open Inventory" << std::endl;
-            std::cout << "  [U]       - Use / Consume Item" << std::endl;
-            std::cout << "  [Q]       - Drop Item" << std::endl;
-            std::cout << "  [X]       - Quit Game" << std::endl;
-            std::cout << "========================================" << std::endl << std::endl;
+            instructionControls();
 
             std::cin.ignore();
             std::cin.get();
@@ -91,7 +132,7 @@ int main(void)
                     << "/100 | Quests Done: " << game.getStoryManager().getCompletedQuestsCount() << "/3" << std::endl; // For Quest UI
 
                 // Prompt user input
-                std::cout << "Enter command (W/A/S/D/E/I/U/Q/X): ";
+                std::cout << "Enter command (W/A/S/D/E/I/U/Q/T/O/X): ";
 
                 // Get the input from the player
                 input = _getch();
@@ -110,6 +151,7 @@ int main(void)
                 else if (input == 'W' || input == 'A' || input == 'S' || input == 'D')
                 {
                     game.handlePlayerInput(input);
+                    game.checkGroundItemInspection();
                 }
                 else if (input == 'E')
                 {
@@ -136,31 +178,67 @@ int main(void)
 
                     clearConsole();
                 }
+                else if (input == 'F')
+                {
+                    std::cout << "[ATTACK] Choose which direction to attack (W/A/S/D): " << std::endl;
+                    char attackInput = _getch();
+
+                    if (attackInput == 'W' || attackInput == 'A' || attackInput == 'S' || attackInput == 'D')
+                    {
+                        game.handlePlayerAttack(attackInput);
+                    }
+                    else
+                    {
+                        std::cout << "[INVALID] Attack Input not recognized." << std::endl;
+                    }
+
+                    std::cin.ignore();
+                    std::cin.get();
+
+                    clearConsole();
+                }
                 else if (input == 'U')
                 {
                     game.getPlayer()->showInventory();
-                    std::cout << std::endl << "Enter item slot number to USE (1-10): ";
+                    std::cout << std::endl << "Enter item slot number to USE / EQUIP (1-10): ";
                     int slot;
                     if (std::cin >> slot)
                     {
                         Item* target = game.getPlayer()->getItemByNumber(slot);
                         if (target != nullptr)
                         {
-                            target->consume(*(game.getPlayer()));
-                            target->setQuantity(target->getQuantity() - 1); // Used one item
+                            // Check if the item is a weapon or not
+                            Weapon* weaponTarget = dynamic_cast<Weapon*>(target);
 
-                            
-                            if (target->getQuantity() > 0)
+                            if (weaponTarget)
                             {
-                                std::cout << "[USED] Consumed one instance of Item successfully!" << std::endl;
-                            }
-                            else if (target->getQuantity() <= 0)
-                            {
-                                game.getPlayer()->removeItem(target, slot);
-                                delete target; // Clean memory after single-use consumption
+                                game.getPlayer()->removeItem(weaponTarget, slot);
+                                game.getPlayer()->equipWeapon(weaponTarget);
 
-                                std::cout << "[ALL USED] All instances of Item have been completely consumed." << std::endl;
+                                std::cout << "[EQUIPPED] Successfully Equipped Weapon: " << weaponTarget->getName() << std::endl;
                             }
+                            else
+                            {
+                                target->consume(*(game.getPlayer()));
+                                target->setQuantity(target->getQuantity() - 1); // Used one item
+
+
+                                if (target->getQuantity() > 0)
+                                {
+                                    std::cout << "[USED] Consumed one instance of Item successfully!" << std::endl;
+                                }
+                                else if (target->getQuantity() <= 0)
+                                {
+                                    game.getPlayer()->removeItem(target, slot);
+                                    delete target; // Clean memory after single-use consumption
+
+                                    std::cout << "[ALL USED] All instances of Item have been completely consumed." << std::endl;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            std::cout << "[NO ITEM] No Item exists in this slot." << std::endl;
                         }
                     }
 
@@ -185,12 +263,48 @@ int main(void)
 
                     clearConsole();
                 }
+                else if (input == 'T')
+                {
+                    instructionControls();
+
+                    showLegend();
+
+                    std::cin.ignore();
+                    std::cin.get();
+
+                    clearConsole();
+                }
+                else if (input == 'O')
+                {
+                    Weapon* weaponTarget = game.getPlayer()->getWeapon();
+
+                    if (weaponTarget != nullptr)
+                    {
+                        if (game.getPlayer()->unequipWeapon()) {
+                            std::cout << "[UNEQUIPPED] " << weaponTarget->getName() << " added to inventory!" << std::endl;
+                        }
+                        else {
+                            std::cout << "[INVENTORY FULL] Could not unequip." << std::endl;
+                        }
+                    }
+
+                    std::cin.ignore();
+                    std::cin.get();
+
+                    clearConsole();
+                }
                 else
                 {
                     std::cout << "[INVALID] Input not recognized." << std::endl;
                 }
 
                 std::cout << std::endl;
+
+                if (!game.getPlayer()->getIsAlive())
+                {
+                    std::cout << std::endl << "You have died. GAME OVER." << std::endl;
+                    isRunning = false;
+                }
             }
 
             menuRunning = false;
@@ -198,29 +312,7 @@ int main(void)
 
         else if (choice == '2') {
 
-            std::cout << std::endl
-                    << "P - Player"
-                    << "Z - Zombie" << std::endl
-                    << "A - Apartment / Starting Point"
-                    << "S - Supermarket" << std::endl
-                    << "H - Hospital" << std::endl
-                    << "PS - Police Station" << std::endl
-                    << "C - School" << std::endl
-                    << "G - Gas Station" << std::endl
-                    << "F - Safe House" << std::endl
-                    << "M - Military Base" << std::endl
-                    << "E - Evacuation Point" << std::endl
-                    << "f - Food" << std::endl
-                    << "w - Water" << std::endl
-                    << "m - Medicine" << std::endl
-                    << "a - Ammunition" << std::endl
-                    << "g - Gun / Firearm" << std::endl
-                    << "k - Knife" << std::endl
-                    << "i - Iris / NPC" << std::endl
-                    << "h - Hank (Police Officer) / NPC" << std::endl
-                    << "d - Dr. Chen / NPC" << std::endl;
-
-            std::cout << std::endl;
+            showLegend();
 
             std::cout << "Press Enter to exit back to main menu..." << std::endl;
 

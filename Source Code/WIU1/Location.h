@@ -3,6 +3,7 @@
 #include <vector>
 #include "NPC.h"
 #include "Item.h"
+#include "Zombie.h"
 
 class Location
 {
@@ -23,16 +24,27 @@ protected:
 
     std::vector<NPC*> npcs;
 
+    std::vector<Zombie*> zombies;
+
 
 public:
     Location(std::string locName = "Unknown Location", char locSymbol = '?', int sizeX = 10, int sizeY = 10);
     virtual ~Location();
+
+    /* Zombies */
+    void spawnRandomZombies(int zombieCount);
+    void updateZombies(int playerX, int playerY);
+    Zombie* getZombieAt(int x, int y) const;
+    void removeZombie(Zombie* target);
 
     // Variable Accessors
     std::string getName() const;
     char getSymbol() const;
     int getSpawnX() const;
     int getSpawnY() const;
+
+    /* Generate Layout */
+    void generateRandomLayout(int furnitureCount, int itemCount);
 
     // Logic & Query Methods
 	bool isIndoorWalkable(int x, int y) const;

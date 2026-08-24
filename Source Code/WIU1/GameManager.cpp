@@ -6,6 +6,8 @@
 #include <cctype>
 #include "Item.h"
 #include "StoryManager.h"
+#include "Weapon.h"
+#include "Zombie.h"
 
 // To add later on with the map and location, etc. To fix the warning and errors and add the 
 // necessary logic for each of them.
@@ -30,6 +32,20 @@ GameManager::GameManager()
     }
     if (hospital != nullptr) {
         hospital->addNPC(&storyManager.getpharmacyNPC());
+    }
+
+    /* The player gets the necessary placements in the game accordingly. */
+    Location* apartment = outdoorMap.getLocationByName("Apartment");
+    if (apartment != nullptr)
+    {
+        isInBuilding = true;
+        currentBuilding = apartment;
+        player->setIndoorPosition(apartment->getSpawnX(), apartment->getSpawnY());
+
+        savedOutdoorX = player->getOutdoorX();
+        savedOutdoorY = player->getOutdoorY();
+
+        player->equipWeapon(new Weapon("Knife", "A rusty kitchen knife. Reliable up close.", 'k', 15, 1));
     }
 }
 
@@ -56,7 +72,7 @@ void GameManager::handlePlayerInput(char moveCommand)
         else if (moveCommand == 'D') nextX++; // Right
 
         // Check building interior collision
-        if (currentBuilding->isIndoorWalkable(nextX, nextY))
+        if (currentBuilding->isIndoorWalkable(nextX, nextY) && currentBuilding->getZombieAt(nextX, nextY) == nullptr)
         {
             player->setIndoorPosition(nextX, nextY);
 
@@ -66,6 +82,10 @@ void GameManager::handlePlayerInput(char moveCommand)
                 std::cout << "[INFO] Exiting building..." << std::endl;
                 exitBuilding();
             }
+        }
+        else if (currentBuilding->getZombieAt(nextX, nextY) != nullptr)
+        {
+            std::cout << "[BLOCKED] A zombie is in your way! Press [F] to attack it." << std::endl;
         }
         else
         {
@@ -85,10 +105,20 @@ void GameManager::handlePlayerInput(char moveCommand)
         else if (moveCommand == 'D') nextX++; // Right
 
         // Check outdoor collision
-        if (outdoorMap.isWalkable(nextX, nextY)) {
+        if (outdoorMap.isWalkable(nextX, nextY) && outdoorMap.getZombieAt(nextX, nextY) == nullptr) {
             player->setOutdoorPosition(nextX, nextY);
+            
+            // Decrease hunger and thirst accordingly
+            player->setHunger(player->getHunger() - 1);
+            player->setThirst(player->getThirst() - 2);
+            applySurvivalPenalties();
         }
-        else {
+        else if (outdoorMap.getZombieAt(nextX, nextY) != nullptr)
+        {
+            std::cout << "[BLOCKED] A zombie is in your way! Press [F] to attack it." << std::endl;
+        }
+        else
+        {
             std::cout << "[COLLISION] Cannot move there!" << std::endl;
         }
 
@@ -101,6 +131,20 @@ void GameManager::handlePlayerInput(char moveCommand)
             }
         }
     }
+
+    // Check if the player is in building or not
+    if (isInBuilding) {
+        if (currentBuilding != nullptr)
+        {
+            currentBuilding->updateZombies(player->getIndoorX(), player->getIndoorY());
+        }
+    }
+    else {
+        outdoorMap.updateZombies(player->getOutdoorX(), player->getOutdoorY());
+    }
+
+    checkZombieAttacks();       // zombies now next to you get a hit in
+    applySurvivalPenalties();   // starving/dehydrated damage, if applicable
 }
 
 void GameManager::checkGroundItemInspection()
@@ -111,7 +155,7 @@ void GameManager::checkGroundItemInspection()
     Item* groundItem = outdoorMap.getGroundItemAt(pX, pY);
     if (groundItem != nullptr)
     {
-        std::cout << "\n[GROUND ITEM DETECTED]" << std::endl
+        std::cout << std::endl << "[GROUND ITEM DETECTED]" << std::endl
             << "  Name: " << groundItem->getName() << std::endl
             << "  Qty: " << groundItem->getQuantity() << " | Weight: " << groundItem->getWeight() << " g" << std::endl
             << "  Info: " << groundItem->getDescription() << std::endl
@@ -141,6 +185,38 @@ void GameManager::exitBuilding() {
 
     // Restore outdoor position
     player->setOutdoorPosition(savedOutdoorX, savedOutdoorY);
+}
+
+void GameManager::checkZombieAttacks()
+{
+    int pX = isInBuilding ? player->getIndoorX() : player->getOutdoorX();
+    int pY = isInBuilding ? player->getIndoorY() : player->getOutdoorY();
+
+    // 4-directional adjacency — any zombie standing next to you gets a free hit each turn.
+    // Being surrounded by more than one is deliberately worse: each adjacent zombie hits.
+    int dx[] = { 0, 0, -1, 1 };
+    int dy[] = { -1, 1, 0, 0 };
+
+    for (int i = 0; i < 4; ++i)
+    {
+        int checkX = pX + dx[i];
+        int checkY = pY + dy[i];
+
+        Zombie* zombie = isInBuilding ? currentBuilding->getZombieAt(checkX, checkY) : outdoorMap.getZombieAt(checkX, checkY);
+
+        if (zombie != nullptr)
+        {
+            player->takeDamage(zombie->getAttackPower());
+            std::cout << "[ZOMBIE] " << zombie->getName() << " claws at you!" << std::endl;
+        }
+    }
+}
+
+void GameManager::applySurvivalPenalties()
+{
+    if (player->getHunger() <= 10 || player->getThirst() <= 10) {
+        player->takeDamage(2);
+    }
 }
 
 void GameManager::handleItemPickup()
@@ -207,6 +283,64 @@ void GameManager::rewardPlayerFromNPC(Player& playerRef, Map& mapRef, Item* ques
         questReward->setPosition(xPosLoc, yPosLoc);
         mapRef.addGroundItem(questReward);
     }
+}
+
+void GameManager::handlePlayerAttack(char choice)
+{
+    Weapon* weapon = player->getWeapon();
+    if (weapon == nullptr) {
+        std::cout << "[ATTACK] No weapon was equipped! Press [U] to equip a weapon." << std::endl;
+        return;
+    }
+
+    // Based on choice, set direction accordingly
+    int dx = 0, dy = 0;
+    if (choice == 'W') dy = -1;
+    else if (choice == 'S') dy = 1;
+    else if (choice == 'A') dx = -1;
+    else if (choice == 'D') dx = 1;
+    else return;
+
+    bool isRanged = weapon->getAtkRange() > 1;
+    if (isRanged && player->getAmmoCount() <= 0) {
+        std::cout << "[ATTACK] Out of ammo!" << std::endl;
+        return;
+    }
+
+    // The initial position of the player,
+    // which will check if the weapon's range is close to a zombie.
+    int positionX = isInBuilding ? player->getIndoorX() : player->getOutdoorX();
+    int positionY = isInBuilding ? player->getIndoorY() : player->getOutdoorY();
+
+    // Based on the range, the steps will increment
+    for (int step = 1; step <= weapon->getAtkRange(); ++step)
+    {
+        int currentX = positionX + (dx * step);
+        int currentY = positionY + (dy * step);
+
+        // Search the adjacent tiles to check if a zombie is nearby
+        Zombie* target = isInBuilding ? currentBuilding->getZombieAt(currentX, currentY) : outdoorMap.getZombieAt(currentX, currentY);
+
+        if (target != nullptr)
+        {
+            target->takeDamage(weapon->getDamage());
+            if (isRanged) player->setAmmoCount(player->getAmmoCount() - 1);
+
+            if (!target->getIsAlive())
+            {
+                std::cout << "[KILL] " << target->getName() << " destroyed!" << std::endl;
+                isInBuilding ? currentBuilding->removeZombie(target) : outdoorMap.removeZombie(target);
+            }
+            else
+            {
+                std::cout << "[ATTACK] " << target->getName() << " is attacked!" << std::endl;
+                std::cout << "Damage: " << weapon->getDamage() << ", " << target->getName() << " Health: " << target->getHealth() << std::endl;
+            }
+            return;
+        }
+        if (!isRanged) break; // melee only checks the one adjacent tile
+    }
+    std::cout << "[ATTACK] No target in range." << std::endl;
 }
 
 void GameManager::render(int viewWidth, int viewHeight) const

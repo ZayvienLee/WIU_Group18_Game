@@ -1,5 +1,8 @@
 #include <string>
+#include <iostream>
 #include "Weapon.h"
+#include "Item.h"
+#include "Player.h"
 
 // Default values will be assigned to unknown weapon
 Weapon::Weapon()
@@ -20,6 +23,12 @@ Weapon::Weapon(std::string n, std::string desc, char sym, int atk, int atkR)
 
 	atkRange = atkR;
 	wDamage = atk;
+}
+
+void Weapon::consume(Player& player)
+{
+	// Weapons are meant to be equipped, NOT consumed
+	std::cout << "[WEAPON] You can't consume a weapon. Press [U] again to equip it instead." << std::endl;
 }
 
 int Weapon::getAtkRange() const

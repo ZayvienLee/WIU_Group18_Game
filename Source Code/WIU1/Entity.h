@@ -23,6 +23,7 @@ public:
 
     // Common shared Functions
     virtual void takeDamage(int damage);
+    virtual void attack(int attack, Entity* entity);
 
     void heal(int amount);
 
@@ -30,5 +31,7 @@ public:
     // Accessory Functions
     bool getIsAlive() const;
     int getHealth() const;
+    int getAttackPower() const;
+
     void setHealth(int Health);
 };

@@ -3,14 +3,18 @@
 #include "Item.h"
 #include <string>
 
+class Weapon; // Forward declaration to avoid circular include
+
 class Player : public Entity
 {
 	private:
 		int hunger; // Affected by the action the player takes, starts losing health when critically low
 		int thirst; // How hydrated the player is. Affected by the action the player takes, starts losing health when critically low
+		int ammoCount; // Number of bullets that the player has
 
 		// Inventory system to hold the items
-		Item** inventory; // Dynamically allocate array of  Item pointer
+		Item** inventory; // Dynamically allocate array of Item pointer as inventory
+		Weapon* equippedWeapon; // This pointer is what the player equips
 		int maxItems; // The maximum number of items that the player can carry
 		int itemCount; // The current number of items held
 
@@ -30,12 +34,11 @@ class Player : public Entity
 		void removeItem(Item* item, int slot); // Drop item and remove it from the inventory.
 		Item* getItemByNumber(int slotNumber); // Get the item based on the number inside the inventory
 		void showInventory() const; // Display the Inventory Contents
-
+		
+		/* Variable Accessors */
 		int getItemCount() const;
 		int getInventoryCapacity() const;
 		int getTotalWeight() const;
-
-		/* Variable Accessors */
 		std::string getName() const;
 		int getOutdoorX() const;
 		int getOutdoorY() const;
@@ -45,8 +48,13 @@ class Player : public Entity
 		void setIndoorPosition(int x, int y);
 		int getHunger() const;
 		int getThirst() const;
+		int getAmmoCount() const;
+		Weapon* getWeapon() const;
 
 		/* Set the data of the variables */
+		void equipWeapon(Weapon* weapon);
+		bool unequipWeapon();
 		void setHunger(int Hunger);
 		void setThirst(int Thirst);
+		void setAmmoCount(int amount);
 };

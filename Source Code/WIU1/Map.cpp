@@ -10,6 +10,8 @@
 #include "Player.h"
 #include <cstdlib>
 #include <random>
+#include "Zombie.h"
+#include <memory>
 
 Map::Map()
 {
@@ -79,6 +81,11 @@ Map::Map()
 	locations.push_back(new Location("Safe House", 'F', 9, 9));
 	locations.push_back(new Location("Military Base", 'M', 25, 20));
 	locations.push_back(new Location("Evacuation Point", 'V'));
+
+	for (Location* location : locations)
+	{
+		location->spawnRandomZombies(3);
+	}
 }
 
 // Delete ALL of the dynamic locations and ground items, free up the memory
@@ -94,6 +101,12 @@ Map::~Map()
 		delete item;
 	}
 	groundItems.clear();
+
+	for (Zombie* zombie : zombies)
+	{
+		delete zombie;
+	}
+	zombies.clear();
 }
 
 bool Map::isWalkable(int x, int y) const
@@ -137,7 +150,8 @@ void Map::generateRandomObstacles(int obstacleCount)
 	int numTypes = sizeof(obstacleTypes) / sizeof(obstacleTypes[0]);
 
 	int placed = 0;
-	while (placed < obstacleCount)
+	int attempts = 0;
+	while (placed < obstacleCount && attempts < obstacleCount)
 	{
 		int randX = distrXPos(gen);
 		int randY = distrYPos(gen);
@@ -171,7 +185,16 @@ void Map::generateRandomObstacles(int obstacleCount)
 				char chosenObstacle = obstacleTypes[rand() % numTypes];
 				activeGrid[randY][randX] = chosenObstacle;
 				placed++;
+				attempts = 0;
 			}
+			else
+			{
+				attempts++;
+			}
+		}
+		else
+		{
+			attempts++;
 		}
 	}
 }
@@ -184,7 +207,8 @@ void Map::spawnRandomItems(int itemCount)
 	std::uniform_int_distribution<int> distrY(0, HEIGHT - 1);
 
 	int spawned = 0;
-	while (spawned < itemCount)
+	int attempts = 0;
+	while (spawned < itemCount && attempts < itemCount)
 	{
 		int randX = distrX(gen);
 		int randY = distrY(gen);
@@ -202,8 +226,67 @@ void Map::spawnRandomItems(int itemCount)
 			newItem->setPosition(randX, randY);
 			addGroundItem(newItem);
 			spawned++;
+			attempts = 0;
+		}
+		else
+		{
+			attempts++;
 		}
 	}
+}
+
+void Map::spawnRandomZombies(int zombieCount)
+{
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> distrX(0, WIDTH - 1), distrY(0, HEIGHT - 1);
+
+	int spawned = 0;
+	int attempts = 0;
+	while (spawned < zombieCount && attempts < zombieCount)
+	{
+		int randomX = distrX(gen);
+		int randomY = distrY(gen);
+
+		if (isWalkable(randomX, randomY) && getZombieAt(randomX, randomY) == nullptr)
+		{
+			zombies.push_back(new Zombie("Zombie", "A shambling infected corpse.", randomX, randomY, 'Z', 40, 40, 10));
+			spawned++;
+			attempts = 0;
+		}
+		else
+		{
+			attempts++;
+		}
+	}
+}
+
+void Map::randomizeAllLocationLayouts(int furnitureCount, int itemCount)
+{
+	for (Location* loc : locations) {
+		loc->generateRandomLayout(furnitureCount, itemCount);
+	}
+}
+
+void Map::updateZombies(int playerX, int playerY)
+{
+	for (Zombie* zombie : zombies)
+	{
+		if (zombie->getIsAlive())
+		{
+			zombie->moveRandomly(0, 0, WIDTH - 1, HEIGHT - 1, [this, playerX, playerY](int x, int y)
+                {
+                    return isWalkable(x, y) && getZombieAt(x, y) == nullptr && !(x == playerX && y == playerY);
+                }
+            );
+		}
+	}
+}
+
+void Map::removeZombie(Zombie * target)
+{
+	zombies.erase(std::remove(zombies.begin(), zombies.end(), target), zombies.end());
+	delete target;
 }
 
 void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Player& player) const
@@ -223,9 +306,13 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Pl
 		{
 
 			Item* grounditem = getGroundItemAt(c, r);
+			Zombie* zombie = getZombieAt(c, r);
 
 			if (r == playerY && c == playerX) { // To render the Player
 				std::cout << player.getSymbol() << " "; // Player character
+			}
+			else if (zombie != nullptr) {
+				std::cout << zombie->getSymbol() << " "; // Render the Zombie
 			}
 			else if (grounditem != nullptr) {
 				std::cout << grounditem->getSymbol() << " "; // Item to render
@@ -323,6 +410,18 @@ Location* Map::getLocationByName(std::string name)
 		if (location->getName() == name)
 		{
 			return location;
+		}
+	}
+	return nullptr;
+}
+
+Zombie* Map::getZombieAt(int x, int y) const
+{
+	for (Zombie* zombie : zombies)
+	{
+		if (zombie->getIsAlive() && zombie->getX() == x && zombie->getY() == y)
+		{
+			return zombie;
 		}
 	}
 	return nullptr;

@@ -1,8 +1,15 @@
-#include "Location.h"
 #include <string>
 #include <iostream>
+#include <random>
+#include <memory>
+#include <algorithm>
+#include "Location.h"
 #include "NPC.h"
 #include "Item.h"
+#include "Zombie.h"
+#include "Food.h"
+#include "Water.h"
+#include "Medicine.h"
 
 Location::Location(std::string locName, char locSymbol, int sizeX, int sizeY)
 {
@@ -68,6 +75,71 @@ Location::~Location()
         delete item;
     }
     floorItems.clear();
+    
+    for (Zombie* zombie : zombies)
+    {
+        delete zombie;
+    }
+    zombies.clear();
+}
+
+void Location::spawnRandomZombies(int zombieCount)
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> distrX(0, INTERIOR_WIDTH - 1), distrY(0, INTERIOR_HEIGHT - 1);
+
+    int spawned = 0;
+    int attempts = 0;
+    while (spawned < zombieCount && attempts < zombieCount)
+    {
+        int randomX = distrX(gen);
+        int randomY = distrY(gen);
+
+        if (isIndoorWalkable(randomX, randomY) && getZombieAt(randomX, randomY) == nullptr && getNPCat(randomX, randomY) == nullptr)
+        {
+            zombies.push_back(new Zombie("Zombie", "A shambling infected corpse.", randomX, randomY, 'Z', 40, 40, 10));
+            spawned++;
+            attempts = 0;
+        }
+        else
+        {
+            attempts++;
+        }
+    }
+}
+
+void Location::updateZombies(int playerX, int playerY)
+{
+    for (Zombie* zombie : zombies)
+    {
+        if (zombie->getIsAlive())
+        {
+            zombie->moveRandomly(0, 0, INTERIOR_WIDTH - 1, INTERIOR_HEIGHT - 1, [this, playerX, playerY](int x, int y)
+                {
+                    return isIndoorWalkable(x, y) && getZombieAt(x, y) == nullptr && !(x == playerX && y == playerY);
+                }
+            );
+        }
+    }
+}
+
+Zombie* Location::getZombieAt(int x, int y) const
+{
+    for (Zombie* zombie : zombies)
+    {
+        if (zombie->getIsAlive() && zombie->getX() == x && zombie->getY() == y)
+        {
+            return zombie;
+        }
+    }
+    return nullptr;
+}
+
+void Location::removeZombie(Zombie* target)
+{
+    zombies.erase(std::remove(zombies.begin(), zombies.end(), target), zombies.end());
+    delete target;
 }
 
 bool Location::isIndoorWalkable(int x, int y) const
@@ -97,9 +169,13 @@ void Location::displayInterior(int playerX, int playerY) const {
 
             NPC* npc = getNPCat(c, r);
             Item* floorItem = getFloorItemAt(c, r);
+            Zombie* zombie = getZombieAt(c, r);
 
             if (r == playerY && c == playerX) { // To render the Player
                 std::cout << "P "; // Player inside building
+            }
+            else if (zombie != nullptr) {
+                std::cout << zombie->getSymbol() << " "; // Render the Zombie
             }
             else if (npc != nullptr) { // NPC
                 std::cout << npc->getSymbol() << " ";
@@ -185,6 +261,51 @@ int Location::getSpawnX() const
 int Location::getSpawnY() const
 {
     return spawnY;
+}
+
+void Location::generateRandomLayout(int furnitureCount, int itemCount)
+{
+    std::random_device rd; std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> distrX(1, INTERIOR_WIDTH - 2);
+    std::uniform_int_distribution<int> distrY(1, INTERIOR_HEIGHT - 2);
+
+    int placed = 0;
+    int attempts = 0;
+    while (placed < furnitureCount && attempts < furnitureCount)
+    {
+        int rx = distrX(gen), ry = distrY(gen);
+        bool isSpawn = (rx == spawnX && ry == spawnY);
+        if (!isSpawn && interiorGrid[ry][rx] == '.')
+        {
+            interiorGrid[ry][rx] = '#';
+            interiorGridActive[ry][rx] = '#';
+            placed++;
+            attempts = 0;
+        }
+        else
+        {
+            attempts++;
+        }
+    }
+
+    int spawned = 0;
+    while (spawned < itemCount && attempts < itemCount)
+    {
+        int rx = distrX(gen), ry = distrY(gen);
+        if (isIndoorWalkable(rx, ry) && getFloorItemAt(rx, ry) == nullptr)
+        {
+            int type = rand() % 3;
+            Item* newItem = (type == 0) ? (Item*)new Food() : (type == 1) ? (Item*)new Water() : (Item*)new Medicine();
+            newItem->setPosition(rx, ry);
+            addFloorItem(newItem);
+            spawned++;
+            attempts = 0;
+        }
+        else
+        {
+            attempts++;
+        }
+    }
 }
 
 void Location::addNPC(NPC* npc)

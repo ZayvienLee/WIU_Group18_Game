@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include "Weapon.h"
 
 Player::Player(std::string n, std::string desc, char sym, int h, int maxH, int hung, int thir, int atk, bool alive, int capacity)
 {
@@ -22,6 +23,7 @@ Player::Player(std::string n, std::string desc, char sym, int h, int maxH, int h
 	thirst = thir;
 	maxItems = capacity;
 	itemCount = 0;
+	ammoCount = 0;
 
 	// Set up the coordinates
 	outdoorX = 1;
@@ -41,6 +43,8 @@ Player::Player(std::string n, std::string desc, char sym, int h, int maxH, int h
 	{
 		inventory[i] = nullptr;
 	}
+
+	equippedWeapon = nullptr;
 }
 
 Player::~Player()
@@ -60,6 +64,12 @@ Player::~Player()
 		// Delete the inventory array
 		delete[] inventory;
 		inventory = nullptr;
+	}
+
+	if (equippedWeapon != nullptr)
+	{
+		delete equippedWeapon;
+		equippedWeapon = nullptr;
 	}
 }
 
@@ -134,10 +144,25 @@ Item* Player::getItemByNumber(int slotNumber)
 // Display Inventory Contents
 void Player::showInventory() const
 {
-	std::cout << std::endl << "========================================" << std::endl
+	std::cout << std::endl
+		<< "========================================" << std::endl
 		<< "          PLAYER INVENTORY (" << itemCount << "/" << maxItems << " Slots)" << std::endl
 		<< "          Total Weight: " << getTotalWeight() << " g" << std::endl
 		<< "========================================" << std::endl;
+
+	if (equippedWeapon != nullptr)
+	{
+		std::cout << "Weapon: " << equippedWeapon->getName() << std::endl;
+		std::cout << "Attack Power: " << equippedWeapon->getDamage() << std::endl;
+		std::cout << "Attack Range: " << equippedWeapon->getAtkRange() << std::endl;
+		
+	}
+	else
+	{
+		std::cout << "There is no weapon equipped" << std::endl;
+	}
+
+	std::cout << "========================================" << std::endl;
 	
 	if (itemCount == 0)
 	{
@@ -242,12 +267,59 @@ int Player::getThirst() const
 	return thirst;
 }
 
+int Player::getAmmoCount() const
+{
+	return ammoCount;
+}
+
+Weapon* Player::getWeapon() const
+{
+	return equippedWeapon;
+}
+
+void Player::equipWeapon(Weapon* weapon)
+{
+	if (weapon == nullptr)
+	{
+		return;
+	}
+
+	if (equippedWeapon != nullptr)
+	{
+		if (!addItem(equippedWeapon)) {
+			std::cout << "[EQUIP] Inventory full / Can't swap weapons." << std::endl;
+			return; // abort: keep old weapon equipped, don't touch the new one's caller
+		}
+	}
+
+	equippedWeapon = weapon;
+}
+
+bool Player::unequipWeapon()
+{
+	if (equippedWeapon == nullptr) {
+		return false;
+	}
+	if (itemCount >= maxItems) {
+		return false;
+	}
+
+	addItem(equippedWeapon);
+	equippedWeapon = nullptr;
+	return true;
+}
+
 void Player::setHunger(int Hunger)
 {
-	hunger = Hunger;
+	hunger = std::max(0, std::min(100, Hunger));
 }
 
 void Player::setThirst(int Thirst)
 {
-	thirst = Thirst;
+	thirst = std::max(0, std::min(100, Thirst));
+}
+
+void Player::setAmmoCount(int amount)
+{
+	ammoCount = amount;
 }

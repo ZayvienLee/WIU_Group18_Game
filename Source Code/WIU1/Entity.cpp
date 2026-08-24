@@ -43,6 +43,14 @@ void Entity::takeDamage(int damage)
 	}
 }
 
+void Entity::attack(int attack, Entity* entity)
+{
+	if (entity != nullptr)
+	{
+		entity->takeDamage(attack);
+	}
+}
+
 void Entity::heal(int amount)
 {
 	health = std::min(maxHealth, health + amount);
@@ -57,6 +65,11 @@ bool Entity::getIsAlive() const
 int Entity::getHealth() const
 {
 	return health;
+}
+
+int Entity::getAttackPower() const
+{
+	return attackPower;
 }
 
 void Entity::setHealth(int Health)

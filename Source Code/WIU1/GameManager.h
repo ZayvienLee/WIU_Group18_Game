@@ -30,10 +30,16 @@ public:
 	void enterBuilding(Location* Building);
 	void exitBuilding();
 
+	void checkZombieAttacks();
+
+	/* If the player does not find or use the supplies, penalise the player */
+	void applySurvivalPenalties();
+
 	/* To handle Item management */
 	void handleItemPickup();
 	void handleItemDrop(int slotNumber);
 	void rewardPlayerFromNPC(Player& playerRef, Map& mapRef, Item* questReward) const;
+	void handlePlayerAttack(char choice);
 
 	// Renders either the camera viewport or building interior
 	void render(int viewWidth = 15, int viewHeight = 9) const;

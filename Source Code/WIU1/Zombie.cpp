@@ -1,7 +1,9 @@
 #include "Zombie.h"
 #include <string>
+#include <random>
+#include <functional>
 
-Zombie::Zombie(std::string n, std::string desc, char sym, int h, int maxH, int atk, bool alive)
+Zombie::Zombie(std::string n, std::string desc, int x, int y, char sym, int h, int maxH, int atk, bool alive)
 {
 	// GameObject variables
 	name = n;
@@ -23,7 +25,29 @@ Zombie::Zombie(std::string n, std::string desc, char sym, int h, int maxH, int a
 
 void Zombie::update()
 {
-	
+	// Movement is driven externally
+}
+
+void Zombie::moveRandomly(int minX, int minY, int maxX, int maxY, std::function<bool(int, int)> isWalkable)
+{
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> dirDist(0, 4); // Based on the number, the zombie will stay or change position
+
+	// Randomize the zombie's position
+	int dir = dirDist(gen);
+	int newX = positionX, newY = positionY;
+
+	if (dir == 1) newY--;
+	else if (dir == 2) newY++;
+	else if (dir == 3) newX--;
+	else if (dir == 4) newX++;
+
+	if (newX >= minX && newX <= maxX && newY >= minY && newY <= maxY && isWalkable(newX, newY))
+	{
+		positionX = newX;
+		positionY = newY;
+	}
 }
 
 std::string Zombie::getZName() const

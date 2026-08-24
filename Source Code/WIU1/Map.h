@@ -1,10 +1,11 @@
 #pragma once
+#include <vector>
+#include <string>
 #include "Location.h"
 #include "Item.h"
-#include <vector>
 #include "Player.h"
-#include"NPC.h"
-#include <string>
+#include "NPC.h"
+#include "Zombie.h"
 
 class Map
 {
@@ -22,12 +23,19 @@ private:
 
 	std::vector<NPC*> npcs;
 
+	std::vector<Zombie*> zombies; // The enemies to kill
+
 public:
 	Map();
 	~Map();
 
 	void generateRandomObstacles(int obstacleCount);
 	void spawnRandomItems(int itemCount);
+	void spawnRandomZombies(int zombieCount);
+	void randomizeAllLocationLayouts(int furnitureCount = 5, int itemCount = 4);
+
+	void updateZombies(int playerX, int playerY);
+	void removeZombie(Zombie* target);
 
 	/* Core Logic Checks */
 	bool isWalkable(int x, int y) const;
@@ -42,4 +50,5 @@ public:
 	Item* pickupItemAt(int playerX, int playerY); // Search and remove item from ground when picked up
 	Item* getGroundItemAt(int x, int y) const; // Helper for map rendering
 	Location* getLocationByName(std::string name);
+	Zombie* getZombieAt(int x, int y) const;
 };
