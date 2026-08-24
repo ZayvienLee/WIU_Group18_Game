@@ -31,6 +31,7 @@ static void instructionControls()
     std::cout << "  [I]       - Open Inventory" << std::endl;
     std::cout << "  [F]       - Attack" << std::endl;
     std::cout << "  [U]       - Use / Consume Item / Equip Weapon" << std::endl;
+    std::cout << "  [G]       - Show Quests" << std::endl;
     std::cout << "  [Q]       - Drop Item" << std::endl;
     std::cout << "  [T]       - Controls & Legend" << std::endl;
     std::cout << "  [O]       - Unequip Weapon" << std::endl;
@@ -311,8 +312,11 @@ int main(void)
                 }
                 else if (input == 'G')
                 {
+                    clearConsole();
+
                     game.getStoryManager().showQuests();
-                    std::cin.ignore();
+                    
+                    std::cin.clear();
                     std::cin.get();
 
                     clearConsole();
