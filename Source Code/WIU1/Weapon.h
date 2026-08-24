@@ -12,7 +12,7 @@ private:
 
 public:
     Weapon();
-    Weapon(std::string n, std::string desc, char sym, int atk, int atkR);
+    Weapon(std::string n, std::string desc, char sym, int atk, int atkR, int wght);
 
     void consume(Player& player) override;
 

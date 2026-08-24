@@ -1,17 +1,19 @@
-#include "Map.h"
-#include <iostream>
 #include <string>
+#include <memory>
+#include <cstdlib>
 #include <algorithm>
+#include <iostream>
+#include <random>
+
+#include "Map.h"
 #include "Location.h"
 #include "Item.h"
 #include "Food.h"
 #include "Water.h"
 #include "Medicine.h"
 #include "Player.h"
-#include <cstdlib>
-#include <random>
 #include "Zombie.h"
-#include <memory>
+#include "Ammunition.h"
 
 Map::Map()
 {
@@ -84,7 +86,10 @@ Map::Map()
 
 	for (Location* location : locations)
 	{
-		location->spawnRandomZombies(3);
+		if (location != nullptr && location->getSymbol() != 'A')
+		{
+			location->spawnRandomZombies(5); // 5 Zombies are present in each location EXCEPT Apartment
+		}
 	}
 }
 
@@ -137,13 +142,13 @@ char Map::getTileAt(int x, int y) const
 	return activeGrid[y][x];
 }
 
-void Map::generateRandomObstacles(int obstacleCount)
+void Map::generateRandomLayout(int obstacleCount, int itemCount)
 {
 	// The lines needed to randomize the numbers
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution distrXPos(0, WIDTH - 1);
-	std::uniform_int_distribution distrYPos(0, HEIGHT - 1);
+	std::uniform_int_distribution distrXPos(1, WIDTH - 1);
+	std::uniform_int_distribution distrYPos(1, HEIGHT - 1);
 
 	// The array of the obstacle types to be randomly placed and allocated
 	char obstacleTypes[] = { 'C', 'r', '~' };
@@ -160,8 +165,9 @@ void Map::generateRandomObstacles(int obstacleCount)
 		if (baseGrid[randY][randX] == '_')
 		{
 			// Next check to ensure that it is not adjacent to an entrance to the building '.'
+			// Nor next to each other over distances
 			// Also ensuring that no three obstacles have any chance to suround the entrance to the door
-			bool nearDoor = false;
+			bool nearDoorOrOtherObstacles = false;
 			for (int dy = -3; dy <= 3; ++dy)
 			{
 				for (int dx = -3; dx <= 3; ++dx)
@@ -171,16 +177,21 @@ void Map::generateRandomObstacles(int obstacleCount)
 
 					if (checkY >= 0 && checkY < HEIGHT && checkX >= 0 && checkX < WIDTH)
 					{
-						if (baseGrid[checkY][checkX] == '.')
+						if (
+							baseGrid[checkY][checkX] == '.' ||
+							activeGrid[checkY][checkX] != 'C' ||
+							activeGrid[checkY][checkX] != 'r' ||
+							activeGrid[checkY][checkX] != '~'
+							)
 						{
-							nearDoor = true;
+							nearDoorOrOtherObstacles = true;
 						}
 					}
 				}
 			}
 
 			// If it is safe, add the obstacle into the map
-			if (!nearDoor)
+			if (!nearDoorOrOtherObstacles)
 			{
 				char chosenObstacle = obstacleTypes[rand() % numTypes];
 				activeGrid[randY][randX] = chosenObstacle;
@@ -197,36 +208,58 @@ void Map::generateRandomObstacles(int obstacleCount)
 			attempts++;
 		}
 	}
-}
-
-void Map::spawnRandomItems(int itemCount)
-{
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<int> distrX(0, WIDTH - 1);
-	std::uniform_int_distribution<int> distrY(0, HEIGHT - 1);
 
 	int spawned = 0;
-	int attempts = 0;
+	attempts = 0;
 	while (spawned < itemCount && attempts < itemCount)
 	{
-		int randX = distrX(gen);
-		int randY = distrY(gen);
+		int randX = distrXPos(gen);
+		int randY = distrYPos(gen);
 
 		// Allowed, walkable path '_'
 		if (activeGrid[randY][randX] == '_' && getGroundItemAt(randX, randY) == nullptr)
-		{
-			int type = rand() % 3;
-			Item* newItem = nullptr;
+		{			
+			// Next check to ensure that it is not adjacent to an entrance to the building '.'
+			// Nor near any obstacles.
+			// Also ensuring that no obstacles encase an item and make it in accessable
+			bool nearDoorOrObstacle = false;
+			for (int dy = -2; dy <= 2; ++dy)
+			{
+				for (int dx = -2; dx <= 2; ++dx)
+				{
+					int checkY = randY + dy;
+					int checkX = randX + dx;
 
-			if (type == 0) newItem = new Food();
-			else if (type == 1) newItem = new Water();
-			else if (type == 2) newItem = new Medicine();
+					if (checkY >= 0 && checkY < HEIGHT && checkX >= 0 && checkX < WIDTH)
+					{
+						if (baseGrid[checkY][checkX] == '.' || activeGrid[checkY][checkX] == 'C' || activeGrid[checkY][checkX] == 'r' || activeGrid[checkY][checkX] == '~')
+						{
+							nearDoorOrObstacle = true;
+						}
+					}
+				}
+			}
 
-			newItem->setPosition(randX, randY);
-			addGroundItem(newItem);
-			spawned++;
-			attempts = 0;
+			// If it is safe, add the item into the map
+			if (!nearDoorOrObstacle)
+			{
+				int type = rand() % 4;
+				Item* newItem = nullptr;
+
+				if (type == 0) newItem = new Food();
+				else if (type == 1) newItem = new Water();
+				else if (type == 2) newItem = new Medicine();
+				else if (type == 3) newItem = new Ammunition();
+
+				newItem->setPosition(randX, randY);
+				addGroundItem(newItem);
+				spawned++;
+				attempts = 0;
+			}
+			else
+			{
+				attempts++;
+			}
 		}
 		else
 		{

@@ -32,6 +32,7 @@ static void instructionControls()
     std::cout << "  [G]       - Open Quest Menu" << std::endl;
     std::cout << "  [F]       - Attack" << std::endl;
     std::cout << "  [U]       - Use / Consume Item / Equip Weapon" << std::endl;
+    std::cout << "  [G]       - Show Quests" << std::endl;
     std::cout << "  [Q]       - Drop Item" << std::endl;
     std::cout << "  [T]       - Controls & Legend" << std::endl;
     std::cout << "  [O]       - Unequip Weapon" << std::endl;
@@ -108,14 +109,13 @@ int main(void)
             bool isRunning = true;
 
             // Add the obstacles to the map
-            game.getMap().generateRandomObstacles(30); // Stating the number of obstacles to include
-            game.getMap().spawnRandomItems(15); // Stating the number of items to include
-            game.getMap().randomizeAllLocationLayouts(6, 4);
-            game.getMap().spawnRandomZombies(10);
+            game.getMap().generateRandomLayout(60, 30); // Stating the number of obstacles and items to include
+            game.getMap().randomizeAllLocationLayouts(8, 4);
+            game.getMap().spawnRandomZombies(20);
 
             instructionControls();
 
-            std::cin.ignore();
+            std::cin.clear();
             std::cin.get();
 
             clearConsole();
@@ -128,7 +128,8 @@ int main(void)
 
 
                 std::cout << std::endl
-                    << "Hunger: " << game.getPlayer()->getHunger()
+                    << "Health: " << game.getPlayer()->getHealth()
+                    << "/100 | Hunger: " << game.getPlayer()->getHunger()
                     << "/100 | Thirst: " << game.getPlayer()->getThirst()
                     << "/100 | Quests Done: " << game.getStoryManager().getCompletedQuestsCount() << "/3" << std::endl; // For Quest UI
 
@@ -138,8 +139,6 @@ int main(void)
                 // Get the input from the player
                 input = _getch();
                 input = static_cast<char>(toupper(input));
-
-                clearConsole();
 
                 std::cout << std::endl << "Action executed: " << input << std::endl;
 
@@ -151,11 +150,16 @@ int main(void)
                 }
                 else if (input == 'W' || input == 'A' || input == 'S' || input == 'D')
                 {
+                    clearConsole();
+
                     game.handlePlayerInput(input);
-                    game.checkGroundItemInspection();
+                    game.checkGroundItemInspection();                    
                 }
                 else if (input == 'E')
                 {
+                    
+                    clearConsole();
+
                     // Check door interaction first; if not entering,
                     // Attempt pickup, depending on location
                     int pX = game.getLocationStatus() ? game.getPlayer()->getIndoorX() : game.getPlayer()->getOutdoorX();
@@ -174,9 +178,13 @@ int main(void)
                 }
                 else if (input == 'I')
                 {
+                    clearConsole();
+
                     game.getPlayer()->showInventory();
 
-                    std::cin.ignore();
+                    std::cout << "Press Enter return..." << std::endl;
+
+                    std::cin.clear();
                     std::cin.get();
 
                     clearConsole();
@@ -186,6 +194,10 @@ int main(void)
                     std::cout << "[ATTACK] Choose which direction to attack (W/A/S/D): " << std::endl;
                     char attackInput = _getch();
 
+                    attackInput = static_cast<char>(toupper(attackInput));
+
+                    clearConsole();
+
                     if (attackInput == 'W' || attackInput == 'A' || attackInput == 'S' || attackInput == 'D')
                     {
                         game.handlePlayerAttack(attackInput);
@@ -194,14 +206,11 @@ int main(void)
                     {
                         std::cout << "[INVALID] Attack Input not recognized." << std::endl;
                     }
-
-                    std::cin.ignore();
-                    std::cin.get();
-
-                    clearConsole();
                 }
                 else if (input == 'U')
                 {
+                    clearConsole();
+
                     game.getPlayer()->showInventory();
                     std::cout << std::endl << "Enter item slot number to USE / EQUIP (1-10): ";
                     int slot;
@@ -253,6 +262,8 @@ int main(void)
                 }
                 else if (input == 'Q')
                 {
+                    clearConsole();
+
                     game.getPlayer()->showInventory();
                     std::cout << std::endl << "Enter item slot number to DROP (1-" << game.getPlayer()->getInventoryCapacity() << "): ";
                     int slot;
@@ -268,17 +279,26 @@ int main(void)
                 }
                 else if (input == 'T')
                 {
+                    clearConsole();
+
                     instructionControls();
+
+                    std::cin.clear();
+                    std::cin.get();
+
+                    clearConsole();
 
                     showLegend();
 
-                    std::cin.ignore();
+                    std::cin.clear();
                     std::cin.get();
 
                     clearConsole();
                 }
                 else if (input == 'O')
                 {
+                    clearConsole();
+
                     Weapon* weaponTarget = game.getPlayer()->getWeapon();
 
                     if (weaponTarget != nullptr)
@@ -290,22 +310,22 @@ int main(void)
                             std::cout << "[INVENTORY FULL] Could not unequip." << std::endl;
                         }
                     }
-
-                    std::cin.ignore();
-                    std::cin.get();
-
-                    clearConsole();
                 }
                 else if (input == 'G')
                 {
+                    clearConsole();
+
                     game.getStoryManager().showQuests();
-                    std::cin.ignore();
+                    
+                    std::cin.clear();
                     std::cin.get();
 
                     clearConsole();
                 }
                 else
                 {
+                    clearConsole();
+
                     std::cout << "[INVALID] Input not recognized." << std::endl;
                 }
 

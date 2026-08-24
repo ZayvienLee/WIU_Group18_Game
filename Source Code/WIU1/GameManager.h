@@ -31,6 +31,7 @@ public:
 	void exitBuilding();
 
 	void checkZombieAttacks();
+	void updateZombiePositions();
 
 	void interactWithNPC();
 
