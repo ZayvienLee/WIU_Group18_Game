@@ -162,6 +162,10 @@ void StoryManager::showQuests() const
         }
     }
 
+    if (!hasQuest)
+    {
+        std::cout << "No quests claimed." << std::endl;
+    }
     
 }
 
