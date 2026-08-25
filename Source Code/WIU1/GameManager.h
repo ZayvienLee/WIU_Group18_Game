@@ -34,6 +34,7 @@ public:
 	void updateZombiePositions();
 
 	void interactWithNPC();
+	bool hasTemozolomide();
 
 	/* If the player does not find or use the supplies, penalise the player */
 	void applySurvivalPenalties();

@@ -8,6 +8,7 @@
 #include "StoryManager.h"
 #include "Weapon.h"
 #include "Zombie.h"
+#include "Temozolomide.h"
 
 // To add later on with the map and location, etc. To fix the warning and errors and add the 
 // necessary logic for each of them.
@@ -23,15 +24,24 @@ GameManager::GameManager()
     Location* supermarket = outdoorMap.getLocationByName("Supermarket");
     Location* policeStation = outdoorMap.getLocationByName("Police Station");
     Location* hospital = outdoorMap.getLocationByName("Hospital");
+    Location* safehouse = outdoorMap.getLocationByName("Safe House");
 
     if (supermarket != nullptr) {
         supermarket->addNPC(&storyManager.getZombieNPC());
+        Temozolomide* temozolomide = new Temozolomide();
+        temozolomide->setPosition(5, 5);
+
+        supermarket->addFloorItem(temozolomide);
     }
     if (policeStation != nullptr) {
         policeStation->addNPC(&storyManager.getmissingpersonNPC());
     }
     if (hospital != nullptr) {
         hospital->addNPC(&storyManager.getpharmacyNPC());
+    }
+
+    if (safehouse != nullptr) {
+        safehouse->addNPC(&storyManager.getTimothyNPC());
     }
 
     /* The player gets the necessary placements in the game accordingly. */
@@ -234,6 +244,14 @@ void GameManager::handleItemPickup()
     else if (player->addItem(groundItem))
     {
         std::cout << "[PICKUP] Added " << groundItem->getName() << " to inventory!" << std::endl;
+
+        if (groundItem->getName() == "Temozolomide" && storyManager.getfindPharmacyQuest().isAccepted())
+        {
+            storyManager.findTemozolomide();
+
+            std::cout << "You found the Temozolomide!" << std::endl;
+            std::cout << "Return to Dr. Chen" << std::endl;
+        }
     }
     else
     {
@@ -330,6 +348,7 @@ void GameManager::handlePlayerAttack(char choice)
             if (!target->getIsAlive())
             {
                 std::cout << "[KILL] " << target->getName() << " destroyed!" << std::endl;
+                storyManager.addZombieKill();
                 isInBuilding ? currentBuilding->removeZombie(target) : outdoorMap.removeZombie(target);
             }
             else
@@ -383,6 +402,21 @@ Map& GameManager::getMap()
     return outdoorMap;
 }
 
+bool GameManager::hasTemozolomide()
+{
+    for (int i = 0; i < player->getItemCount(); i++)
+    {
+        Item* item = player->getItemByNumber(i);
+
+        if (item != nullptr && item->getName() == "Temozolomide")
+        {
+            return true;
+        }
+    }
+    return false;
+
+}
+
 void GameManager::interactWithNPC()
 {
     if (!isInBuilding || currentBuilding == nullptr)
@@ -410,8 +444,92 @@ void GameManager::interactWithNPC()
         npc = currentBuilding->getNPCat(playerX, playerY - 1);
     }
 
-    if (npc != nullptr)
+    if (npc == &storyManager.getTimothyNPC())
     {
-        npc->talk();
+        if (storyManager.getfindMissingPersonQuest().isAccepted())
+        {
+            storyManager.findTimothy();
+
+            std::cout << "Timothy: Thank you for finding me!" << std::endl;
+            std::cout << "Return to Hank" << std::endl;
+        }
+        else
+        {
+            std::cout << "Timothy: I don't know you" << std::endl;
+        }
+
+        return;
+    }
+
+    if (npc == &storyManager.getmissingpersonNPC())
+    {
+        Quest& quest = storyManager.getfindMissingPersonQuest();
+        
+        if (!quest.isAccepted())
+        {
+            npc->talk();
+        }
+        else if (storyManager.isTimothyFound())
+        {
+            quest.completeQuest();
+
+            std::cout << "Hank: You found Timothy!" << std::endl;
+            std::cout << "Quest Completed!" << std::endl;
+        }
+        else
+        {
+            std::cout << "Hank: Please find Timothy first." << std::endl;
+        }
+
+        return;
+    }
+
+    if (npc == &storyManager.getZombieNPC())
+    {
+        Quest& quest = storyManager.getkillZombieQuest();
+
+        if (!quest.isAccepted())
+        {
+            npc->talk();
+        }
+        else if (storyManager.getZombiesKilled() >= 3)
+        {
+            quest.completeQuest();
+
+            std::cout << "Iris: Thank you for killing the zombies!" << std::endl;
+            std::cout << "Quest Completed!" << std::endl;
+        }
+
+        else
+        {
+            npc->talk();
+            std::cout << "Zombies killed: " << storyManager.getZombiesKilled() << "/3" << std::endl;
+        }
+
+        return;
+    }
+
+    if (npc == &storyManager.getpharmacyNPC())
+    {
+        Quest& quest = storyManager.getfindPharmacyQuest();
+
+        if (!quest.isAccepted())
+        {
+            npc->talk();
+        }
+        else if (hasTemozolomide())
+        {
+            quest.completeQuest();
+
+            std::cout << "Dr. Chen: You found the Temozolomide!" << std::endl;
+            std::cout << "Quest Completed!" << std::endl;
+        }
+        else
+        {
+            npc->talk();
+            std::cout << "Dr. Chen: Please bring me the Temozolomide." << std::endl;
+        }
+
+        return;
     }
 }
