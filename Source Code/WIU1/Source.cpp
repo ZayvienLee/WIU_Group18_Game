@@ -11,6 +11,7 @@
 #include <crtdbg.h>
 #include "Item.h"
 #include "Weapon.h"
+#include "GameObject.h"
 
 // This is needed to 'clear' the console
 static void clearConsole()
@@ -22,9 +23,6 @@ static void clearConsole()
 
 static void instructionControls()
 {
-    /*std::cout << "========================================" << std::endl;
-    std::cout << "    POST-APOCALYPTIC SURVIVAL GAME      " << std::endl;
-    std::cout << "========================================" << std::endl;*/
     std::cout << "Controls:" << std::endl;
     std::cout << "  [W/A/S/D] - Move Up / Left / Down / Right" << std::endl;
     std::cout << "  [E]       - Interact / Enter Door / Pick Up Item" << std::endl;
@@ -330,6 +328,18 @@ int main(void)
                 }
 
                 std::cout << std::endl;
+
+                /* End conditions */
+
+                if (game.getHasWon())
+                {
+                    std::cout << std::endl
+                        << "==========================================" << std::endl
+                        << "   You made it out. Welcome to Haven-7.   " << std::endl
+                        << "==========================================" << std::endl;
+                    
+                    isRunning = false;
+                }
 
                 if (!game.getPlayer()->getIsAlive())
                 {

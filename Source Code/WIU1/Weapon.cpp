@@ -3,6 +3,7 @@
 #include "Weapon.h"
 #include "Item.h"
 #include "Player.h"
+#include "GameObject.h"
 
 // Default values will be assigned to unknown weapon
 Weapon::Weapon()
@@ -13,6 +14,7 @@ Weapon::Weapon()
 	atkRange = 1;
 	wDamage = 0;
 	weight = 0;
+	colourCode = Colour::MAGENTA;
 }
 
 Weapon::Weapon(std::string n, std::string desc, char sym, int atk, int atkR, int wght)
@@ -25,6 +27,8 @@ Weapon::Weapon(std::string n, std::string desc, char sym, int atk, int atkR, int
 	atkRange = atkR;
 	wDamage = atk;
 	weight = wght;
+
+	colourCode = Colour::MAGENTA;
 }
 
 void Weapon::consume(Player& player)

@@ -1,0 +1,22 @@
+#include "QuestItem.h"
+#include "Player.h"
+#include "GameObject.h"
+#include <string>
+#include <iostream>
+
+QuestItem::QuestItem(std::string n, std::string desc, char sym)
+{
+	name = n;
+	description = desc;
+	x = -1; y = -1;
+	symbol = sym;
+	inInventory = true;
+	weight = 100;
+	quantity = 1;
+	colourCode = Colour::MAGENTA;
+}
+
+void QuestItem::consume(Player & player)
+{
+	std::cout << "[QUEST ITEM] This can't be used directly — bring it to whoever needs it." << std::endl;
+}

@@ -8,6 +8,9 @@
 #include "StoryManager.h"
 #include "Weapon.h"
 #include "Zombie.h"
+#include "NPC.h"
+#include "Quest.h"
+#include "KeyCard.h"
 
 // To add later on with the map and location, etc. To fix the warning and errors and add the 
 // necessary logic for each of them.
@@ -44,6 +47,8 @@ GameManager::GameManager()
 
         player->equipWeapon(new Weapon("Knife", "A rusty kitchen knife. Reliable up close.", 'k', 15, 1, 200));
     }
+
+    hasWon = false;
 }
 
 GameManager::~GameManager()
@@ -124,7 +129,21 @@ void GameManager::handlePlayerInput(char moveCommand)
             // Identify building based on coordinates or adjacent label
             Location* targetBuilding = outdoorMap.getBuildingAt(player->getOutdoorX(), player->getOutdoorY());
             if (targetBuilding != nullptr) {
-                enterBuilding(targetBuilding);
+                if (targetBuilding->getName() == "Safe House" && player->findItemByName("Key Card") == nullptr)
+                {
+                    std::cout << "[LOCKED] This door needs a keycard. Complete all quests to obtain one." << std::endl;
+                }
+                else if (targetBuilding->getName() == "Evacuation Point")
+                {
+                    if (checkEvacuationScreening())
+                    {
+                        hasWon = true;
+                    }
+                }
+                else
+                {
+                    enterBuilding(targetBuilding);
+                }
             }
         }
     }
@@ -354,7 +373,7 @@ void GameManager::render(int viewWidth, int viewHeight) const
     if (isInBuilding && currentBuilding != nullptr)
     {
         // Renders 10x10 interior grid centered on player indoor coordinates
-        currentBuilding->displayInterior(player->getIndoorX(), player->getIndoorY());
+        currentBuilding->displayInterior(player->getIndoorX(), player->getIndoorY(), *player);
     }
     else
     {
@@ -381,6 +400,58 @@ StoryManager& GameManager::getStoryManager()
 Map& GameManager::getMap()
 {
     return outdoorMap;
+}
+
+bool GameManager::checkNPCInteraction()
+{
+    
+}
+
+void GameManager::talkToNPC(NPC* npc)
+{
+    /* This is to check if all of the quests are completed */
+    if (storyManager.allQuestsCompleted() && player->findItemByName("Key Card") == nullptr)
+    {
+        KeyCard* keycard = new KeyCard();
+        
+        if (player->addItem(keycard))
+        {
+            std::cout << std::endl << "[RADIO] All primary objectives complete. A keycard to the Safe House has been left for you." << std::endl;
+        }
+        else
+        {
+            int xPos = isInBuilding ? player->getIndoorX() : player->getOutdoorX();
+            int yPos = isInBuilding ? player->getIndoorY() : player->getOutdoorY();
+
+            keycard->setPosition(xPos, yPos);
+
+            isInBuilding ? currentBuilding->addFloorItem(keycard) : outdoorMap.addGroundItem(keycard);
+            std::cout << std::endl << "[RADIO] All objectives complete! A keycard was dropped at your feet, as your bags are full." << std::endl;
+        }
+    }
+}
+
+bool GameManager::checkEvacuationScreening()
+{
+    if (!storyManager.allQuestsCompleted())
+    {
+        std::cout << "[SCREENING] Guard: \"We can't let you through yet — finish what you started in the city first.\"" << std::endl;
+        return false;
+    }
+
+    if (player->findItemByName("Key Card") == nullptr)
+    {
+        std::cout << "[SCREENING] Guard: \"Where's your clearance? Report to the Safe House first.\"" << std::endl;
+        return false;
+    }
+
+    std::cout << std::endl << "[SCREENING] Guard: \"Papers check out. Welcome to Haven-7, survivor.\"" << std::endl;
+    return true;
+}
+
+bool GameManager::getHasWon() const
+{
+    return hasWon;
 }
 
 void GameManager::interactWithNPC()

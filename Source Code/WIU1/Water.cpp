@@ -1,5 +1,6 @@
 #include "Water.h"
 #include "Player.h"
+#include "GameObject.h"
 
 Water::Water()
 {
@@ -12,6 +13,7 @@ Water::Water()
 	inInventory = true;
 	weight = 500;
 	quantity = 5;
+	colourCode = Colour::BLUE;
 }
 
 void Water::consume(Player& player)

@@ -4,6 +4,7 @@
 #include "Location.h"
 #include "Item.h"
 #include "StoryManager.h"
+#include "NPC.h"
 
 class Player; // Forward declaration to avoid circular include
 
@@ -19,6 +20,8 @@ private:
 	int savedOutdoorY; // Save the outdoor coordinates of Y when stepping inside
 	
 	StoryManager storyManager;
+
+	bool hasWon;
 
 public:
 	GameManager();
@@ -52,4 +55,12 @@ public:
 	Player* getPlayer();
 	StoryManager& getStoryManager();
 	Map& getMap();
+
+	/* NPC Interaction */
+	bool checkNPCInteraction();
+	void talkToNPC(NPC* npc);
+
+	/* Win Conditions */
+	bool checkEvacuationScreening();
+	bool getHasWon() const;
 };

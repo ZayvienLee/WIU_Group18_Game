@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include "Weapon.h"
+#include "GameObject.h"
 
 Player::Player(std::string n, std::string desc, char sym, int h, int maxH, int hung, int thir, int atk, bool alive, int capacity)
 {
@@ -30,6 +31,8 @@ Player::Player(std::string n, std::string desc, char sym, int h, int maxH, int h
 	outdoorY = 1;
 	indoorX = 5;
 	indoorY = 5;
+
+	colourCode = Colour::GREEN;
 
 	// Inventory system
 	if (maxItems <= 0) // Should the number be not a positive number, set to default accordingly
@@ -128,6 +131,33 @@ void Player::removeItem(Item* item, int slot)
 	}
 }
 
+Item* Player::findItemByName(std::string itemName) const
+{
+	for (int i = 0; i < maxItems; ++i)
+	{
+		if (inventory[i] != nullptr && inventory[i]->getName() == itemName)
+		{
+			return inventory[i];
+		}
+	}
+	return nullptr;
+}
+
+void Player::removeItem(Item* item)
+{
+	if (item == nullptr) return;
+
+	for (int i = 0; i < maxItems; ++i)
+	{
+		if (inventory[i] = item)
+		{
+			inventory[i] = nullptr;
+			itemCount--;
+			return;
+		}
+	}
+}
+
 // Get Item Pointer based on User Number Input (1-indexed selection)
 Item* Player::getItemByNumber(int slotNumber)
 {
@@ -146,8 +176,8 @@ void Player::showInventory() const
 {
 	std::cout << std::endl
 		<< "========================================" << std::endl
-		<< "          PLAYER INVENTORY (" << itemCount << "/" << maxItems << " Slots)" << std::endl
-		<< "          Total Weight: " << getTotalWeight() << " g" << std::endl
+		<< "   PLAYER INVENTORY (" << itemCount << "/" << maxItems << " Slots)" << std::endl
+		<< "   Total Weight: " << getTotalWeight() << " g" << std::endl
 		<< "========================================" << std::endl;
 
 	if (equippedWeapon != nullptr)

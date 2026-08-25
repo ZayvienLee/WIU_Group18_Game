@@ -22,7 +22,7 @@ void StoryManager::storyIntro() {
     std::cout << "\033[0mThen the transmission cuts out" << std::endl;
     std::cout << "You have two days to reach Haven-7" << std::endl;
     std::cout << "But there is one problem." << std::endl;
-    std::cout << "\033[1mHaven-7 is on the other side of the city." << std::endl;
+    std::cout << "\033[1mHaven-7 is on the other side of the city.\033[0m" << std::endl;
     
 }
 

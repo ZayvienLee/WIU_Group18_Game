@@ -1,7 +1,7 @@
-#include "NPC.h"
-#include "GameObject.h"
 #include <iostream>
 #include <string>
+#include "NPC.h"
+#include "GameObject.h"
 #include "Quest.h"
  
 void NPC::talk() {
@@ -28,4 +28,5 @@ NPC::NPC(std::string n, std::string desc, int x, int y, char sym, std::string di
     symbol = sym;
     dialogue = dial;
     quest = qst;
+    colourCode = Colour::CYAN;
 }

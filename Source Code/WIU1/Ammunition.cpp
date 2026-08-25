@@ -1,6 +1,7 @@
 #include "Ammunition.h"
 #include "Item.h"
 #include "Player.h"
+#include "GameObject.h"
 
 Ammunition::Ammunition()
 {
@@ -11,6 +12,7 @@ Ammunition::Ammunition()
 	inInventory = true;
 	weight = 50;
 	quantity = 5;
+	colourCode = Colour::YELLOW;
 }
 
 void Ammunition::consume(Player& player)

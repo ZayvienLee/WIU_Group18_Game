@@ -12,6 +12,7 @@
 #include "Medicine.h"
 #include "Ammunition.h"
 #include <cstdlib>
+#include "Player.h"
 
 Location::Location(std::string locName, char locSymbol, int sizeX, int sizeY)
 {
@@ -100,7 +101,7 @@ void Location::spawnRandomZombies(int zombieCount)
 
         if (interiorGrid[randomY][randomX] == '.' && getZombieAt(randomX, randomY) == nullptr && getNPCat(randomX, randomY) == nullptr)
         {
-            zombies.push_back(new Zombie("Zombie", "A shambling infected corpse.", randomX, randomY, 'Z', 40, 40, 10));
+            zombies.push_back(new Zombie("Zombie", "A shambling infected corpse.", randomX, randomY, 'Z', 40, 40, 5));
             spawned++;
             attempts = 0;
         }
@@ -164,7 +165,7 @@ void Location::setTileAt(int x, int y, char tile) {
     }
 }
 
-void Location::displayInterior(int playerX, int playerY) const {
+void Location::displayInterior(int playerX, int playerY, Player& player) const {
     std::cout << "=== " << name << " Interior ===" << std::endl;
     for (int r = 0; r < INTERIOR_HEIGHT; ++r) {
         for (int c = 0; c < INTERIOR_WIDTH; ++c) {
@@ -174,16 +175,16 @@ void Location::displayInterior(int playerX, int playerY) const {
             Zombie* zombie = getZombieAt(c, r);
 
             if (r == playerY && c == playerX) { // To render the Player
-                std::cout << "P "; // Player inside building
+                std::cout << player.getColouredSymbol() << " "; // Player inside building
             }
             else if (zombie != nullptr) {
-                std::cout << zombie->getSymbol() << " "; // Render the Zombie
+                std::cout << zombie->getColouredSymbol() << " "; // Render the Zombie
             }
             else if (npc != nullptr) { // NPC
-                std::cout << npc->getSymbol() << " ";
+                std::cout << npc->getColouredSymbol() << " ";
             }
             else if (floorItem != nullptr) {
-                std::cout << floorItem->getSymbol() << " "; // Item to render
+                std::cout << floorItem->getColouredSymbol() << " "; // Item to render
             }
             else {
                 std::cout << interiorGridActive[r][c] << " "; // Tile + space

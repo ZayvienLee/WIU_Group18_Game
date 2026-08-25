@@ -283,7 +283,7 @@ void Map::spawnRandomZombies(int zombieCount)
 
 		if (isWalkable(randomX, randomY) && getZombieAt(randomX, randomY) == nullptr)
 		{
-			zombies.push_back(new Zombie("Zombie", "A shambling infected corpse.", randomX, randomY, 'Z', 40, 40, 10));
+			zombies.push_back(new Zombie("Zombie", "A shambling infected corpse.", randomX, randomY, 'Z', 40, 40, 5));
 			spawned++;
 			attempts = 0;
 		}
@@ -342,13 +342,13 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Pl
 			Zombie* zombie = getZombieAt(c, r);
 
 			if (r == playerY && c == playerX) { // To render the Player
-				std::cout << player.getSymbol() << " "; // Player character
+				std::cout << player.getColouredSymbol() << " "; // Player character
 			}
 			else if (zombie != nullptr) {
-				std::cout << zombie->getSymbol() << " "; // Render the Zombie
+				std::cout << zombie->getColouredSymbol() << " "; // Render the Zombie
 			}
 			else if (grounditem != nullptr) {
-				std::cout << grounditem->getSymbol() << " "; // Item to render
+				std::cout << grounditem->getColouredSymbol() << " "; // Item to render
 			}
 			else {
 				std::cout << activeGrid[r][c] << " "; // Tile + space

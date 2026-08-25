@@ -1,7 +1,8 @@
-#include "Zombie.h"
 #include <string>
 #include <random>
 #include <functional>
+#include "Zombie.h"
+#include "GameObject.h"
 
 Zombie::Zombie(std::string n, std::string desc, int x, int y, char sym, int h, int maxH, int atk, bool alive)
 {
@@ -19,6 +20,8 @@ Zombie::Zombie(std::string n, std::string desc, int x, int y, char sym, int h, i
 	maxHealth = maxH;
 	attackPower = atk;
 	isAlive = alive; // Entity is alive by default. Always
+
+	colourCode = Colour::BOLD_RED;
 }
 
 void Zombie::update()

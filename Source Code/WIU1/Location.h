@@ -4,6 +4,7 @@
 #include "NPC.h"
 #include "Item.h"
 #include "Zombie.h"
+#include "Player.h"
 
 class Location
 {
@@ -50,7 +51,7 @@ public:
 	bool isIndoorWalkable(int x, int y) const;
 	char getTileAt(int x, int y) const;
     void setTileAt(int x, int y, char tile);
-    void displayInterior(int playerX, int playerY) const;
+    void displayInterior(int playerX, int playerY, Player& player) const;
 
     void addFloorItem(Item* item); // Search and remove item from ground when picked up
     Item* pickupItemAt(int playerX, int playerY); // Helper for map rendering

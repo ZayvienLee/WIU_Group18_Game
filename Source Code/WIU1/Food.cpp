@@ -1,5 +1,6 @@
 #include "Food.h"
 #include "Player.h"
+#include "GameObject.h"
 
 Food::Food()
 {
@@ -12,6 +13,7 @@ Food::Food()
 	inInventory = true;
 	weight = 200;
 	quantity = 5;
+	colourCode = Colour::GREEN;
 }
 
 void Food::consume(Player& player)

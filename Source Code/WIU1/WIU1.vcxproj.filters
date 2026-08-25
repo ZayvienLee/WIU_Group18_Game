@@ -66,6 +66,12 @@
     <ClCompile Include="Weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KeyCard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ammunition.h">
@@ -114,6 +120,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Weapon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyCard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
