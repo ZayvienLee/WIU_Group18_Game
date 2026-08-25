@@ -124,103 +124,6 @@ StoryManager::StoryManager() :
     )
 {}
 
-void StoryManager::Dialogue()
-{
-    int NPC = 0; // Delete this once initialised in NPC.h and NPC.cpp
-    std::string decision;
-
-    if (NPC == 1)
-    {
-        if (SideQuest == 0)
-        {
-            std::cout << "Hello there, I need to get the Temozolomide from the Pharmacy section of the Supermarket. If you are able to get it, I can craft a cure for you.";
-            SideQuest = 1;
-        }
-        if (SideQuest == 1)
-        {
-            int Temozolomide = 1; //delete this when Item.h has initialised the item
-            if (Temozolomide == 1)
-            {
-                std::cout << "Oh you found it! Just putting it there and...voila! Here's the cure!" << std::endl;
-                int Cure = 1; //remove int when Item.h has initialised the item
-                SideQuest = 0;
-            }
-            else if (Temozolomide == 0)
-            {
-                std::cout << "There are a bunch of zombies out there, please be careful!" << std::endl;
-            }
-        }
-    }
-    if (NPC == 2)
-    {
-        if (SideQuest == 0)
-        {
-            std::cout << "Hello there, some corners of this police station has a living rodent running around. Catch it and try to bring it to me.";
-            SideQuest = 1;
-        }
-        if (SideQuest == 1)
-        {
-            int Ammo = 0; //remove this when Ammunition.h has initialised the item
-            int Rat = 1; //delete this when Item.h has initialised the item
-            if (Rat == 1)
-            {
-                std::cout << "Woah thanks, you deserve some ammo so have some." << std::endl;
-                Ammo += 5; //remove int when Ammunition.h has initialised the item
-                SideQuest = 0;
-            }
-            else if (Rat == 0)
-            {
-                std::cout << "Catching rodents ain't easy, keep your head up kid." << std::endl;
-            }
-        }
-    }
-    if (NPC == 3)
-    {
-        if (SideQuest == 0)
-        {
-            std::cout << "Oh hi! I need a special gem from the abandoned Subway so we can sell it once we arrive in Haven-7, good luck man!";
-            SideQuest = 1;
-        }
-        if (SideQuest == 1)
-        {
-            int Gem = 1; //delete this when Item.h has initialised the item
-            if (Gem == 1)
-            {
-                std::cout << "You actually got the gem? Sick! Here's some food and water for your work!" << std::endl;
-                int Burger = 2; //remove int when Item.h has initialised the item
-                int WaterBottle = 2; //remove int when Item.h has initialised the item
-                SideQuest = 0;
-            }
-            else if (Gem == 0)
-            {
-                std::cout << "I have never seen anyone come back after talking to me. Please make me proud!" << std::endl;
-            }
-        }
-    }
-    if (NPC == 4)
-    {
-        if (SideQuest == 0)
-        {
-            std::cout << "I want you to slay all the zombies for me. I'll consider you a hero.";
-            SideQuest = 1;
-        }
-        if (SideQuest == 1)
-        {
-            int SlainAllZombies = 1; //delete this when Map.h has initialised the item
-            if (SlainAllZombies == 1)
-            {
-                std::cout << "Sick man, thanks for the effort." << std::endl;
-                SideQuest = 0;
-            }
-            else if (SlainAllZombies == 0)
-            {
-                std::cout << "Get out there and show your worth." << std::endl;
-            }
-        }
-
-    }
-}
-
 void StoryManager::showQuests() const
 {
     std::cout << "========================================" << std::endl
@@ -289,6 +192,10 @@ void StoryManager::showQuests() const
         }
     }
 
+    if (!hasQuest)
+    {
+        std::cout << "No quests claimed." << std::endl;
+    }
     
 }
 
