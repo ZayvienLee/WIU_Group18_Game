@@ -523,6 +523,8 @@ void GameManager::interactWithNPC()
 
             std::cout << "Dr. Chen: You found the Temozolomide!" << std::endl;
             std::cout << "Quest Completed!" << std::endl;
+            hasTemozolomide() == false; // Remove from inventory array slot
+            Item* item-setInInventory(false);
         }
         else
         {
