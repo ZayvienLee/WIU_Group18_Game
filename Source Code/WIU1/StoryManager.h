@@ -60,5 +60,4 @@ public:
     void SetTimeToNextEvent();
     void SetMessageRand();
     void RadioMessage();
-    void Dialogue();
 };
