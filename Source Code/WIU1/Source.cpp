@@ -11,6 +11,7 @@
 #include <crtdbg.h>
 #include "Item.h"
 #include "Weapon.h"
+#include "Temozolomide.h"
 #include "GameObject.h"
 
 // This is needed to 'clear' the console
@@ -229,20 +230,29 @@ int main(void)
                             }
                             else
                             {
-                                target->consume(*(game.getPlayer()));
-                                target->setQuantity(target->getQuantity() - 1); // Used one item
+                                Temozolomide* temozolomide = dynamic_cast<Temozolomide*>(target);
 
-
-                                if (target->getQuantity() > 0)
+                                if (temozolomide != nullptr)
                                 {
-                                    std::cout << "[USED] Consumed one instance of Item successfully!" << std::endl;
+                                    std::cout << "Temezolomide cannot be consumed" << std::endl;
                                 }
-                                else if (target->getQuantity() <= 0)
+                                else
                                 {
-                                    game.getPlayer()->removeItem(target, slot);
-                                    delete target; // Clean memory after single-use consumption
+                                    target->consume(*(game.getPlayer()));
+                                    target->setQuantity(target->getQuantity() - 1); // Used one item
 
-                                    std::cout << "[ALL USED] All instances of Item have been completely consumed." << std::endl;
+
+                                    if (target->getQuantity() > 0)
+                                    {
+                                        std::cout << "[USED] Consumed one instance of Item successfully!" << std::endl;
+                                    }
+                                    else if (target->getQuantity() <= 0)
+                                    {
+                                        game.getPlayer()->removeItem(target, slot);
+                                        delete target; // Clean memory after single-use consumption
+
+                                        std::cout << "[ALL USED] All instances of Item have been completely consumed." << std::endl;
+                                    }
                                 }
                             }
                         }

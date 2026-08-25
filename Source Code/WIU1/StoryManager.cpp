@@ -73,23 +73,26 @@ void StoryManager::RadioMessage()
 
 StoryManager::StoryManager() :
 
-       // Quests
+    // Quests
 
-       // QUEST NAME, QUEST DESCRIPTION
-       killZombieQuest("Kill 3 Zombies", "Kill 3 Zombies somewhere in the city"),
+    // QUEST NAME, QUEST DESCRIPTION
+    killZombieQuest("Kill 3 Zombies", "Kill 3 Zombies somewhere in the city"),
 
-       findMissingPersonQuest("Find Timothy", "Find Timothy somewhere in the city"),
-    
-       findPharmacyQuest("Search for Temozolomide", "Search for Temozolomide in the Pharmacy section of the Supermarket"),
+    findMissingPersonQuest("Find Timothy", "Find Timothy somewhere in the city"),
 
-       // NPCS
+    findPharmacyQuest("Search for Temozolomide", "Search for Temozolomide in the Pharmacy section of the Supermarket"),
 
-       // NAME, DESCRIPTION, X, Y, SYMBOL, DIALOGUE, QUEST
-       zombieNPC("Iris", "A survivor who is looking for help", 1, 1, 'i', "There is a bunch of zombies in the city, please kill them before they attack anyone else!", &killZombieQuest),
+    // NPCS
 
-       missingpersonNPC("Hank", "A police officer searching for a missing civilian", 1, 1, 'h', "Someone went missing during the outbreak. Please find them and bring them back to me.", &findMissingPersonQuest),
+    // NAME, DESCRIPTION, X, Y, SYMBOL, DIALOGUE, QUEST
+    zombieNPC("Iris", "A survivor who is looking for help", 1, 1, 'i', "There is a bunch of zombies in the city, please kill them before they attack anyone else!", &killZombieQuest),
 
-       pharmacyNPC("Dr. Chen", "A doctor who is looking for a cure", 1, 1, 'd', "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me", &findPharmacyQuest) {}
+    missingpersonNPC("Hank", "A police officer searching for a missing civilian", 1, 1, 'h', "Someone went missing during the outbreak. Please find them and bring them back to me.", &findMissingPersonQuest),
+
+    pharmacyNPC("Dr. Chen", "A doctor who is looking for a cure", 1, 1, 'd', "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me", &findPharmacyQuest),
+
+    timothyNPC("Timothy", "A missing survivor", 1, 1, 't', "Thank you for finding me!", nullptr)
+{}
 
 void StoryManager::Dialogue()
 {
@@ -209,6 +212,7 @@ void StoryManager::showQuests() const
         }
         else
         {
+            std::cout << "   Progress: " << zombiesKilled << "/3" << std::endl;
             std::cout << "   Status: " << RED << "Incomplete" << RESET << std::endl << std::endl;
         }
     }
@@ -224,9 +228,13 @@ void StoryManager::showQuests() const
         {
             std::cout << "   Status: " << GREEN << "Completed" << RESET << std::endl << std::endl;
         }
+        else if (timothyFound)
+        {
+            std::cout << "   Status: Return to Hank" << std::endl << std::endl;
+        }
         else
         {
-            std::cout << "   Status: " << RED << "Incomplete" << RESET << std::endl << std::endl;
+            std::cout << "   Status: Find Timothy"<< std::endl << std::endl;
         }
     }
 
@@ -241,9 +249,13 @@ void StoryManager::showQuests() const
         {
             std::cout << "   Status: " << GREEN << "Completed" << RESET << std::endl << std::endl;
         }
+        else if (temozolomideFound)
+        {
+            std::cout << "   Status: Return to Dr Chen" << std::endl << std::endl;
+        }
         else
         {
-            std::cout << "   Status: " << RED << "Incomplete" << RESET << std::endl << std::endl;
+            std::cout << "   Status: Find Temozolomide" << std::endl << std::endl;
         }
     }
 
@@ -302,4 +314,53 @@ int StoryManager::getCompletedQuestsCount() const {
       
 bool StoryManager::allQuestsCompleted() const {
     return getCompletedQuestsCount() == 3;
+}
+
+NPC& StoryManager::getTimothyNPC()
+{
+    return timothyNPC;
+}
+
+void StoryManager::addZombieKill()
+{
+    if (killZombieQuest.isAccepted() && !killZombieQuest.isCompleted())
+    {
+        zombiesKilled++;
+
+        if (zombiesKilled > 3)
+        {
+            zombiesKilled = 3;
+        }
+    }
+}
+
+int StoryManager::getZombiesKilled() const
+{
+    return zombiesKilled;
+}
+
+void StoryManager::findTimothy()
+{
+    if (findMissingPersonQuest.isAccepted())
+    {
+        timothyFound = true;
+    }
+}
+
+bool StoryManager::isTimothyFound() const
+{
+    return timothyFound;
+}
+
+void StoryManager::findTemozolomide()
+{
+    if (findPharmacyQuest.isAccepted())
+    {
+        temozolomideFound = true;
+    }
+}
+
+bool StoryManager::isTemozolomideFound() const
+{
+    return temozolomideFound;
 }

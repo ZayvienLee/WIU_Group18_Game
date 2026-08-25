@@ -12,7 +12,11 @@ private:
     NPC zombieNPC; // The NPC which gives the quest to kill zombies
     NPC missingpersonNPC; // Gives the player a quest to find a missing person
     NPC pharmacyNPC; // gives quest to find Temozolomide in the pharmacy
+    NPC timothyNPC;
 
+    int zombiesKilled = 0;
+    bool timothyFound = false;
+    bool temozolomideFound = false;
 
     int TimeToNextEvent = 0;
     int MessageRand = 0;
@@ -28,10 +32,20 @@ public:
     NPC& getZombieNPC();
     NPC& getmissingpersonNPC();
     NPC& getpharmacyNPC();
+    NPC& getTimothyNPC();
 
     Quest& getkillZombieQuest();
     Quest& getfindMissingPersonQuest();
     Quest& getfindPharmacyQuest();
+
+    void addZombieKill();
+    int getZombiesKilled() const;
+
+    void findTimothy();
+    bool isTimothyFound() const;
+
+    void findTemozolomide();
+    bool isTemozolomideFound() const;
 
     bool allQuestsCompleted() const;
 

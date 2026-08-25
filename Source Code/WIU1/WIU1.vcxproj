@@ -143,6 +143,7 @@
     <ClCompile Include="QuestItem.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="StoryManager.cpp" />
+    <ClCompile Include="Temozolomide.cpp" />
     <ClCompile Include="Water.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="Zombie.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Quest.h" />
     <ClInclude Include="QuestItem.h" />
     <ClInclude Include="StoryManager.h" />
+    <ClInclude Include="Temozolomide.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="Zombie.h" />
