@@ -4,9 +4,10 @@
 #include "NPC.h"
 #include "Quest.h"
 #include <string>
+
 constexpr auto RESET = "\033[37m";
-constexpr auto RED = "\033[31m";      /* Red */
-constexpr auto GREEN = "\033[32m";      /* Green */
+constexpr auto RED = "\033[31m";    /* Red */
+constexpr auto GREEN = "\033[32m";  /* Green */
 
 void StoryManager::storyIntro() {
 
@@ -85,13 +86,42 @@ StoryManager::StoryManager() :
     // NPCS
 
     // NAME, DESCRIPTION, X, Y, SYMBOL, DIALOGUE, QUEST
-    zombieNPC("Iris", "A survivor who is looking for help", 1, 1, 'i', "There is a bunch of zombies in the city, please kill them before they attack anyone else!", &killZombieQuest),
+    zombieNPC(
+        "Iris",
+        "A survivor who is looking for help",
+        1, 1, 'i',
+        &killZombieQuest,
+        "There is a bunch of zombies in the city, please kill them before they attack anyone else!"
+        "There are still some zombies roaming around. Help to elimate the rest of them.",
+        "Thank you for killing the zombies!"
+    ),
 
-    missingpersonNPC("Hank", "A police officer searching for a missing civilian", 1, 1, 'h', "Someone went missing during the outbreak. Please find them and bring them back to me.", &findMissingPersonQuest),
+    missingpersonNPC(
+        "Hank",
+        "A police officer searching for a missing civilian",
+        1, 1, 'h',
+        &findMissingPersonQuest,
+        "Someone went missing during the outbreak. His name is Timothy. Please find them and bring them back to me."
+        "Please find Timothy, first.",
+        "You found Timothy. Thank You so much!"
+    ),
 
-    pharmacyNPC("Dr. Chen", "A doctor who is looking for a cure", 1, 1, 'd', "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me", &findPharmacyQuest),
+    pharmacyNPC("Dr. Chen",
+        "A doctor who is looking for a cure",
+        1, 1, 'd',
+        &findPharmacyQuest,
+        "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me",
+        "Please bring me the Temozolomide.",
+        "You found the Temozolomide!"
+    ),
 
-    timothyNPC("Timothy", "A missing survivor", 1, 1, 't', "Thank you for finding me!", nullptr)
+    timothyNPC(
+        "Timothy",
+        "A missing survivor",
+        1, 1, 't',
+        nullptr,
+        "Thank you for finding me!"
+    )
 {}
 
 void StoryManager::Dialogue()
@@ -230,11 +260,11 @@ void StoryManager::showQuests() const
         }
         else if (timothyFound)
         {
-            std::cout << "   Status: Return to Hank" << std::endl << std::endl;
+            std::cout << "   Status: Return to " << missingpersonNPC.getName() << std::endl << std::endl;
         }
         else
         {
-            std::cout << "   Status: Find Timothy"<< std::endl << std::endl;
+            std::cout << "   Status: Find " << timothyNPC.getName() << std::endl << std::endl;
         }
     }
 
@@ -251,7 +281,7 @@ void StoryManager::showQuests() const
         }
         else if (temozolomideFound)
         {
-            std::cout << "   Status: Return to Dr Chen" << std::endl << std::endl;
+            std::cout << "   Status: Return to " << pharmacyNPC.getName() << std::endl << std::endl;
         }
         else
         {
@@ -354,10 +384,7 @@ bool StoryManager::isTimothyFound() const
 
 void StoryManager::findTemozolomide()
 {
-    if (findPharmacyQuest.isAccepted())
-    {
-        temozolomideFound = true;
-    }
+    temozolomideFound = true;
 }
 
 bool StoryManager::isTemozolomideFound() const

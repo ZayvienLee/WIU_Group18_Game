@@ -272,6 +272,7 @@ void Location::generateRandomLayout(int furnitureCount, int itemCount)
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> distrX(1, INTERIOR_WIDTH - 2);
     std::uniform_int_distribution<int> distrY(1, INTERIOR_HEIGHT - 2);
+    std::uniform_int_distribution<int> itemTypes(0, 3);
 
     int attempts = 0;
 
@@ -327,9 +328,9 @@ void Location::generateRandomLayout(int furnitureCount, int itemCount)
             }
 
             // If it is safe, add the item into the map
-            if (!nearDoorOrObstacle)
+            if (!nearDoorOrObstacle && (randomX != 5 && randomY != 5))
             {
-                int type = rand() % 4;
+                int type = itemTypes(gen);
                 Item* newItem = nullptr;
 
                 if (type == 0) newItem = new Food();

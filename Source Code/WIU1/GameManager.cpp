@@ -1,9 +1,9 @@
+#include <iostream>
+#include <cctype>
 #include "GameManager.h"
 #include "Map.h"
 #include "Player.h"
 #include "Location.h"
-#include <iostream>
-#include <cctype>
 #include "Item.h"
 #include "StoryManager.h"
 #include "Weapon.h"
@@ -12,6 +12,9 @@
 #include "NPC.h"
 #include "Quest.h"
 #include "KeyCard.h"
+#include "Ammunition.h"
+#include "Medicine.h"
+#include "Weapon.h"
 
 // To add later on with the map and location, etc. To fix the warning and errors and add the 
 // necessary logic for each of them.
@@ -24,16 +27,17 @@ GameManager::GameManager()
 	savedOutdoorX = 20;
 	savedOutdoorY = 4;
 
+    /* These locations are needed to add the NPCs to the respective places in each building */
     Location* supermarket = outdoorMap.getLocationByName("Supermarket");
     Location* policeStation = outdoorMap.getLocationByName("Police Station");
     Location* hospital = outdoorMap.getLocationByName("Hospital");
     Location* safehouse = outdoorMap.getLocationByName("Safe House");
+    Location* school = outdoorMap.getLocationByName("School");
 
     if (supermarket != nullptr) {
         supermarket->addNPC(&storyManager.getZombieNPC());
         Temozolomide* temozolomide = new Temozolomide();
         temozolomide->setPosition(5, 5);
-
         supermarket->addFloorItem(temozolomide);
     }
     if (policeStation != nullptr) {
@@ -45,6 +49,9 @@ GameManager::GameManager()
 
     if (safehouse != nullptr) {
         safehouse->addNPC(&storyManager.getTimothyNPC());
+    }
+    if (school != nullptr) {
+        school->addNPC(&storyManager.getTimothyNPC());
     }
 
     /* The player gets the necessary placements in the game accordingly. */
@@ -269,7 +276,7 @@ void GameManager::handleItemPickup()
             storyManager.findTemozolomide();
 
             std::cout << "You found the Temozolomide!" << std::endl;
-            std::cout << "Return to Dr. Chen" << std::endl;
+            std::cout << "Return to " << storyManager.getpharmacyNPC().getName() << std::endl;
         }
     }
     else
@@ -319,7 +326,16 @@ void GameManager::rewardPlayerFromNPC(Player& playerRef, Map& mapRef, Item* ques
         // Fallback: If inventory is full when NPC gives reward, drop it at player's feet
         std::cout << "[NPC] 'Your bags are full. I'll leave it right here on the ground.'" << std::endl;
         questReward->setPosition(xPosLoc, yPosLoc);
-        mapRef.addGroundItem(questReward);
+        
+        if (currentBuilding != nullptr) {
+
+            currentBuilding->addFloorItem(questReward);
+            return;
+        }
+        else {
+            mapRef.addGroundItem(questReward);
+            return;
+        }
     }
 }
 
@@ -421,55 +437,11 @@ Map& GameManager::getMap()
     return outdoorMap;
 }
 
-bool GameManager::hasTemozolomide()
-{
-    for (int i = 0; i < player->getItemCount(); i++)
-    {
-        Item* item = player->getItemByNumber(i);
-
-        if (item != nullptr && item->getName() == "Temozolomide")
-        {
-            return true;
-        }
-    }
-    return false;
-
-}
-
-bool GameManager::checkNPCInteraction()
-{
-    
-}
-
-void GameManager::talkToNPC(NPC* npc)
-{
-    /* This is to check if all of the quests are completed */
-    if (storyManager.allQuestsCompleted() && player->findItemByName("Key Card") == nullptr)
-    {
-        KeyCard* keycard = new KeyCard();
-        
-        if (player->addItem(keycard))
-        {
-            std::cout << std::endl << "[RADIO] All primary objectives complete. A keycard to the Safe House has been left for you." << std::endl;
-        }
-        else
-        {
-            int xPos = isInBuilding ? player->getIndoorX() : player->getOutdoorX();
-            int yPos = isInBuilding ? player->getIndoorY() : player->getOutdoorY();
-
-            keycard->setPosition(xPos, yPos);
-
-            isInBuilding ? currentBuilding->addFloorItem(keycard) : outdoorMap.addGroundItem(keycard);
-            std::cout << std::endl << "[RADIO] All objectives complete! A keycard was dropped at your feet, as your bags are full." << std::endl;
-        }
-    }
-}
-
 bool GameManager::checkEvacuationScreening()
 {
     if (!storyManager.allQuestsCompleted())
     {
-        std::cout << "[SCREENING] Guard: \"We can't let you through yet — finish what you started in the city first.\"" << std::endl;
+        std::cout << "[SCREENING] Guard: \"We can't let you through yet - finish what you started in the city first.\"" << std::endl;
         return false;
     }
 
@@ -498,109 +470,130 @@ void GameManager::interactWithNPC()
     int playerX = player->getIndoorX();
     int playerY = player->getIndoorY();
 
-    NPC* npc = currentBuilding->getNPCat(playerX + 1, playerY);
+    Item* reward = nullptr;
 
-    if (npc == nullptr)
-    {
+    NPC* npc = currentBuilding->getNPCat(playerX + 1, playerY);
+    if (npc == nullptr) {
         npc = currentBuilding->getNPCat(playerX - 1, playerY);
     }
-
-    if (npc == nullptr)
-    {
+    if (npc == nullptr) {
         npc = currentBuilding->getNPCat(playerX, playerY + 1);
     }
-
-    if (npc == nullptr)
-    {
+    if (npc == nullptr) {
         npc = currentBuilding->getNPCat(playerX, playerY - 1);
     }
 
+    /* This is a special case where the NPC is the objective for another NPC's quest */
     if (npc == &storyManager.getTimothyNPC())
     {
         if (storyManager.getfindMissingPersonQuest().isAccepted())
         {
-            storyManager.findTimothy();
+            if (storyManager.isTimothyFound())
+            {
+                std::cout << storyManager.getTimothyNPC().getName()
+                    << ": Help bring me back to " << storyManager.getmissingpersonNPC().getName() << std::endl;
+            }
+            else
+            {
+                storyManager.findTimothy();
 
-            std::cout << "Timothy: Thank you for finding me!" << std::endl;
-            std::cout << "Return to Hank" << std::endl;
+                npc->talk();
+
+                std::cout << "Return to " << storyManager.getmissingpersonNPC().getName() << std::endl;
+            }
         }
         else
         {
-            std::cout << "Timothy: I don't know you" << std::endl;
+            std::cout << storyManager.getTimothyNPC().getName() << ": I don't know you" << std::endl;
         }
-
-        return;
     }
-
-    if (npc == &storyManager.getmissingpersonNPC())
+    else if (npc == &storyManager.getmissingpersonNPC())
     {
         Quest& quest = storyManager.getfindMissingPersonQuest();
         
-        if (!quest.isAccepted())
-        {
+        if (!quest.isAccepted()) {
             npc->talk();
         }
-        else if (storyManager.isTimothyFound())
-        {
+        else if (storyManager.isTimothyFound() && quest.isAccepted()) {
             quest.completeQuest();
 
-            std::cout << "Hank: You found Timothy!" << std::endl;
-            std::cout << "Quest Completed!" << std::endl;
-        }
-        else
-        {
-            std::cout << "Hank: Please find Timothy first." << std::endl;
-        }
+            npc->talk();
 
-        return;
+            reward = new Medicine();
+        }
+        else {
+            npc->talk();
+        }
     }
-
-    if (npc == &storyManager.getZombieNPC())
+    else if (npc == &storyManager.getZombieNPC())
     {
         Quest& quest = storyManager.getkillZombieQuest();
 
-        if (!quest.isAccepted())
-        {
+        if (!quest.isAccepted()) {
             npc->talk();
         }
-        else if (storyManager.getZombiesKilled() >= 3)
-        {
+        else if (storyManager.getZombiesKilled() >= 10 && quest.isAccepted()) {
             quest.completeQuest();
 
-            std::cout << "Iris: Thank you for killing the zombies!" << std::endl;
-            std::cout << "Quest Completed!" << std::endl;
-        }
-
-        else
-        {
             npc->talk();
-            std::cout << "Zombies killed: " << storyManager.getZombiesKilled() << "/3" << std::endl;
+
+            reward = new Ammunition();
         }
-
-        return;
+        else {
+            npc->talk();
+            std::cout << "Zombies killed: " << storyManager.getZombiesKilled() << " / 10." << std::endl;
+        }
     }
-
-    if (npc == &storyManager.getpharmacyNPC())
+    else if (npc == &storyManager.getpharmacyNPC())
     {
         Quest& quest = storyManager.getfindPharmacyQuest();
 
-        if (!quest.isAccepted())
-        {
+        Item* turnInItem = nullptr;
+        turnInItem = player->findItemByName("Temozolomide");
+
+
+        if (!quest.isAccepted())  {
             npc->talk();
         }
-        else if (hasTemozolomide())
-        {
+        else if (turnInItem != nullptr && quest.isAccepted()) {
             quest.completeQuest();
 
-            std::cout << "Dr. Chen: You found the Temozolomide!" << std::endl;
-            std::cout << "Quest Completed!" << std::endl;
+            player->removeItem(turnInItem);
+            delete turnInItem;
+            turnInItem = nullptr;
+
+            npc->talk();
+
+            reward = new Weapon("Pistol", "A sturdy sidearm " + storyManager.getpharmacyNPC().getName() + " kept for protection.", 'g', 30, 3, 500);
+        }
+        else {
+            npc->talk();
+        }
+    }
+    
+    if (reward != nullptr)
+    {
+        rewardPlayerFromNPC(*player, outdoorMap, reward);
+    }
+
+    /* This is to check if all of the quests are completed */
+    if (storyManager.allQuestsCompleted() && player->findItemByName("Key Card") == nullptr)
+    {
+        KeyCard* keycard = new KeyCard();
+
+        if (player->addItem(keycard))
+        {
+            std::cout << std::endl << "[RADIO] All primary objectives complete. A keycard to the Safe House has been left for you." << std::endl;
         }
         else
         {
-            npc->talk();
-            std::cout << "Dr. Chen: Please bring me the Temozolomide." << std::endl;
-        }
+            int xPos = isInBuilding ? player->getIndoorX() : player->getOutdoorX();
+            int yPos = isInBuilding ? player->getIndoorY() : player->getOutdoorY();
 
-        return;
+            keycard->setPosition(xPos, yPos);
+
+            isInBuilding ? currentBuilding->addFloorItem(keycard) : outdoorMap.addGroundItem(keycard);
+            std::cout << std::endl << "[RADIO] All objectives complete! A keycard was dropped at your feet, as your bags are full." << std::endl;
+        }
     }
 }

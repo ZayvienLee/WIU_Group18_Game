@@ -1,8 +1,11 @@
 #include "Quest.h"
 #include <string>
-
+#include <iostream>
 
 void Quest::completeQuest() {
+
+    std::cout << "Quest Completed!" << std::endl;
+
     Completed = true;
 }
 

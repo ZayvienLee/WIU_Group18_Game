@@ -4,6 +4,18 @@
 #include <string>
 #include <iostream>
 
+QuestItem::QuestItem()
+{
+	name = "Quest Item";
+	description = "This item is related to a Quest";
+	x = -1; y = -1;
+	symbol = '?';
+	inInventory = true;
+	weight = 100;
+	quantity = 1;
+	colourCode = Colour::MAGENTA;
+}
+
 QuestItem::QuestItem(std::string n, std::string desc, char sym)
 {
 	name = n;

@@ -36,9 +36,6 @@ public:
 	void checkZombieAttacks();
 	void updateZombiePositions();
 
-	void interactWithNPC();
-	bool hasTemozolomide();
-
 	/* If the player does not find or use the supplies, penalise the player */
 	void applySurvivalPenalties();
 
@@ -58,8 +55,7 @@ public:
 	Map& getMap();
 
 	/* NPC Interaction */
-	bool checkNPCInteraction();
-	void talkToNPC(NPC* npc);
+	void interactWithNPC();
 
 	/* Win Conditions */
 	bool checkEvacuationScreening();

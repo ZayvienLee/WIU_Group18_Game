@@ -1,7 +1,8 @@
 #pragma once
-#include "Item.h"
-class Temozolomide :
-    public Item
+#include "QuestItem.h"
+#include "Player.h"
+
+class Temozolomide : public QuestItem
 {
 public:
     Temozolomide();

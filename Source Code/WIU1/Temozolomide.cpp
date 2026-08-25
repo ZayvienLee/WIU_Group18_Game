@@ -1,13 +1,14 @@
 #include "Temozolomide.h"
+#include "Player.h"
 #include <iostream>
 
 Temozolomide::Temozolomide()
 {
 	name = "Temozolomide";
-	description = "A medication needed by Dr. Chen.";
+	description = "A medication needed by Dr. Chen. He urgently needs it.";
 	x = 5;
 	y = 5;
-	symbol = 'o';
+	symbol = 't';
 	inInventory = false;
 	weight = 1;
 	quantity = 1;
@@ -15,6 +16,5 @@ Temozolomide::Temozolomide()
 
 void Temozolomide::consume(Player& player)
 {
+
 }
-
-

@@ -3,30 +3,51 @@
 #include "NPC.h"
 #include "GameObject.h"
 #include "Quest.h"
- 
-void NPC::talk() {
-    std::cout << name << ": " << dialogue << std::endl;   
-    if (quest != nullptr)
-    {
-        quest->accept();
 
-        std::cout << "Quest: " << quest->getName() << std::endl;
-        std::cout << quest->getDescription() << std::endl;
-    }
-}
-
-Quest* NPC::getQuest() const {
-    return quest;
-}
-
-NPC::NPC(std::string n, std::string desc, int x, int y, char sym, std::string dial, Quest* qst)
+NPC::NPC(std::string n, std::string desc, int x, int y, char sym, Quest* qst, std::string dial, std::string dialProgress, std::string dialComplete)
 {
     name = n;
     description = desc;
     positionX = x;
     positionY = y;
     symbol = sym;
-    dialogue = dial;
     quest = qst;
     colourCode = Colour::CYAN;
+
+    // Dialogue to convey to player
+    dialogue = dial;
+    dialogueProgress = dialProgress;
+    dialogueComplete = dialComplete;
+}
+
+void NPC::talk()
+{  
+    if (quest != nullptr)
+    {   
+        if (quest->isAccepted()) {
+            if (!quest->isCompleted()) {
+                std::cout << name << ": " << dialogueProgress << std::endl;
+            }
+            else {
+                std::cout << name << ": " << dialogueComplete << std::endl;
+            }
+        }
+        else {
+            quest->accept();
+
+            std::cout << name << ": " << dialogue << std::endl;
+            std::cout << "[QUEST ACCEPTED] " << quest->getName() << std::endl;
+            std::cout << "Description (How to Complete): " << quest->getDescription() << std::endl;
+        }
+    }
+    else {
+        if (name == "Timothy") {
+            std::cout << name << ": " << dialogue << std::endl;
+        }
+    }
+}
+
+Quest* NPC::getQuest() const
+{
+    return quest;
 }
