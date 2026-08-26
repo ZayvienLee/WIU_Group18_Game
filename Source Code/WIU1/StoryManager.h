@@ -17,6 +17,7 @@ private:
     int zombiesKilled = 0;
     bool timothyFound = false;
     bool temozolomideFound = false;
+    bool alreadyCompleted = false;
 
     int TimeToNextEvent = 0;
     int MessageRand = 0;
@@ -28,6 +29,8 @@ protected:
 
 public:
     StoryManager();
+
+    void showQuests() const;
 
     NPC& getZombieNPC();
     NPC& getmissingpersonNPC();
@@ -48,10 +51,10 @@ public:
     bool isTemozolomideFound() const;
 
     bool allQuestsCompleted() const;
+    void setCompletionStatus();
+    bool completionStatus() const;
 
     int getCompletedQuestsCount() const;
-
-    void showQuests() const;
 
     void storyIntro(); // gives intro to the story before game starts
 

@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AccessCard.cpp" />
     <ClCompile Include="Ammunition.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Food.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AccessCard.h" />
     <ClInclude Include="Ammunition.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Food.h" />

@@ -82,15 +82,9 @@ Map::Map()
 	locations.push_back(new Location("School", 'C', 12, 12));
 	locations.push_back(new Location("Safe House", 'F', 9, 9));
 	locations.push_back(new Location("Military Base", 'M', 25, 20));
-	locations.push_back(new Location("Evacuation Point", 'V'));
+	locations.push_back(new Location("Evacuation Point (Demilitarised)", 'V', 25, 20));
 
-	for (Location* location : locations)
-	{
-		if (location != nullptr && location->getSymbol() != 'A')
-		{
-			location->spawnRandomZombies(5); // 5 Zombies are present in each location EXCEPT Apartment
-		}
-	}
+	populateLocationsWithZombies();
 }
 
 // Delete ALL of the dynamic locations and ground items, free up the memory
@@ -156,7 +150,7 @@ void Map::generateRandomLayout(int obstacleCount, int itemCount)
 
 	int placed = 0;
 	int attempts = 0;
-	while (placed < obstacleCount && attempts < obstacleCount)
+	while (placed < obstacleCount && attempts < obstacleCount * 30)
 	{
 		int randX = distrXPos(gen);
 		int randY = distrYPos(gen);
@@ -179,9 +173,9 @@ void Map::generateRandomLayout(int obstacleCount, int itemCount)
 					{
 						if (
 							baseGrid[checkY][checkX] == '.' ||
-							activeGrid[checkY][checkX] != 'C' ||
-							activeGrid[checkY][checkX] != 'r' ||
-							activeGrid[checkY][checkX] != '~'
+							activeGrid[checkY][checkX] == 'C' ||
+							activeGrid[checkY][checkX] == 'r' ||
+							activeGrid[checkY][checkX] == '~'
 							)
 						{
 							nearDoorOrOtherObstacles = true;
@@ -211,7 +205,7 @@ void Map::generateRandomLayout(int obstacleCount, int itemCount)
 
 	int spawned = 0;
 	attempts = 0;
-	while (spawned < itemCount && attempts < itemCount)
+	while (spawned < itemCount && attempts < itemCount * 30)
 	{
 		int randX = distrXPos(gen);
 		int randY = distrYPos(gen);
@@ -268,6 +262,49 @@ void Map::generateRandomLayout(int obstacleCount, int itemCount)
 	}
 }
 
+void Map::randomiseLocationLayouts(float furnitureDensity, float itemDensity)
+{
+	for (Location* location : locations)
+	{
+		float locationFurnitures = furnitureDensity;
+		float locationItems = itemDensity;
+
+		if (location->getSymbol() == 'V')
+		{
+			locationFurnitures *= 2.0;
+			locationItems *= 0.25;
+		}
+
+		int area = location->getInteriorFloorArea();
+		location->generateRandomLayout(static_cast<int>(area * locationFurnitures), static_cast<int>(area * locationItems));
+	}
+}
+
+void Map::populateLocationsWithZombies(float zombieDensity)
+{
+	for (Location* location : locations)
+	{
+		char sym = location->getSymbol();
+		
+		// Apartment and Safe House should not have any zombies
+		if (sym == 'A' || sym == 'F') {
+			continue;
+		} 
+
+		float density = zombieDensity;
+
+		if (sym == 'V') {
+			density = zombieDensity * 3.0f; // Evacuation point is heavily infested
+		}
+
+		int zombieCount = static_cast<int>(location->getInteriorFloorArea() * density);
+		if (zombieCount > 0)
+		{
+			location->spawnRandomZombies(zombieCount);
+		}
+	}
+}
+
 void Map::spawnRandomZombies(int zombieCount)
 {
 	std::random_device rd;
@@ -276,7 +313,7 @@ void Map::spawnRandomZombies(int zombieCount)
 
 	int spawned = 0;
 	int attempts = 0;
-	while (spawned < zombieCount && attempts < zombieCount)
+	while (spawned < zombieCount && attempts < zombieCount * 30)
 	{
 		int randomX = distrX(gen);
 		int randomY = distrY(gen);

@@ -30,6 +30,8 @@ public:
 	~Map();
 
 	void generateRandomLayout(int obstacleCount, int itemCount);
+	void randomiseLocationLayouts(float furnitureDensity = 0.08f, float itemDensity = 0.03f);
+	void populateLocationsWithZombies(float zombieDensity = 0.04f);
 	void spawnRandomZombies(int zombieCount);
 	void randomizeAllLocationLayouts(int furnitureCount = 5, int itemCount = 4);
 

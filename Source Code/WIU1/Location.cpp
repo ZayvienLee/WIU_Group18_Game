@@ -53,6 +53,13 @@ Location::Location(std::string locName, char locSymbol, int sizeX, int sizeY)
     // Default exit door at bottom wall at the center of the building
     interiorGrid[INTERIOR_HEIGHT - 1][INTERIOR_WIDTH / 2] = 'E';
     interiorGridActive[INTERIOR_HEIGHT - 1][INTERIOR_WIDTH / 2] = 'E';
+
+    if (getSymbol() == 'V')
+    {
+        // The Final door to get through
+        interiorGrid[0][INTERIOR_WIDTH / 2] = '^';
+        interiorGridActive[0][INTERIOR_WIDTH / 2] = '^';
+    }
 }
 
 Location::~Location()
@@ -94,7 +101,7 @@ void Location::spawnRandomZombies(int zombieCount)
 
     int spawned = 0;
     int attempts = 0;
-    while (spawned < zombieCount && attempts < zombieCount)
+    while (spawned < zombieCount && attempts < zombieCount * 30)
     {
         int randomX = distrX(gen);
         int randomY = distrY(gen);
@@ -150,7 +157,7 @@ bool Location::isIndoorWalkable(int x, int y) const
     if (x < 0 || x >= INTERIOR_WIDTH || y < 0 || y >= INTERIOR_HEIGHT) return false;
     // Impassable interior walls/furniture marked with '#', etc.
     // Check if the space is '.' OR 'E'
-    return (interiorGrid[y][x] == '.' || interiorGrid[y][x] == 'E');
+    return (interiorGrid[y][x] == '.' || interiorGrid[y][x] == 'E' || interiorGrid[y][x] == '^');
 }
 
 char Location::getTileAt(int x, int y) const
@@ -266,6 +273,22 @@ int Location::getSpawnY() const
     return spawnY;
 }
 
+int Location::getWidth() const
+{
+    return INTERIOR_WIDTH;
+}
+
+int Location::getHeight() const
+{
+    return INTERIOR_HEIGHT;
+}
+
+int Location::getInteriorFloorArea() const
+{
+    // Excluding the Bounding Walls
+    return (INTERIOR_WIDTH - 2) * (INTERIOR_HEIGHT - 2);
+}
+
 void Location::generateRandomLayout(int furnitureCount, int itemCount)
 {
     std::random_device rd;
@@ -274,20 +297,46 @@ void Location::generateRandomLayout(int furnitureCount, int itemCount)
     std::uniform_int_distribution<int> distrY(1, INTERIOR_HEIGHT - 2);
     std::uniform_int_distribution<int> itemTypes(0, 3);
 
-    int attempts = 0;
-
-    int placed = 0;
-    while (placed < furnitureCount && attempts < furnitureCount)
+    int placed = 0, attempts = 0;
+    while (placed < furnitureCount && attempts < furnitureCount * 30)
     {
         int randomX = distrX(gen);
         int randomY = distrY(gen);
         bool isSpawn = (randomX == spawnX && randomY == spawnY);
-        if (!isSpawn && interiorGrid[randomY][randomX] == '.')
+        bool isOccupied = (getNPCat(randomX, randomY) != nullptr) || (getFloorItemAt(randomX, randomY) != nullptr);
+
+        if (!isSpawn && !isOccupied && interiorGrid[randomY][randomX] == '.')
         {
-            interiorGrid[randomY][randomX] = '#';
-            interiorGridActive[randomY][randomX] = '#';
-            placed++;
-            attempts = 0;
+            bool nearDoor = false;
+
+            for (int dy = -2; dy <= 2; ++dy)
+            {
+                for (int dx = -2; dx <= 2; ++dx)
+                {
+                    int checkY = randomY + dx;
+                    int checkX = randomX + dy;
+
+                    if (checkY >= 0 && checkY < INTERIOR_HEIGHT && checkX >= 0 && checkX < INTERIOR_WIDTH)
+                    {
+                        if (interiorGridActive[checkY][checkX] == 'E' || interiorGridActive[checkY][checkX] == '^')
+                        {
+                            nearDoor = true;
+                        }
+                    }
+                }
+            }
+
+            if (!nearDoor)
+            {
+                interiorGrid[randomY][randomX] = '#';
+                interiorGridActive[randomY][randomX] = '#';
+                placed++;
+                attempts = 0;
+            }
+            else
+            {
+                attempts++;
+            }
         }
         else
         {
@@ -295,12 +344,15 @@ void Location::generateRandomLayout(int furnitureCount, int itemCount)
         }
     }
 
-    int spawned = 0;
-    while (spawned < itemCount && attempts < itemCount)
+    int spawned = 0; attempts = 0;
+    while (spawned < itemCount && attempts < itemCount * 30)
     {
         int randomX = distrX(gen);
         int randomY = distrY(gen);
-        if (isIndoorWalkable(randomX, randomY) && getFloorItemAt(randomX, randomY) == nullptr)
+
+        bool isOccupied = (getNPCat(randomX, randomY) != nullptr) || (getFloorItemAt(randomX, randomY) != nullptr);
+
+        if (isIndoorWalkable(randomX, randomY) && getFloorItemAt(randomX, randomY) == nullptr && getNPCat(randomX, randomY) == nullptr)
         {
             // Next check to ensure that it is not adjacent to an entrance to the building '.'
             // Nor near any obstacles.
@@ -310,16 +362,12 @@ void Location::generateRandomLayout(int furnitureCount, int itemCount)
             {
                 for (int dx = -1; dx <= 1; ++dx)
                 {
-                    int checkY = randomX + dy;
-                    int checkX = randomY + dx;
+                    int checkY = randomY + dy;
+                    int checkX = randomX + dx;
 
                     if (checkY >= 0 && checkY < INTERIOR_HEIGHT && checkX >= 0 && checkX < INTERIOR_WIDTH)
                     {
-                        if (interiorGridActive[checkY][checkX] == 'E' ||
-                            interiorGridActive[checkY][checkX] == 'C' ||
-                            interiorGridActive[checkY][checkX] == 'r' ||
-                            interiorGridActive[checkY][checkX] == '~'
-                            )
+                        if (interiorGridActive[checkY][checkX] == '#')
                         {
                             nearDoorOrObstacle = true;
                         }
@@ -328,8 +376,9 @@ void Location::generateRandomLayout(int furnitureCount, int itemCount)
             }
 
             // If it is safe, add the item into the map
-            if (!nearDoorOrObstacle && (randomX != 5 && randomY != 5))
+            if (!nearDoorOrObstacle)
             {
+
                 int type = itemTypes(gen);
                 Item* newItem = nullptr;
 
@@ -358,6 +407,27 @@ void Location::generateRandomLayout(int furnitureCount, int itemCount)
 
 void Location::addNPC(NPC* npc)
 {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> distrX(0, INTERIOR_WIDTH - 1);
+    std::uniform_int_distribution<int> distrY(0, INTERIOR_HEIGHT - 1);
+
+    int randX = 0;
+    int randY = 0;
+
+    do
+    {
+        randX = distrX(gen);
+        randY = distrY(gen);
+
+    } while (
+        !isIndoorWalkable(randX, randY) ||
+        getZombieAt(randX, randY) != nullptr ||
+        getNPCat(randX, randY) != nullptr
+        );
+
+    npc->setPosition(randX, randY);
+
     npcs.push_back(npc);
 }
 

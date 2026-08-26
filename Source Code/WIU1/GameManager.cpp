@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cctype>
+#include <random>
 #include "GameManager.h"
 #include "Map.h"
 #include "Player.h"
@@ -15,13 +16,14 @@
 #include "Ammunition.h"
 #include "Medicine.h"
 #include "Weapon.h"
+#include "AccessCard.h"
 
 // To add later on with the map and location, etc. To fix the warning and errors and add the 
 // necessary logic for each of them.
 
 GameManager::GameManager()
 {
-    player = new Player("Name", "The Player", 'P', 100, 100, 100, 100, 10, true, 20);
+    player = new Player("Name", "The Player", 'P', 100, 100, 100, 100, 10, true, 10);
 	isInBuilding = false;
 	currentBuilding = nullptr;
 	savedOutdoorX = 20;
@@ -37,7 +39,23 @@ GameManager::GameManager()
     if (supermarket != nullptr) {
         supermarket->addNPC(&storyManager.getZombieNPC());
         Temozolomide* temozolomide = new Temozolomide();
-        temozolomide->setPosition(5, 5);
+
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> distrX(0, supermarket->getWidth() - 1);
+        std::uniform_int_distribution<int> distrY(0, supermarket->getHeight() - 1);
+
+        int randX = 0;
+        int randY = 0;
+
+        do
+        {
+            randX = distrX(gen);
+            randY = distrY(gen);
+
+        } while (!supermarket->isIndoorWalkable(randX, randY));
+
+        temozolomide->setPosition(randX, randY);
         supermarket->addFloorItem(temozolomide);
     }
     if (policeStation != nullptr) {
@@ -47,9 +65,6 @@ GameManager::GameManager()
         hospital->addNPC(&storyManager.getpharmacyNPC());
     }
 
-    if (safehouse != nullptr) {
-        safehouse->addNPC(&storyManager.getTimothyNPC());
-    }
     if (school != nullptr) {
         school->addNPC(&storyManager.getTimothyNPC());
     }
@@ -101,6 +116,13 @@ void GameManager::handlePlayerInput(char moveCommand)
                 std::cout << "[INFO] Exiting building..." << std::endl;
                 exitBuilding();
             }
+            else if (currentBuilding->getSymbol() == 'V' && currentBuilding->getTileAt(nextX, nextY) == '^') // Special Case: The player has to get to the '^' exit to win the game
+            {
+                if (checkReachedEndGoal())
+                {
+                    hasWon = true;
+                }
+            }
         }
         else if (currentBuilding->getZombieAt(nextX, nextY) != nullptr)
         {
@@ -130,7 +152,7 @@ void GameManager::handlePlayerInput(char moveCommand)
             // Decrease hunger and thirst accordingly
             player->setHunger(player->getHunger() - 1);
             player->setThirst(player->getThirst() - 1);
-            applySurvivalPenalties();
+            applySurvivalPenalties();   // starving/dehydrated damage, if applicable
         }
         else if (outdoorMap.getZombieAt(nextX, nextY) != nullptr)
         {
@@ -146,15 +168,38 @@ void GameManager::handlePlayerInput(char moveCommand)
             // Identify building based on coordinates or adjacent label
             Location* targetBuilding = outdoorMap.getBuildingAt(player->getOutdoorX(), player->getOutdoorY());
             if (targetBuilding != nullptr) {
-                if (targetBuilding->getName() == "Safe House" && player->findItemByName("Key Card") == nullptr)
+                if (targetBuilding->getName() == "Safe House")
                 {
-                    std::cout << "[LOCKED] This door needs a keycard. Complete all quests to obtain one." << std::endl;
+                    if (player->findItemByName("Key Card") == nullptr)
+                    {
+                        std::cout << "[LOCKED] This door needs a keycard. Complete all quests to obtain one." << std::endl;
+                    }
+                    else
+                    {
+                        enterBuilding(targetBuilding);
+
+                        if (player->findItemByName("Access Card") == nullptr)
+                        {
+                            AccessCard* accessCard = new AccessCard();
+                            if (player->addItem(accessCard))
+                            {
+                                std::cout << "[SAFE HOUSE] Your keycard grants you an Access Card for Haven-7!" << std::endl;
+                            }
+                            else
+                            {
+                                accessCard->setPosition(player->getIndoorX(), player->getIndoorY());
+                                currentBuilding->addFloorItem(accessCard);
+                                std::cout << "[SAFE HOUSE] Your bags are full — an Access Card was left on the ground." << std::endl;
+                            }
+                        }
+                    }
                 }
-                else if (targetBuilding->getName() == "Evacuation Point")
+                else if (targetBuilding->getName() == "Evacuation Point (Demilitarised)")
                 {
                     if (checkEvacuationScreening())
                     {
-                        hasWon = true;
+                        enterBuilding(targetBuilding);
+                        std::cout << "This is the last leg between you and salvation! It's your time to shine!" << std::endl;
                     }
                 }
                 else
@@ -166,9 +211,7 @@ void GameManager::handlePlayerInput(char moveCommand)
     }
 
     updateZombiePositions();
-
     checkZombieAttacks();       // zombies now next to you get a hit in
-    applySurvivalPenalties();   // starving/dehydrated damage, if applicable
 }
 
 void GameManager::checkGroundItemInspection()
@@ -313,7 +356,7 @@ void GameManager::handleItemDrop(int slotNumber)
 
 void GameManager::rewardPlayerFromNPC(Player& playerRef, Map& mapRef, Item* questReward) const
 {
-    std::cout << "[NPC] 'Here, take this " << questReward->getName() << " for your help.'" << std::endl;
+    std::cout << "Oh, and also, here, take this " << questReward->getName() << " as a thank you for your help." << std::endl;
 
     int xPosLoc = isInBuilding ? playerRef.getIndoorX() : playerRef.getOutdoorX();
     int yPosLoc = isInBuilding ? playerRef.getIndoorY() : playerRef.getOutdoorY();
@@ -324,7 +367,7 @@ void GameManager::rewardPlayerFromNPC(Player& playerRef, Map& mapRef, Item* ques
 
     if (!playerRef.addItem(questReward)) {
         // Fallback: If inventory is full when NPC gives reward, drop it at player's feet
-        std::cout << "[NPC] 'Your bags are full. I'll leave it right here on the ground.'" << std::endl;
+        std::cout << "Since your bags are full, I'll leave it right here on the ground." << std::endl;
         questReward->setPosition(xPosLoc, yPosLoc);
         
         if (currentBuilding != nullptr) {
@@ -393,14 +436,13 @@ void GameManager::handlePlayerAttack(char choice)
             }
 
             checkZombieAttacks();   // zombies now next to you get a hit on the player
+            updateZombiePositions();
 
             return;
         }
         if (!isRanged) break; // melee only checks the one adjacent tile
     }
     std::cout << "[ATTACK] No target in range." << std::endl;
-
-    updateZombiePositions();
 }
 
 void GameManager::render(int viewWidth, int viewHeight) const
@@ -445,14 +487,28 @@ bool GameManager::checkEvacuationScreening()
         return false;
     }
 
-    if (player->findItemByName("Key Card") == nullptr)
+    if (player->findItemByName("Access Card") == nullptr)
     {
-        std::cout << "[SCREENING] Guard: \"Where's your clearance? Report to the Safe House first.\"" << std::endl;
+        std::cout << "[SCREENING] Guard: \"Where's your clearance? Report to the Safe House first using your Key Card to claim your Access Card.\"" << std::endl;
         return false;
     }
 
-    std::cout << std::endl << "[SCREENING] Guard: \"Papers check out. Welcome to Haven-7, survivor.\"" << std::endl;
+    std::cout << std::endl << "[SCREENING] Guard: \"OK You're clear to enter. But be alert. There are swarms of zombies standing between you this place. Be careful.\"" << std::endl;
     return true;
+}
+
+bool GameManager::checkReachedEndGoal()
+{
+    if (player->findItemByName("Access Card") != nullptr)
+    {
+        std::cout << std::endl << "[SCREENING] Guard: \"You made it. Papers are check out. Welcome to Haven-7, survivor.\"" << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cout << "[SCREENING] Guard: \"Where's your clearance? Did you drop your Access Card somewhere?\"" << std::endl;
+        return false;
+    }
 }
 
 bool GameManager::getHasWon() const
@@ -472,16 +528,7 @@ void GameManager::interactWithNPC()
 
     Item* reward = nullptr;
 
-    NPC* npc = currentBuilding->getNPCat(playerX + 1, playerY);
-    if (npc == nullptr) {
-        npc = currentBuilding->getNPCat(playerX - 1, playerY);
-    }
-    if (npc == nullptr) {
-        npc = currentBuilding->getNPCat(playerX, playerY + 1);
-    }
-    if (npc == nullptr) {
-        npc = currentBuilding->getNPCat(playerX, playerY - 1);
-    }
+    NPC* npc = currentBuilding->getNPCat(playerX, playerY);
 
     /* This is a special case where the NPC is the objective for another NPC's quest */
     if (npc == &storyManager.getTimothyNPC())
@@ -514,7 +561,7 @@ void GameManager::interactWithNPC()
         if (!quest.isAccepted()) {
             npc->talk();
         }
-        else if (storyManager.isTimothyFound() && quest.isAccepted()) {
+        else if (storyManager.isTimothyFound() && quest.isAccepted() && !quest.isCompleted()) {
             quest.completeQuest();
 
             npc->talk();
@@ -532,7 +579,7 @@ void GameManager::interactWithNPC()
         if (!quest.isAccepted()) {
             npc->talk();
         }
-        else if (storyManager.getZombiesKilled() >= 10 && quest.isAccepted()) {
+        else if (storyManager.getZombiesKilled() >= 10 && quest.isAccepted() && !quest.isCompleted()) {
             quest.completeQuest();
 
             npc->talk();
@@ -555,7 +602,7 @@ void GameManager::interactWithNPC()
         if (!quest.isAccepted())  {
             npc->talk();
         }
-        else if (turnInItem != nullptr && quest.isAccepted()) {
+        else if (turnInItem != nullptr && quest.isAccepted() && !quest.isCompleted()) {
             quest.completeQuest();
 
             player->removeItem(turnInItem);
@@ -576,9 +623,11 @@ void GameManager::interactWithNPC()
         rewardPlayerFromNPC(*player, outdoorMap, reward);
     }
 
-    /* This is to check if all of the quests are completed */
-    if (storyManager.allQuestsCompleted() && player->findItemByName("Key Card") == nullptr)
+    /* This is to check if all of the quests are completed. This only executes once */
+    if (storyManager.allQuestsCompleted() && player->findItemByName("Key Card") == nullptr && !storyManager.completionStatus())
     {
+        storyManager.setCompletionStatus();
+
         KeyCard* keycard = new KeyCard();
 
         if (player->addItem(keycard))

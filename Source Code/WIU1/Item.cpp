@@ -27,6 +27,11 @@ Item::Item(std::string n, std::string desc, int xPos, int yPos, char sym, int wg
 	quantity = qty;
 }
 
+bool Item::isConsumable() const
+{
+	return true;
+}
+
 int Item::getQuantity() const
 {
 	return quantity;

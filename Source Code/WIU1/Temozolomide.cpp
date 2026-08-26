@@ -10,11 +10,11 @@ Temozolomide::Temozolomide()
 	y = 5;
 	symbol = 't';
 	inInventory = false;
-	weight = 1;
+	weight = 500;
 	quantity = 1;
 }
 
 void Temozolomide::consume(Player& player)
 {
-
+	std::cout << "[TEMOZOLOMIDE] This item is needed by Dr. Chen! You can't consume this item! Bring it to him instead." << std::endl;
 }

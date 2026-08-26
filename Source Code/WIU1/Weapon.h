@@ -16,6 +16,8 @@ public:
 
     void consume(Player& player) override;
 
+    bool isConsumable() const override;
+
 	int getDamage() const;
 	int getAtkRange() const;
 };

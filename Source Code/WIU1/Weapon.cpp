@@ -37,6 +37,11 @@ void Weapon::consume(Player& player)
 	std::cout << "[WEAPON] You can't consume a weapon. Press [U] again to equip it instead." << std::endl;
 }
 
+bool Weapon::isConsumable() const
+{
+	return false;
+}
+
 int Weapon::getAtkRange() const
 {
 	return atkRange;

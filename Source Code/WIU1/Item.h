@@ -21,6 +21,7 @@ public:
 
 	// Pure Virtual Function: Every Item type MUST define what happens when used
 	virtual void consume(Player& player) = 0;
+	virtual bool isConsumable() const;
 
 	int getQuantity() const;
 	void setQuantity(int qty);

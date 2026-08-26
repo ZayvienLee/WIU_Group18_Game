@@ -47,6 +47,12 @@ void NPC::talk()
     }
 }
 
+void NPC::setPosition(int newX, int newY)
+{
+    positionX = newX;
+    positionY = newY;
+}
+
 Quest* NPC::getQuest() const
 {
     return quest;

@@ -149,7 +149,7 @@ void Player::removeItem(Item* item)
 
 	for (int i = 0; i < maxItems; ++i)
 	{
-		if (inventory[i] = item)
+		if (inventory[i] == item)
 		{
 			inventory[i] = nullptr;
 			itemCount--;

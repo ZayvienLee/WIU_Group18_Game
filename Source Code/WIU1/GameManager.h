@@ -59,5 +59,6 @@ public:
 
 	/* Win Conditions */
 	bool checkEvacuationScreening();
+	bool checkReachedEndGoal();
 	bool getHasWon() const;
 };

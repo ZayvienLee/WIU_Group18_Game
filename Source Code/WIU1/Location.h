@@ -43,6 +43,9 @@ public:
     char getSymbol() const;
     int getSpawnX() const;
     int getSpawnY() const;
+    int getWidth() const;
+    int getHeight() const;
+    int getInteriorFloorArea() const;
 
     /* Generate Layout */
     void generateRandomLayout(int furnitureCount, int itemCount);

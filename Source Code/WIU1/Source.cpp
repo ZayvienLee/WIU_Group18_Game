@@ -76,7 +76,8 @@ int main(void)
 
     while (menuRunning) {
 
-                std::cout << R"(                         ______   _______  _______  ______              _______           _______
+                std::cout << R"(
+                         ______   _______  _______  ______              _______           _______
                         (  __  \ (  ____ \(  ___  )(  __  \   |\     /|(  ___  )|\     /|(  ____ )
                         | (  \  )| (    \/| (   ) || (  \  )  | )   ( || (   ) || )   ( || (    )|
                         | |   ) || (__    | (___) || |   ) |  | (___) || |   | || |   | || (____)|
@@ -115,7 +116,7 @@ int main(void)
 
             // Add the obstacles to the map
             game.getMap().generateRandomLayout(60, 30); // Stating the number of obstacles and items to include
-            game.getMap().randomizeAllLocationLayouts(8, 4);
+            game.getMap().randomiseLocationLayouts(0.08f, 0.03f); // This is based on the density of the location (area)
             game.getMap().spawnRandomZombies(20);
 
             instructionControls();
@@ -136,7 +137,8 @@ int main(void)
                     << "Health: " << game.getPlayer()->getHealth()
                     << "/100 | Hunger: " << game.getPlayer()->getHunger()
                     << "/100 | Thirst: " << game.getPlayer()->getThirst()
-                    << "/100 | Quests Done: " << game.getStoryManager().getCompletedQuestsCount() << "/3" << std::endl; // For Quest UI
+                    << "/100 | Quests Done: " << game.getStoryManager().getCompletedQuestsCount() << "/3" << std::endl // For Quest UI
+                    << "Total Zombies Killed: " << game.getStoryManager().getZombiesKilled() << std::endl;
 
                 // Prompt user input
                 std::cout << "Enter command (W/A/S/D/E/I/U/Q/T/O/X): ";
@@ -224,41 +226,36 @@ int main(void)
                         Item* target = game.getPlayer()->getItemByNumber(slot);
                         if (target != nullptr)
                         {
-                            // Check if the item is a weapon or not
-                            Weapon* weaponTarget = dynamic_cast<Weapon*>(target);
-
-                            if (weaponTarget)
+                            if (!target->isConsumable())
                             {
-                                game.getPlayer()->removeItem(weaponTarget, slot);
-                                game.getPlayer()->equipWeapon(weaponTarget);
-
-                                std::cout << "[EQUIPPED] Successfully Equipped Weapon: " << weaponTarget->getName() << std::endl;
-                            }
-                            else
-                            {
-                                Temozolomide* temozolomide = dynamic_cast<Temozolomide*>(target);
-
-                                if (temozolomide != nullptr)
+                                if (Weapon* weaponTarget = dynamic_cast<Weapon*>(target))
                                 {
-                                    std::cout << "Temezolomide cannot be consumed" << std::endl;
+                                    game.getPlayer()->removeItem(weaponTarget, slot);
+                                    game.getPlayer()->equipWeapon(weaponTarget);
+
+                                    std::cout << "[EQUIPPED] " << weaponTarget->getName() << std::endl;
                                 }
                                 else
                                 {
-                                    target->consume(*(game.getPlayer()));
-                                    target->setQuantity(target->getQuantity() - 1); // Used one item
+                                    std::cout << "[ITEM] " << target->getName() << " can't be used this way." << std::endl;
+                                }
+                            }
+                            else
+                            {
+                                target->consume(*(game.getPlayer()));
+                                target->setQuantity(target->getQuantity() - 1); // Used one item
 
 
-                                    if (target->getQuantity() > 0)
-                                    {
-                                        std::cout << "[USED] Consumed one instance of Item successfully!" << std::endl;
-                                    }
-                                    else if (target->getQuantity() <= 0)
-                                    {
-                                        game.getPlayer()->removeItem(target, slot);
-                                        delete target; // Clean memory after single-use consumption
+                                if (target->getQuantity() > 0)
+                                {
+                                    std::cout << "[USED] Consumed one instance of Item successfully!" << std::endl;
+                                }
+                                else if (target->getQuantity() <= 0)
+                                {
+                                    game.getPlayer()->removeItem(target, slot);
+                                    delete target; // Clean memory after single-use consumption
 
-                                        std::cout << "[ALL USED] All instances of Item have been completely consumed." << std::endl;
-                                    }
+                                    std::cout << "[ALL USED] All instances of Item have been completely consumed." << std::endl;
                                 }
                             }
                         }

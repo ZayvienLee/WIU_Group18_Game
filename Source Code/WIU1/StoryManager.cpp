@@ -8,6 +8,7 @@
 constexpr auto RESET = "\033[37m";
 constexpr auto RED = "\033[31m";    /* Red */
 constexpr auto GREEN = "\033[32m";  /* Green */
+constexpr auto YELLOW = "\033[33m"; /* Yellow */
 
 void StoryManager::storyIntro() {
 
@@ -77,9 +78,9 @@ StoryManager::StoryManager() :
     // Quests
 
     // QUEST NAME, QUEST DESCRIPTION
-    killZombieQuest("Kill 3 Zombies", "Kill 3 Zombies somewhere in the city"),
+    killZombieQuest("Kill 10 Zombies", "Kill 10 Zombies roaming around in the city"),
 
-    findMissingPersonQuest("Find Timothy", "Find Timothy somewhere in the city"),
+    findMissingPersonQuest("Find Timothy somewhere in the city", "Timothy was last seen in the School Grounds."),
 
     findPharmacyQuest("Search for Temozolomide", "Search for Temozolomide in the Pharmacy section of the Supermarket"),
 
@@ -89,9 +90,9 @@ StoryManager::StoryManager() :
     zombieNPC(
         "Iris",
         "A survivor who is looking for help",
-        1, 1, 'i',
+        6, 7, 'i',
         &killZombieQuest,
-        "There is a bunch of zombies in the city, please kill them before they attack anyone else!"
+        "There is a bunch of zombies in the city, please kill them before they attack anyone else!",
         "There are still some zombies roaming around. Help to elimate the rest of them.",
         "Thank you for killing the zombies!"
     ),
@@ -99,16 +100,16 @@ StoryManager::StoryManager() :
     missingpersonNPC(
         "Hank",
         "A police officer searching for a missing civilian",
-        1, 1, 'h',
+        3, 4, 'h',
         &findMissingPersonQuest,
-        "Someone went missing during the outbreak. His name is Timothy. Please find them and bring them back to me."
+        "Someone went missing during the outbreak. His name is Timothy. Please find them and bring them back to me.",
         "Please find Timothy, first.",
         "You found Timothy. Thank You so much!"
     ),
 
     pharmacyNPC("Dr. Chen",
         "A doctor who is looking for a cure",
-        1, 1, 'd',
+        9, 10, 'd',
         &findPharmacyQuest,
         "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me",
         "Please bring me the Temozolomide.",
@@ -118,7 +119,7 @@ StoryManager::StoryManager() :
     timothyNPC(
         "Timothy",
         "A missing survivor",
-        1, 1, 't',
+        2, 3, 't',
         nullptr,
         "Thank you for finding me!"
     )
@@ -126,16 +127,36 @@ StoryManager::StoryManager() :
 
 void StoryManager::showQuests() const
 {
-    std::cout << "========================================" << std::endl
-              << "          Quests          " << std::endl
-              << "========================================" << std::endl;
+    auto printQuest = [](const Quest& q)
+        {
+            std::cout << " - " << q.getName() << ": ";
+
+            if (q.isCompleted()) std::cout << GREEN << "Completed";
+            else if (q.isAccepted()) std::cout << YELLOW << "In Progress";
+            else std::cout << RED << "Not Accepted";
+
+            std::cout << RESET << std::endl;
+        };
+
+    std::cout 
+        << "========================================" << std::endl
+        << "                 QUESTS                 " << std::endl
+        << "========================================" << std::endl;
+
+    printQuest(killZombieQuest);
+    printQuest(findMissingPersonQuest);
+    printQuest(findPharmacyQuest);
+
+    /*std::cout << "========================================" << std::endl
+        << "          Quests          " << std::endl
+        << "========================================" << std::endl;
 
     bool hasQuest = false;
 
     if (killZombieQuest.isAccepted())
     {
         hasQuest = true;
-        
+
         std::cout << "1. " << killZombieQuest.getName() << std::endl;
         std::cout << "   " << killZombieQuest.getDescription() << std::endl;
 
@@ -163,11 +184,11 @@ void StoryManager::showQuests() const
         }
         else if (timothyFound)
         {
-            std::cout << "   Status: Return to " << missingpersonNPC.getName() << std::endl << std::endl;
+            std::cout << "   Status: Return to Hank" << std::endl << std::endl;
         }
         else
         {
-            std::cout << "   Status: Find " << timothyNPC.getName() << std::endl << std::endl;
+            std::cout << "   Status: Find Timothy" << std::endl << std::endl;
         }
     }
 
@@ -184,7 +205,7 @@ void StoryManager::showQuests() const
         }
         else if (temozolomideFound)
         {
-            std::cout << "   Status: Return to " << pharmacyNPC.getName() << std::endl << std::endl;
+            std::cout << "   Status: Return to Dr Chen" << std::endl << std::endl;
         }
         else
         {
@@ -195,8 +216,7 @@ void StoryManager::showQuests() const
     if (!hasQuest)
     {
         std::cout << "No quests claimed." << std::endl;
-    }
-    
+    }*/
 }
 
 NPC& StoryManager::getZombieNPC()
@@ -253,6 +273,16 @@ bool StoryManager::allQuestsCompleted() const {
     return getCompletedQuestsCount() == 3;
 }
 
+void StoryManager::setCompletionStatus()
+{
+    alreadyCompleted = true;
+}
+
+bool StoryManager::completionStatus() const
+{
+    return alreadyCompleted;
+}
+
 NPC& StoryManager::getTimothyNPC()
 {
     return timothyNPC;
@@ -260,15 +290,7 @@ NPC& StoryManager::getTimothyNPC()
 
 void StoryManager::addZombieKill()
 {
-    if (killZombieQuest.isAccepted() && !killZombieQuest.isCompleted())
-    {
-        zombiesKilled++;
-
-        if (zombiesKilled > 3)
-        {
-            zombiesKilled = 3;
-        }
-    }
+    zombiesKilled++;
 }
 
 int StoryManager::getZombiesKilled() const

@@ -3,8 +3,7 @@
 #include "Quest.h"
 #include <string>
 
-class NPC :
-    public GameObject
+class NPC : public GameObject
 {
 private:
     std::string dialogue; // This dialogue plays when the player first interacts with the NPC
@@ -15,7 +14,7 @@ private:
 public:
     NPC(std::string n, std::string desc, int x, int y, char sym, Quest* qst, std::string dial, std::string dialProgress = "?", std::string dialComplete = "?");
     void talk();
+    void setPosition(int newX, int newY);
+
     Quest* getQuest() const;
-
 };
-
