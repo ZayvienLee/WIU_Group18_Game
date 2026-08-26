@@ -4,15 +4,14 @@
 
 #include "GameManager.h"
 #include "StoryManager.h"
+#include "GameObject.h"
+#include "Item.h"
+#include "Weapon.h"
 
 // The libraries to check for memory leaks
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
-#include "Item.h"
-#include "Weapon.h"
-#include "Temozolomide.h"
-#include "GameObject.h"
 
 // This is needed to 'clear' the console
 static void clearConsole()
@@ -31,7 +30,6 @@ static void instructionControls()
     std::cout << "  [G]       - Open Quest Menu" << std::endl;
     std::cout << "  [F]       - Attack" << std::endl;
     std::cout << "  [U]       - Use / Consume Item / Equip Weapon" << std::endl;
-    std::cout << "  [G]       - Show Quests" << std::endl;
     std::cout << "  [Q]       - Drop Item" << std::endl;
     std::cout << "  [T]       - Controls & Legend" << std::endl;
     std::cout << "  [O]       - Unequip Weapon" << std::endl;
@@ -45,9 +43,9 @@ static void showLegend()
 {
     std::cout << std::endl
         << "Legend: " << std::endl
-        << "  P - Player"
-        << "  Z - Zombie" << std::endl
-        << "  A - Apartment (Starting Point)"
+        << "  " << Colour::GREEN << "P" << Colour::RESET << " - Player" << std::endl
+        << "  " << Colour::BOLD_RED << "Z" << Colour::RESET << " - Zombie" << std::endl
+        << "  A - Apartment (Starting Point)" << std::endl
         << "  S - Supermarket" << std::endl
         << "  H - Hospital" << std::endl
         << "  PS - Police Station" << std::endl
@@ -56,15 +54,18 @@ static void showLegend()
         << "  F - Safe House" << std::endl
         << "  M - Military Base" << std::endl
         << "  E - Evacuation Point" << std::endl
-        << "  f - Food" << std::endl
-        << "  w - Water" << std::endl
-        << "  m - Medicine" << std::endl
-        << "  a - Ammunition" << std::endl
-        << "  g - Gun / Firearm" << std::endl
-        << "  k - Knife" << std::endl
-        << "  i - Iris / NPC" << std::endl
-        << "  h - Hank (Police Officer) / NPC" << std::endl
-        << "  d - Dr. Chen / NPC" << std::endl;
+        << "  " << Colour::GREEN << "f" << Colour::RESET << " - Food" << std::endl
+        << "  " << Colour::BLUE << "w" << Colour::RESET << " - Water" << std::endl
+        << "  " << Colour::CYAN << "m" << Colour::RESET << " - Medicine" << std::endl
+        << "  " << Colour::YELLOW << "Z" << Colour::RESET << " - Ammunition" << std::endl
+        << "  " << Colour::MAGENTA << "g" << Colour::RESET << " - Gun / Firearm" << std::endl
+        << "  " << Colour::MAGENTA << "k" << Colour::RESET << " - Knife" << std::endl
+        << "  " << Colour::BOLD_CYAN << "k" << Colour::RESET << " - Key Card" << std::endl
+        << "  " << Colour::BOLD_CYAN << "a" << Colour::RESET << " - Access Card" << std::endl
+        << "  " << Colour::CYAN << "i" << Colour::RESET << " - NPC Iris" << std::endl
+        << "  " << Colour::CYAN << "h" << Colour::RESET << " - NPC Hank (Police Officer)" << std::endl
+        << "  " << Colour::CYAN << "t" << Colour::RESET << " - NPC Timothy" << std::endl
+        << "  " << Colour::CYAN << "d" << Colour::RESET << " - NPC Dr. Chen" << std::endl;
 
     std::cout << std::endl;
 }
@@ -141,7 +142,7 @@ int main(void)
                     << "Total Zombies Killed: " << game.getStoryManager().getZombiesKilled() << std::endl;
 
                 // Prompt user input
-                std::cout << "Enter command (W/A/S/D/E/I/U/Q/T/O/X): ";
+                std::cout << "Enter command (W/A/S/D/E/I/G/F/U/Q/T/O/X): ";
 
                 // Get the input from the player
                 input = _getch();

@@ -13,7 +13,7 @@ KeyCard::KeyCard()
 	inInventory = true;
 	weight = 50;
 	quantity = 1;
-	colourCode = Colour::YELLOW;
+	colourCode = Colour::BOLD_CYAN;
 }
 
 void KeyCard::consume(Player & player)
