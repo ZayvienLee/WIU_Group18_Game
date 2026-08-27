@@ -14,8 +14,9 @@ Weapon::Weapon()
 
 	atkRange = 0;
 	wDamage = 0;
-
 	weight = 0;
+	damageMultiplier = 0;
+
 	colourCode = Colour::MAGENTA;
 }
 
@@ -28,6 +29,8 @@ Weapon::Weapon(std::string n, std::string desc, char sym, int atk, int atkR, int
 
 	atkRange = atkR;
 	wDamage = atk;
+
+	damageMultiplier = 1;
 	
 	weight = wght;
 	colourCode = Colour::MAGENTA;

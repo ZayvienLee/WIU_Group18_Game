@@ -96,8 +96,8 @@ StoryManager::StoryManager() :
     zombiesKilled = 0;
     timothyFound = false;
     temozolomideFound = false;
-    hasAlreadyRecievedCard = false;
-    TimeToNextEvent = 0;
+    hasReceivedKeyCard = false;
+    hasReceivedAccessCard = false;
     MessageRand = 0;
     DoneSideQuests = 0;
 }
@@ -155,7 +155,7 @@ void StoryManager::RadioMessage(int playerHealth)
         std::cout << "[RADIO] *heavy static* \"...you sound like you're in rough shape out there. Find medicine, fast.\"" << std::endl;
         return;
     }
-    if (allQuestsCompleted() && !checkHasAlreadyRecievedCard())
+    if (allQuestsCompleted() && !checkHasReceivedKeyCard())
     {
         std::cout << "[RADIO] \"This is Haven-7. All objectives clear on our end - head to the Safe House for your clearance.\"" << std::endl;
         return;
@@ -281,14 +281,24 @@ bool StoryManager::allQuestsCompleted() const {
     return getCompletedQuestsCount() >= 5;
 }
 
-void StoryManager::setRecievedCard()
+void StoryManager::setReceivedKeyCard()
 {
-    hasAlreadyRecievedCard = true;
+    hasReceivedKeyCard = true;
 }
 
-bool StoryManager::checkHasAlreadyRecievedCard() const
+bool StoryManager::checkHasReceivedKeyCard() const
 {
-    return hasAlreadyRecievedCard;
+    return hasReceivedKeyCard;
+}
+
+void StoryManager::setReceivedAccessCard()
+{
+    hasReceivedAccessCard = true;
+}
+
+bool StoryManager::checkHasReceivedAccessCard() const
+{
+    return hasReceivedAccessCard;
 }
 
 NPC& StoryManager::getTimothyNPC()
@@ -332,14 +342,4 @@ void StoryManager::findTimothy()
 bool StoryManager::isTimothyFound() const
 {
     return timothyFound;
-}
-
-void StoryManager::findTemozolomide()
-{
-    temozolomideFound = true;
-}
-
-bool StoryManager::isTemozolomideFound() const
-{
-    return temozolomideFound;
 }

@@ -1,9 +1,10 @@
 #pragma once
 #include "Weapon.h"
+#include <string>
+
 class Ranged : public Weapon
 {
 private:
-	int damageMultiplier;
 	bool isFirearm; // Indicates if the ranged weapon is a firearm
 
 public:

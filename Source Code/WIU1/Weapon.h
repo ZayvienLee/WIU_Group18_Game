@@ -6,7 +6,7 @@ class Player; // Forward declaration to avoid circular include
 
 class Weapon : public Item
 {
-private:
+protected:
     int atkRange;
     int wDamage;
 	int damageMultiplier; // Multiplier for damage if the weapon is two-handed

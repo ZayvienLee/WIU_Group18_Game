@@ -22,7 +22,8 @@ private:
     int zombiesKilled;
     bool timothyFound;
     bool temozolomideFound;
-    bool hasAlreadyRecievedCard;
+    bool hasReceivedKeyCard;
+    bool hasReceivedAccessCard;
 
     int TimeToNextEvent;
     int MessageRand;
@@ -53,12 +54,11 @@ public:
     void findTimothy();
     bool isTimothyFound() const;
 
-    void findTemozolomide();
-    bool isTemozolomideFound() const;
-
     bool allQuestsCompleted() const;
-    void setRecievedCard();
-    bool checkHasAlreadyRecievedCard() const;
+    void setReceivedKeyCard();
+    bool checkHasReceivedKeyCard() const;
+    void setReceivedAccessCard();
+    bool checkHasReceivedAccessCard() const;
 
     int getCompletedQuestsCount() const;
 

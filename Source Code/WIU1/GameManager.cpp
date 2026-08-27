@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <cctype>
 #include <random>
@@ -18,7 +17,8 @@
 #include "Medicine.h"
 #include "AccessCard.h"
 #include "QuestItem.h"
-
+#include "Melee.h"
+#include "Ranged.h"
 
 // To add later on with the map and location, etc. To fix the warning and errors and add the 
 // necessary logic for each of them.
@@ -114,7 +114,7 @@ GameManager::GameManager()
         currentBuilding = apartment;
         player->setIndoorPosition(apartment->getSpawnX(), apartment->getSpawnY());
 
-        player->equipWeapon(new Weapon("Knife", "A rusty kitchen knife. Reliable up close.", 'k', 15, 1, 200));
+        player->equipWeapon(new Melee("Knife", "A rusty kitchen knife. Reliable up close.", 'k', 15, 1, 200, false, 1));
     }
 
     hasWon = false;
@@ -389,12 +389,11 @@ void GameManager::handleItemPickup()
 
         if (groundItem->getName() == "Temozolomide" && storyManager.getfindPharmacyQuest().isAccepted())
         {
-            storyManager.findTemozolomide();
 
             std::cout << "You found the Temozolomide!" << std::endl;
             std::cout << "Return to " << storyManager.getpharmacyNPC().getName() << std::endl;
         }
-        else if (groundItem->getName() == "Tool Parts" && storyManager.getScavengePartsQuest().isAccepted())
+        else if (groundItem->getName() == "Toolbox Parts" && storyManager.getScavengePartsQuest().isAccepted())
         {
             std::cout << "You found the Toolbox Parts!" << std::endl;
             std::cout << "Return to " << storyManager.getMechanicNPC().getName() << std::endl;
@@ -706,7 +705,7 @@ void GameManager::interactWithNPC()
 
             npc->talk();
 
-            reward = new Weapon("Pistol", "A sturdy sidearm " + storyManager.getpharmacyNPC().getName() + " kept for protection.", 'g', 30, 3, 500);
+            reward = new Ranged("Pistol", "A sturdy sidearm " + storyManager.getpharmacyNPC().getName() + " kept for protection.", 'g', 30, 3, 500, true, 1);
         }
         else {
             npc->talk();
@@ -745,6 +744,9 @@ void GameManager::interactWithNPC()
         else if (storyManager.getZombiesKilled() >= 25 && !quest.isCompleted()) {
             quest.completeQuest();
             npc->talk();
+            
+            reward = new Melee("Machete", "A heavy two-handed blade recovered from the armory.", 'b', 25, 1, 800, true, 2);
+
             player->increaseMaxHealth(30);
         }
         else {
@@ -758,7 +760,7 @@ void GameManager::interactWithNPC()
         {
             npc->talk();
         }
-        else if (player->findItemByName("Access Card") == nullptr && storyManager.checkHasAlreadyRecievedCard())
+        else if (player->findItemByName("Access Card") == nullptr && storyManager.checkHasReceivedAccessCard())
         {
             std::cout << npc->getName() << ": You've done it. You have proven to be an extraordinary survivior. Here - this is your ticket to Haven-7." << std::endl;
 
@@ -775,7 +777,7 @@ void GameManager::interactWithNPC()
                 std::cout << "[SAFE HOUSE] Your bags are full - an Access Card was left on the ground." << std::endl;
             }
 
-            storyManager.setRecievedCard();
+            storyManager.setReceivedAccessCard();
         }
         else
         {
@@ -789,9 +791,9 @@ void GameManager::interactWithNPC()
     }
 
     /* This is to check if all of the quests are completed. This only executes once */
-    if (storyManager.allQuestsCompleted() && player->findItemByName("Key Card") == nullptr && !storyManager.checkHasAlreadyRecievedCard())
+    if (storyManager.allQuestsCompleted() && player->findItemByName("Key Card") == nullptr && !storyManager.checkHasReceivedKeyCard())
     {
-        storyManager.setRecievedCard();
+        storyManager.setReceivedKeyCard();
 
         KeyCard* keycard = new KeyCard();
 

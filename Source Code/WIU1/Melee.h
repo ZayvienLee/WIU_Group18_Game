@@ -1,9 +1,10 @@
 #pragma once
 #include "Weapon.h"
+#include <string>
+
 class Melee : public Weapon
 {
 private:
-	int damageMultiplier; // Multiplier for damage if the melee weapon is two-handed
 	bool is2Handed; // Indicates if the melee weapon requires two hands to wield
 
 public:

@@ -1,21 +1,22 @@
 #include "Melee.h"
-#include "Player.h"
+#include "Weapon.h"
+#include <string>
 
-Melee::Melee()
+Melee::Melee() : Weapon() // inherits all of Weapon's defaults
 {
-	damageMultiplier = 1;
 	is2Handed = false;
 }
 
 Melee::Melee(std::string n, std::string desc, char sym, int atk, int atkR, int wght, bool in2Hands, int dmgMulti)
+	: Weapon(n, desc, sym, atk, atkR, wght) // delegate: sets weight, name, damage, range, etc.
 {
-	damageMultiplier = dmgMulti;
 	is2Handed = in2Hands;
+	setDamageMultiplier(dmgMulti);
 
-	Weapon::setDamageMultiplier(damageMultiplier);
-
-	if (is2Handed) {
-		Weapon::setDamage(Weapon::getDamage() * Weapon::getDamageMultiplier());
+	// Two-handed weapons swing harder, multiplies the damage
+	if (is2Handed)
+	{
+		setDamage(getDamage() * dmgMulti);
 	}
 }
 

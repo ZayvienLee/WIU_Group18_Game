@@ -1,21 +1,27 @@
 #include "Ranged.h"
+#include "Weapon.h"
+#include <string>
 
-Ranged::Ranged()
+Ranged::Ranged() : Weapon() // inherits all of Weapon's defaults
 {
-	damageMultiplier = 1;
 	isFirearm = false;
 }
 
 Ranged::Ranged(std::string n, std::string desc, char sym, int atk, int atkR, int wght, bool isGun, int dmgMulti)
+	: Weapon(n, desc, sym, atk, atkR, wght)
 {
-	damageMultiplier = dmgMulti;
 	isFirearm = isGun;
+	setDamageMultiplier(dmgMulti);
 
-	Weapon::setDamageMultiplier(damageMultiplier);
+	if (isFirearm)
+	{
+		setDamage(getDamage() * dmgMulti);
 
-	if (isFirearm) {
-		Weapon::setDamage(Weapon::getDamage() * Weapon::getDamageMultiplier());
-		Weapon::setAtkRange(100);
+		// Minimum reach of FireArms
+		if (getAtkRange() < 6)
+		{
+			setAtkRange(6);
+		}
 	}
 }
 

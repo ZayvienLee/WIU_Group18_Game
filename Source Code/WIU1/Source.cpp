@@ -46,7 +46,7 @@ static void showLegend()
         << "  A - Apartment (Starting Point)" << std::endl
         << "  S - Supermarket" << std::endl
         << "  H - Hospital" << std::endl
-        << "  PS - Police Station" << std::endl
+        << "  P - Police Station" << std::endl
         << "  C - School" << std::endl
         << "  G - Gas Station" << std::endl
         << "  F - Safe House" << std::endl
@@ -60,7 +60,7 @@ static void showLegend()
 
     std::cout << std::endl << "Press Enter for next page" << std::endl;
         
-    std::cin.clear();
+    std::cin.ignore();
     std::cin.get();
 
     clearConsole();
@@ -72,6 +72,7 @@ static void showLegend()
         << "  " << Colour::CYAN << "m" << Colour::RESET << " - Medicine" << std::endl
         << "  " << Colour::YELLOW << "a" << Colour::RESET << " - Ammunition" << std::endl
         << "  " << Colour::MAGENTA << "g" << Colour::RESET << " - Gun / Firearm" << std::endl
+        << "  " << Colour::MAGENTA << "k" << Colour::RESET << " - Knife" << std::endl
         << "  " << Colour::MAGENTA << "k" << Colour::RESET << " - Knife" << std::endl
         << "  " << Colour::BOLD_MAGENTA << "t" << Colour::RESET << " - Temozolomide" << std::endl
         << "  " << Colour::BOLD_MAGENTA << "p" << Colour::RESET << " - Toolbox Parts" << std::endl
@@ -320,7 +321,7 @@ int main(void)
 
                     std::cout << "Press Enter to see Legend..." << std::endl;
 
-                    std::cin.clear();
+                    std::cin.ignore();
                     std::cin.get();
 
                     clearConsole();
