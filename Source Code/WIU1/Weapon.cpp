@@ -11,8 +11,10 @@ Weapon::Weapon()
 	name = "Unknown Weapon";
 	description = "This is an Unknown Weapon";
 	symbol = '?';
-	atkRange = 1;
+
+	atkRange = 0;
 	wDamage = 0;
+
 	weight = 0;
 	colourCode = Colour::MAGENTA;
 }
@@ -26,8 +28,8 @@ Weapon::Weapon(std::string n, std::string desc, char sym, int atk, int atkR, int
 
 	atkRange = atkR;
 	wDamage = atk;
+	
 	weight = wght;
-
 	colourCode = Colour::MAGENTA;
 }
 
@@ -50,4 +52,39 @@ int Weapon::getAtkRange() const
 int Weapon::getDamage() const
 {
 	return wDamage;
+}
+
+int Weapon::getWeight() const
+{
+	return weight;
+}
+
+int Weapon::getDamageMultiplier() const
+{
+	return damageMultiplier;
+}
+
+bool Weapon::isTwoHanded() const
+{
+	return false;
+}
+
+bool Weapon::isGun() const
+{
+	return false;
+}
+
+void Weapon::setDamage(int dmg)
+{
+	wDamage = dmg;
+}
+
+void Weapon::setAtkRange(int atkR)
+{
+	atkRange = atkR;
+}
+
+void Weapon::setDamageMultiplier(int dmgMulti)
+{
+	damageMultiplier = dmgMulti;
 }
