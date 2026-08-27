@@ -9,6 +9,7 @@ class Weapon : public Item
 private:
     int atkRange;
     int wDamage;
+	int damageMultiplier; // Multiplier for damage if the weapon is two-handed
 
 public:
     Weapon();
@@ -18,7 +19,16 @@ public:
 
     bool isConsumable() const override;
 
+	void setDamage(int dmg);
+	void setAtkRange(int atkR);
+	void setDamageMultiplier(int dmgMulti);
+
 	int getDamage() const;
 	int getAtkRange() const;
+	int getWeight() const;
+	int getDamageMultiplier() const;
+
+	virtual bool isTwoHanded() const;
+	virtual bool isGun() const;
 };
 
