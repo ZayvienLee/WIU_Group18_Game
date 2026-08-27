@@ -157,7 +157,7 @@ void Map::generateRandomLayout(int obstacleCount, int itemCount)
 	std::uniform_int_distribution distrYPos(1, HEIGHT - 1);
 
 	// The array of the obstacle types to be randomly placed and allocated
-	char obstacleTypes[] = { 'C', 'r', '~' };
+	char obstacleTypes[] = { 'c', 'r', '~' };
 	int numTypes = sizeof(obstacleTypes) / sizeof(obstacleTypes[0]);
 
 	int placed = 0;
@@ -185,7 +185,7 @@ void Map::generateRandomLayout(int obstacleCount, int itemCount)
 					{
 						if (
 							baseGrid[checkY][checkX] == '.' ||
-							activeGrid[checkY][checkX] == 'C' ||
+							activeGrid[checkY][checkX] == 'c' ||
 							activeGrid[checkY][checkX] == 'r' ||
 							activeGrid[checkY][checkX] == '~'
 							)
@@ -238,7 +238,7 @@ void Map::generateRandomLayout(int obstacleCount, int itemCount)
 
 					if (checkY >= 0 && checkY < HEIGHT && checkX >= 0 && checkX < WIDTH)
 					{
-						if (baseGrid[checkY][checkX] == '.' || activeGrid[checkY][checkX] == 'C' || activeGrid[checkY][checkX] == 'r' || activeGrid[checkY][checkX] == '~')
+						if (baseGrid[checkY][checkX] == '.' || activeGrid[checkY][checkX] == 'c' || activeGrid[checkY][checkX] == 'r' || activeGrid[checkY][checkX] == '~')
 						{
 							nearDoorOrObstacle = true;
 						}

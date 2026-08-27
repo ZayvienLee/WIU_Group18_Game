@@ -30,7 +30,7 @@ QuestItem::QuestItem(std::string n, std::string desc, char sym)
 
 void QuestItem::consume(Player & player)
 {
-	std::cout << "[QUEST ITEM] This can't be used directly — bring it to whoever needs it." << std::endl;
+	std::cout << "[QUEST ITEM] This can't be used directly - bring it to whoever needs it." << std::endl;
 }
 
 bool QuestItem::isConsumable() const

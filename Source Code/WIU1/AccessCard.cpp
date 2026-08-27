@@ -17,7 +17,7 @@ AccessCard::AccessCard()
 
 void AccessCard::consume(Player & player)
 {
-	std::cout << "[ACCESS CARD] Just carry this — it is the key to salvation and freedom!" << std::endl;
+	std::cout << "[ACCESS CARD] Just carry this - it is the key to salvation and freedom!" << std::endl;
 }
 
 bool AccessCard::isConsumable() const

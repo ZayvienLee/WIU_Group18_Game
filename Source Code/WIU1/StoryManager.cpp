@@ -32,7 +32,7 @@ StoryManager::StoryManager() :
     zombieNPC(
         "Iris",
         "A survivor who is looking for help",
-        6, 7, 'i',
+        6, 7, 'N',
         &killZombieQuest,
         "There is a bunch of zombies in the city, please kill them before they attack anyone else!",
         "There are still some zombies roaming around. Help to elimate the rest of them.",
@@ -42,7 +42,7 @@ StoryManager::StoryManager() :
     missingpersonNPC(
         "Hank",
         "A police officer searching for a missing civilian",
-        3, 4, 'h',
+        3, 4, 'N',
         &findMissingPersonQuest,
         "Someone went missing during the outbreak. His name is Timothy. Please find them and bring them back to me.",
         "Please find Timothy, first.",
@@ -51,7 +51,7 @@ StoryManager::StoryManager() :
 
     pharmacyNPC("Dr. Chen",
         "A doctor who is looking for a cure",
-        9, 10, 'd',
+        9, 10, 'N',
         &findPharmacyQuest,
         "I need to get the Temozolomide from the pharmacy section of the supermarket. Please help to retrieve it and bring it back to me",
         "Please bring me the Temozolomide.",
@@ -61,32 +61,32 @@ StoryManager::StoryManager() :
     timothyNPC(
         "Timothy",
         "A missing survivor",
-        2, 3, 't',
+        2, 3, 'N',
         nullptr,
         "Thank you for finding me!"
     ),
 
     mechanicNPC(
         "Marco", "A mechanic holed up in the Gas Station garage",
-        4, 4, 'n',
+        4, 4, 'N',
         &scavengePartsQuest,
         "This place would be a lot safer with the right tools. If you find any toolbox parts out there, bring them here.",
         "Still need those toolbox parts, if you find any.",
-        "Perfect, exactly what I needed. Here — take this, should help you carry more."
+        "Perfect, exactly what I needed. Here - take this, should help you carry more."
     ),
 
     militaryCaptainNPC(
         "Captain Reyes", "A soldier stationed at the Military Base",
-        4, 4, 'j',
+        4, 4, 'N',
         &killGreaterZombieQuest,
         "You want gear from an armory, you earn it. Prove you can handle yourself out there first.",
         "Come back once you've thinned out more of them.",
-        "Not bad, survivor. Here — this ought to keep you standing a bit longer."
+        "Not bad, survivor. Here - this ought to keep you standing a bit longer."
     ),
 
     safeHouseCoordinatorNPC(
         "Marissa", "The Safe House coordinator, managing clearance for Haven-7",
-        4, 4, 'q',
+        4, 4, 'N',
         nullptr,
         "You've made it this far. Command still needs proof you've handled things out there before I clear you for Haven-7."
     )
@@ -157,7 +157,7 @@ void StoryManager::RadioMessage(int playerHealth)
     }
     if (allQuestsCompleted() && !checkHasAlreadyRecievedCard())
     {
-        std::cout << "[RADIO] \"This is Haven-7. All objectives clear on our end — head to the Safe House for your clearance.\"" << std::endl;
+        std::cout << "[RADIO] \"This is Haven-7. All objectives clear on our end - head to the Safe House for your clearance.\"" << std::endl;
         return;
     }
     if (killZombieQuest.isAccepted() && !killZombieQuest.isCompleted())
@@ -167,7 +167,7 @@ void StoryManager::RadioMessage(int playerHealth)
     }
     if (findMissingPersonQuest.isAccepted() && !timothyFound)
     {
-        std::cout << "[RADIO] \"If anyone's near the school grounds — a survivor may still be trapped inside.\"" << std::endl;
+        std::cout << "[RADIO] \"If anyone's near the school grounds - a survivor may still be trapped inside.\"" << std::endl;
         return;
     }
     if (findPharmacyQuest.isAccepted() && !findPharmacyQuest.isCompleted())
@@ -265,12 +265,20 @@ int StoryManager::getCompletedQuestsCount() const {
         count++;
     }
 
+    if (scavengePartsQuest.isCompleted()) {
+        count++;
+    }
+
+    if (killGreaterZombieQuest.isCompleted()) {
+        count++;
+    }
+
     return count;
 
 }
       
 bool StoryManager::allQuestsCompleted() const {
-    return getCompletedQuestsCount() == 5;
+    return getCompletedQuestsCount() >= 5;
 }
 
 void StoryManager::setRecievedCard()

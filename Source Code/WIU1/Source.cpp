@@ -55,7 +55,8 @@ static void showLegend()
         << "  _ - Outdoor Walkable Path" << std::endl
         << "  . - Outdoor: Building Entrance / Inddor: Inddor Walkable Path" << std::endl
         << "  # - Building Wall / Furniture" << std::endl
-        << "  X - Inaccessable Building Area" << std::endl;
+        << "  X - Inaccessable Building Area" << std::endl
+        << "  c/r/~ - Random Obstacle" << std::endl;
 
     std::cout << std::endl << "Press Enter for next page" << std::endl;
         
@@ -76,13 +77,7 @@ static void showLegend()
         << "  " << Colour::BOLD_MAGENTA << "p" << Colour::RESET << " - Toolbox Parts" << std::endl
         << "  " << Colour::BOLD_CYAN << "K" << Colour::RESET << " - Key Card" << std::endl
         << "  " << Colour::BOLD_CYAN << "A" << Colour::RESET << " - Access Card" << std::endl
-        << "  " << Colour::CYAN << "i" << Colour::RESET << " - NPC Iris" << std::endl
-        << "  " << Colour::CYAN << "h" << Colour::RESET << " - NPC Hank (Police Officer)" << std::endl
-        << "  " << Colour::CYAN << "t" << Colour::RESET << " - NPC Timothy" << std::endl
-        << "  " << Colour::CYAN << "d" << Colour::RESET << " - NPC Dr. Chen" << std::endl
-        << "  " << Colour::CYAN << "n" << Colour::RESET << " - NPC Marco" << std::endl
-        << "  " << Colour::CYAN << "j" << Colour::RESET << " - NPC Captain Reyes" << std::endl
-        << "  " << Colour::CYAN << "q" << Colour::RESET << " - NPC Marissa" << std::endl;
+        << "  " << Colour::CYAN << "N" << Colour::RESET << " - NPC/Quest" << std::endl;
 
     std::cout << std::endl;
 }

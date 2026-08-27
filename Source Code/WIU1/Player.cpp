@@ -390,41 +390,59 @@ void Player::increaseMaxHealth(int amount)
 
 void Player::speakLowHealth() const
 {
-	static const std::string lines[] =
-	{
-		"Alex: I need to patch myself up, fast.",
-		"Alex: This isn't good. I can barely stand.",
-		"Alex: Come on, hang in there..."
-	};
-
 	if (!hasWarnedLowHealth)
 	{
-		std::cout << lines[rand() % 3] << std::endl;
+		int random = rand() % 3;
+		if (random == 0)
+		{
+			std::cout << "Alex: I need to patch myself up, fast." << std::endl;
+		}
+		else if (random == 1)
+		{
+			std::cout << "Alex: This isn't good. I can barely stand." << std::endl;
+		}
+		else if (random == 2)
+		{
+			std::cout << "Alex: Come on, hang in there..." << std::endl;
+		}
 	}
 }
 
 void Player::speakLowHungerThirst() const
-{
-	static const std::string lines[] = {
-		"Alex: My stomach's killing me. I need food or water.",
-		"Alex: I can't keep going like this...",
-		"Alex: Water... I really need water."
-	};
-	
+{	
 	if (!hasWarnedHungerThirst)
 	{
-		std::cout << lines[rand() % 3] << std::endl;
+		int random = rand() % 3;
+		if (random == 0)
+		{
+			std::cout << "Alex: My stomach's killing me. I need food or water." << std::endl;
+		}
+		else if (random == 1)
+		{
+			std::cout << "Alex: I can't keep going like this..." << std::endl;
+		}
+		else if (random == 2)
+		{
+			std::cout << "Alex: Water... I really need water." << std::endl;
+		}
 	}
 }
 
 void Player::speakOnKill() const
-{
-	static const std::string lines[] = {
-		"Alex: One less of them to worry about.",
-		"Alex: Stay down.",
-		"Alex: Sorry. Had to be done."
-	};
-	std::cout << lines[rand() % 3] << std::endl;
+{	
+	int random = rand() % 3;
+	if (random == 0)
+	{
+		std::cout << "Alex: One less of them to worry about." << std::endl;
+	}
+	else if (random == 1)
+	{
+		std::cout << "Alex: Stay down." << std::endl;
+	}
+	else if (random == 2)
+	{
+		std::cout << "Alex: Sorry. Had to be done." << std::endl;
+	}
 }
 
 void Player::setWarningHungerThirst(bool status)

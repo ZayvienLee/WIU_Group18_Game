@@ -59,7 +59,7 @@ GameManager::GameManager()
             randX = distrX(gen);
             randY = distrY(gen);
 
-        } while (!supermarket->isIndoorWalkable(randX, randY));
+        } while (!supermarket->isIndoorWalkable(randX, randY) && randY < supermarket->getHeight() - 1);
 
         temozolomide->setPosition(randX, randY);
         supermarket->addFloorItem(temozolomide);
@@ -317,7 +317,7 @@ void GameManager::checkZombieAttacks()
     int pX = isInBuilding ? player->getIndoorX() : player->getOutdoorX();
     int pY = isInBuilding ? player->getIndoorY() : player->getOutdoorY();
 
-    // 4-directional adjacency — any zombie standing next to you gets a free hit each turn.
+    // 4-directional adjacency - any zombie standing next to you gets a free hit each turn.
     // Being surrounded by more than one is deliberately worse: each adjacent zombie hits.
     int dx[] = { 0, 0, -1, 1 };
     int dy[] = { -1, 1, 0, 0 };
@@ -503,7 +503,7 @@ void GameManager::handlePlayerAttack(char choice)
 
 
         // Check if there is a wall or obstacle in the way
-        if (space == '#' || space == 'C' || space == 'r' || space == '~')
+        if (space == '#' || space == 'c' || space == 'r' || space == '~')
         {
             std::cout << "[ATTACK] There is an obstruction! Attack cannot proceed." << std::endl;
             return;
@@ -749,7 +749,7 @@ void GameManager::interactWithNPC()
         }
         else {
             npc->talk();
-            std::cout << "Zombies killed: " << storyManager.getZombiesKilled() << " / 20." << std::endl;
+            std::cout << "Zombies killed: " << storyManager.getZombiesKilled() << " / 25." << std::endl;
         }
     }
     else if (npc == &storyManager.getSafeHouseCoordinatorNPC())
@@ -758,7 +758,7 @@ void GameManager::interactWithNPC()
         {
             npc->talk();
         }
-        else if (player->findItemByName("Access Card") == nullptr)
+        else if (player->findItemByName("Access Card") == nullptr && storyManager.checkHasAlreadyRecievedCard())
         {
             std::cout << npc->getName() << ": You've done it. You have proven to be an extraordinary survivior. Here - this is your ticket to Haven-7." << std::endl;
 
@@ -766,13 +766,16 @@ void GameManager::interactWithNPC()
             if (player->addItem(accessCard))
             {
                 std::cout << "[SAFE HOUSE] You received an Access Card!" << std::endl;
+                npc->talk();
             }
             else
             {
                 accessCard->setPosition(player->getIndoorX(), player->getIndoorY());
                 currentBuilding->addFloorItem(accessCard);
-                std::cout << "[SAFE HOUSE] Your bags are full — an Access Card was left on the ground." << std::endl;
+                std::cout << "[SAFE HOUSE] Your bags are full - an Access Card was left on the ground." << std::endl;
             }
+
+            storyManager.setRecievedCard();
         }
         else
         {

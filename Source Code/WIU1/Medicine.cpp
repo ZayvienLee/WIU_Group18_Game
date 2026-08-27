@@ -20,8 +20,8 @@ void Medicine::consume(Player& player)
 {
 	player.setHealth(player.getHealth() + recoverHp);
 
-	if (player.getHealth() > 100)
+	if (player.getHealth() > player.getMaxHealth())
 	{
-		player.setHealth(100);
+		player.setHealth(player.getMaxHealth());
 	}
 }

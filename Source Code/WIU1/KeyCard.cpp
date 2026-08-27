@@ -17,7 +17,7 @@ KeyCard::KeyCard()
 
 void KeyCard::consume(Player & player)
 {
-	std::cout << "[KEY CARD] Just carry this — it unlocks the Safe House door automatically." << std::endl;
+	std::cout << "[KEY CARD] Just carry this - it unlocks the Safe House door automatically." << std::endl;
 }
 
 bool KeyCard::isConsumable() const
