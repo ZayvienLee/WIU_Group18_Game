@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <iostream>
 #include <random>
-
 #include "Map.h"
 #include "Location.h"
 #include "Item.h"
@@ -14,6 +13,7 @@
 #include "Player.h"
 #include "Zombie.h"
 #include "Ammunition.h"
+
 
 Map::Map()
 {
@@ -100,6 +100,8 @@ Map::~Map()
 		delete item;
 	}
 	groundItems.clear();
+
+	npcs.clear();
 
 	for (Zombie* zombie : zombies)
 	{
@@ -344,11 +346,7 @@ void Map::updateZombies(int playerX, int playerY)
 	{
 		if (zombie->getIsAlive())
 		{
-			zombie->moveRandomly(0, 0, WIDTH - 1, HEIGHT - 1, [this, playerX, playerY](int x, int y)
-                {
-                    return isWalkable(x, y) && getZombieAt(x, y) == nullptr && !(x == playerX && y == playerY);
-                }
-            );
+			zombie->moveRandomly(0, 0, WIDTH - 1, HEIGHT - 1, this, nullptr);
 		}
 	}
 }

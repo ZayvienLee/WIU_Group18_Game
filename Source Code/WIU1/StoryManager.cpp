@@ -1,9 +1,9 @@
-#include "StoryManager.h"
 #include <cstdlib>
 #include <iostream>
+#include <string>
+#include "StoryManager.h"
 #include "NPC.h"
 #include "Quest.h"
-#include <string>
 
 constexpr auto RESET = "\033[37m";
 constexpr auto RED = "\033[31m";    /* Red */

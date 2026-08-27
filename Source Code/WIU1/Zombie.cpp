@@ -1,8 +1,9 @@
 #include <string>
 #include <random>
-#include <functional>
 #include "Zombie.h"
 #include "GameObject.h"
+#include "Location.h"
+#include "Map.h"
 
 Zombie::Zombie(std::string n, std::string desc, int x, int y, char sym, int h, int maxH, int atk, bool alive)
 {
@@ -24,12 +25,17 @@ Zombie::Zombie(std::string n, std::string desc, int x, int y, char sym, int h, i
 	colourCode = Colour::BOLD_RED;
 }
 
+Zombie::~Zombie()
+{
+
+}
+
 void Zombie::update()
 {
 	// Movement is driven externally
 }
 
-void Zombie::moveRandomly(int minX, int minY, int maxX, int maxY, std::function<bool(int, int)> isWalkable)
+void Zombie::moveRandomly(int minX, int minY, int maxX, int maxY, Map* map, Location* loc)
 {
 	static std::random_device rd;
 	static std::mt19937 gen(rd());
@@ -44,7 +50,24 @@ void Zombie::moveRandomly(int minX, int minY, int maxX, int maxY, std::function<
 	else if (dir == 3) newX--;
 	else if (dir == 4) newX++;
 
-	if (newX >= minX && newX <= maxX && newY >= minY && newY <= maxY && isWalkable(newX, newY))
+	// To check the bounds first
+	if (newX < minX || newX > maxX || newY < minY || newY > maxY)
+	{
+		return; // Out of bounds, stop early and don't move
+	}
+
+	bool isWalkable = false;
+
+	if (loc != nullptr)
+	{
+		isWalkable = loc->isIndoorWalkable(newX, newY) && loc->getZombieAt(newX, newY) == nullptr && loc->getNPCat(newX, newY) == nullptr;
+	}
+	else if (map != nullptr)
+	{
+		isWalkable = map->isWalkable(newX, newY) && map->getZombieAt(newX, newY) == nullptr;
+	}
+
+	if (isWalkable) // Move if there are no obstacles
 	{
 		positionX = newX;
 		positionY = newY;

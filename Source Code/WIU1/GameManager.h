@@ -1,10 +1,8 @@
 #pragma once
 #include "Map.h"
-#include "Player.h"
 #include "Location.h"
 #include "Item.h"
 #include "StoryManager.h"
-#include "NPC.h"
 
 class Player; // Forward declaration to avoid circular include
 
@@ -29,6 +27,7 @@ public:
 
 	void handlePlayerInput(char moveCommand); // Route movement depends on the player location
 	void checkGroundItemInspection(); // needed to check if the item is on the same space as the player after moving
+	void checkNPCInspection(); // to check if there is an NPC on the space if the player is in a location
 
 	void enterBuilding(Location* Building);
 	void exitBuilding();

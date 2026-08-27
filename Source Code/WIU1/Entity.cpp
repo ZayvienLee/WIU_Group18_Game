@@ -1,7 +1,8 @@
-#include "Entity.h"
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include "GameObject.h"
+#include "Entity.h"
 
 // Default values will be assigned to unknown entity
 Entity::Entity()
@@ -33,14 +34,15 @@ Entity::Entity(std::string n, std::string desc, int x, int y, char sym, int h, i
 void Entity::takeDamage(int damage)
 {
 	health -= damage;
-	std::cout << name << " took " << damage << " damage! (HP: " << health << "/" << maxHealth << ")" << std::endl;
 	
 	if (health <= 0)
 	{
 		health = 0;
 		isAlive = false;
-		std::cout << name << " has died." << std::endl;
+		std::cout << Colour::BOLD_MAGENTA << name << " has died." << Colour::RESET << std::endl;
 	}
+
+	std::cout << Colour::BOLD_RED << name << " took " << damage << " damage! (HP: " << health << "/" << maxHealth << ")" << Colour::RESET << std::endl;
 }
 
 void Entity::attack(int attack, Entity* entity)
@@ -76,4 +78,3 @@ void Entity::setHealth(int Health)
 {
 	health = Health;
 }
-

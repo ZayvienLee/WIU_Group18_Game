@@ -1,5 +1,5 @@
-#include "GameObject.h"
 #include <string>
+#include "GameObject.h"
 
 GameObject::GameObject()
 {
@@ -21,9 +21,19 @@ GameObject::GameObject(std::string n, std::string desc, int x, int y, char sym, 
 	colourCode = colour;
 }
 
+GameObject::~GameObject()
+{
+	
+}
+
 std::string GameObject::getName() const
 {
 	return name;
+}
+
+std::string GameObject::getDescription() const
+{
+	return description;
 }
 
 char GameObject::getSymbol() const

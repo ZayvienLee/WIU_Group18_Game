@@ -1,8 +1,7 @@
+#include <iostream>
 #include "KeyCard.h"
 #include "Player.h"
 #include "GameObject.h"
-#include <iostream>
-
 
 KeyCard::KeyCard()
 {

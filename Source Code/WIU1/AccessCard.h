@@ -1,6 +1,8 @@
 #pragma once
 #include "Item.h"
 
+class Player;
+
 class AccessCard : public Item
 {
 public:

@@ -1,8 +1,8 @@
+#include <string>
+#include <iostream>
 #include "QuestItem.h"
 #include "Player.h"
 #include "GameObject.h"
-#include <string>
-#include <iostream>
 
 QuestItem::QuestItem()
 {

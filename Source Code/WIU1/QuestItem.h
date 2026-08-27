@@ -2,6 +2,8 @@
 #include "Item.h"
 #include <string>
 
+class Player;
+
 class QuestItem : public Item
 {
 public:

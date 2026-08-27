@@ -1,8 +1,7 @@
+#include <iostream>
 #include "AccessCard.h"
 #include "Player.h"
 #include "GameObject.h"
-#include <iostream>
-
 
 AccessCard::AccessCard()
 {

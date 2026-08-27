@@ -16,8 +16,7 @@ protected:
 public:
 	Item();
 	Item(std::string n, std::string desc, int xPos, int yPos, char sym, int wght, int qty, bool inInvent = false);
-
-	virtual ~Item() = default;
+	virtual ~Item();
 
 	// Pure Virtual Function: Every Item type MUST define what happens when used
 	virtual void consume(Player& player) = 0;
@@ -26,7 +25,6 @@ public:
 	int getQuantity() const;
 	void setQuantity(int qty);
 	int getWeight() const;
-	std::string getDescription() const;
 
 	void syncWithPlayer(int playerX, int playerY);// Synchronize item position to match player's coordinates
 	void setInInventory(bool status);

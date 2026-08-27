@@ -1,23 +1,28 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+    #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+    // Replace the standard new operator for leak tracking
+    #define new DBG_NEW
+#endif
+
+
 #include <iostream>
 #include <cctype>
 #include <conio.h>
-
 #include "GameManager.h"
 #include "StoryManager.h"
 #include "GameObject.h"
 #include "Item.h"
 #include "Weapon.h"
 
-// The libraries to check for memory leaks
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
 // This is needed to 'clear' the console
 static void clearConsole()
 {
     // \033[H moves the cursor to the top-left corner
-   // \033[2J clears the entire screen
+    // \033[2J clears the entire screen
     std::cout << "\033[H\033[2J" << std::flush;
 }
 
@@ -57,7 +62,7 @@ static void showLegend()
         << "  " << Colour::GREEN << "f" << Colour::RESET << " - Food" << std::endl
         << "  " << Colour::BLUE << "w" << Colour::RESET << " - Water" << std::endl
         << "  " << Colour::CYAN << "m" << Colour::RESET << " - Medicine" << std::endl
-        << "  " << Colour::YELLOW << "Z" << Colour::RESET << " - Ammunition" << std::endl
+        << "  " << Colour::YELLOW << "a" << Colour::RESET << " - Ammunition" << std::endl
         << "  " << Colour::MAGENTA << "g" << Colour::RESET << " - Gun / Firearm" << std::endl
         << "  " << Colour::MAGENTA << "k" << Colour::RESET << " - Knife" << std::endl
         << "  " << Colour::BOLD_CYAN << "k" << Colour::RESET << " - Key Card" << std::endl
@@ -72,12 +77,14 @@ static void showLegend()
 
 int main(void)
 {
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
     char choice;
     bool menuRunning = true;
 
     while (menuRunning) {
 
-                std::cout << R"(
+        std::cout << R"(
                          ______   _______  _______  ______              _______           _______
                         (  __  \ (  ____ \(  ___  )(  __  \   |\     /|(  ___  )|\     /|(  ____ )
                         | (  \  )| (    \/| (   ) || (  \  )  | )   ( || (   ) || )   ( || (    )|
@@ -87,11 +94,11 @@ int main(void)
                         | (__/  )| (____/\| )   ( || (__/  )  | )   ( || (___) || (___) || ) \ \__
                         (______/ (_______/|/     \|(______/   |/     \|(_______)(_______)|/   \__/)"
 
-        << std::endl << std::endl;
+            << std::endl << std::endl;
 
         std::cout << "                                                      1. Start Game" << std::endl
-                  << "                                                      2. Legend" << std::endl << std::endl
-                  << "                                                      Enter your choice: ";
+            << "                                                      2. Legend" << std::endl << std::endl
+            << "                                                      Enter your choice: ";
 
         std::cin >> choice;
 
@@ -116,9 +123,9 @@ int main(void)
             bool isRunning = true;
 
             // Add the obstacles to the map
-            game.getMap().generateRandomLayout(60, 30); // Stating the number of obstacles and items to include
-            game.getMap().randomiseLocationLayouts(0.08f, 0.03f); // This is based on the density of the location (area)
-            game.getMap().spawnRandomZombies(20);
+            game.getMap().generateRandomLayout(120, 20); // Stating the number of obstacles and items to include
+            game.getMap().randomiseLocationLayouts(0.10f, 0.04f); // This is based on the density of the location (area)
+            game.getMap().spawnRandomZombies(35);
 
             instructionControls();
 
@@ -134,12 +141,14 @@ int main(void)
                 game.render(15, 9);
 
 
-                std::cout << std::endl
-                    << "Health: " << game.getPlayer()->getHealth()
-                    << "/100 | Hunger: " << game.getPlayer()->getHunger()
-                    << "/100 | Thirst: " << game.getPlayer()->getThirst()
-                    << "/100 | Quests Done: " << game.getStoryManager().getCompletedQuestsCount() << "/3" << std::endl // For Quest UI
-                    << "Total Zombies Killed: " << game.getStoryManager().getZombiesKilled() << std::endl;
+                std::cout
+                    << std::endl
+                    << Colour::BOLD_RED << "Health: " << game.getPlayer()->getHealth() << "/100" << Colour::RESET << " | "
+                    << Colour::BOLD_GREEN << "Hunger: " << game.getPlayer()->getHunger() << "/100" << Colour::RESET << " | "
+                    << Colour::BOLD_BLUE << "Thirst: " << game.getPlayer()->getThirst() << "/100" << Colour::RESET << " | "
+                    << Colour::BOLD_YELLOW << "Quests Done: " << game.getStoryManager().getCompletedQuestsCount() << "/3" << Colour::RESET << std::endl // For Quest UI
+                    << Colour::BOLD_MAGENTA << "Total Zombies Killed: " << game.getStoryManager().getZombiesKilled() << Colour::RESET << std::endl
+                    << Colour::BOLD_YELLOW << "Ammunition: " << game.getPlayer()->getAmmoCount() << Colour::RESET << std::endl;
 
                 // Prompt user input
                 std::cout << "Enter command (W/A/S/D/E/I/G/F/U/Q/T/O/X): ";
@@ -161,11 +170,12 @@ int main(void)
                     clearConsole();
 
                     game.handlePlayerInput(input);
-                    game.checkGroundItemInspection();                    
+                    game.checkGroundItemInspection();
+                    game.checkNPCInspection();
                 }
                 else if (input == 'E')
                 {
-                    
+
                     clearConsole();
 
                     // Check door interaction first; if not entering,
@@ -190,7 +200,7 @@ int main(void)
 
                     game.getPlayer()->showInventory();
 
-                    std::cout << "Press Enter return..." << std::endl;
+                    std::cout << "Press Enter to return..." << std::endl;
 
                     std::cin.clear();
                     std::cin.get();
@@ -266,6 +276,8 @@ int main(void)
                         }
                     }
 
+                    std::cout << "Press Enter to return..." << std::endl;
+
                     std::cin.ignore();
                     std::cin.get();
 
@@ -284,6 +296,8 @@ int main(void)
                         game.handleItemDrop(slot);
                     }
 
+                    std::cout << "Press Enter to return..." << std::endl;
+
                     std::cin.ignore();
                     std::cin.get();
 
@@ -295,12 +309,16 @@ int main(void)
 
                     instructionControls();
 
+                    std::cout << "Press Enter to see Legend..." << std::endl;
+
                     std::cin.clear();
                     std::cin.get();
 
                     clearConsole();
 
                     showLegend();
+
+                    std::cout << "Press Enter to return..." << std::endl;
 
                     std::cin.clear();
                     std::cin.get();
@@ -328,7 +346,9 @@ int main(void)
                     clearConsole();
 
                     game.getStoryManager().showQuests();
-                    
+
+                    std::cout << std::endl << "Press Enter to return..." << std::endl;
+
                     std::cin.clear();
                     std::cin.get();
 
@@ -351,7 +371,7 @@ int main(void)
                         << "==========================================" << std::endl
                         << "   You made it out. Welcome to Haven-7.   " << std::endl
                         << "==========================================" << std::endl;
-                    
+
                     isRunning = false;
                 }
 
@@ -389,9 +409,14 @@ int main(void)
 
     }
 
-    // THe lines of code to dump memory leaks
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    _CrtDumpMemoryLeaks();
+    if (_CrtDumpMemoryLeaks())
+    {
+        std::cout << "\n[DEBUG] Memory leaks were detected — check the Output window for details.\n";
+    }
+    else
+    {
+        std::cout << "\n[DEBUG] No memory leaks detected.\n";
+    }
 
     return 0;
 }

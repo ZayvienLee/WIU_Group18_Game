@@ -2,7 +2,6 @@
 #include <iostream>
 #include <random>
 #include <memory>
-#include <algorithm>
 #include "Location.h"
 #include "NPC.h"
 #include "Item.h"
@@ -11,7 +10,6 @@
 #include "Water.h"
 #include "Medicine.h"
 #include "Ammunition.h"
-#include <cstdlib>
 #include "Player.h"
 
 Location::Location(std::string locName, char locSymbol, int sizeX, int sizeY)
@@ -64,13 +62,13 @@ Location::Location(std::string locName, char locSymbol, int sizeX, int sizeY)
 
 Location::~Location()
 {
-    for (int i = 0; i < INTERIOR_HEIGHT; ++i)
+    for (int r = 0; r < INTERIOR_HEIGHT; ++r)
     {
-        delete[] interiorGrid[i]; // Deallocate Columns
-        interiorGrid[i] = nullptr;
+        delete[] interiorGrid[r]; // Deallocate Columns
+        interiorGrid[r] = nullptr;
 
-        delete[] interiorGridActive[i]; // Deallocate Columns
-        interiorGridActive[i] = nullptr;
+        delete[] interiorGridActive[r]; // Deallocate Columns
+        interiorGridActive[r] = nullptr;
     }
 
     delete[] interiorGrid; // Deallocate Rows
@@ -79,12 +77,13 @@ Location::~Location()
     delete[] interiorGridActive; // Deallocate Rows
     interiorGridActive = nullptr;
 
-
     for (Item* item : floorItems)
     {
         delete item;
     }
     floorItems.clear();
+
+    npcs.clear();
     
     for (Zombie* zombie : zombies)
     {
@@ -125,11 +124,7 @@ void Location::updateZombies(int playerX, int playerY)
     {
         if (zombie->getIsAlive())
         {
-            zombie->moveRandomly(0, 0, INTERIOR_WIDTH - 1, INTERIOR_HEIGHT - 1, [this, playerX, playerY](int x, int y)
-                {
-                    return isIndoorWalkable(x, y) && getZombieAt(x, y) == nullptr && getNPCat(x, y) == nullptr && !(x == playerX && y == playerY);
-                }
-            );
+            zombie->moveRandomly(0, 0, INTERIOR_WIDTH - 1, INTERIOR_HEIGHT - 1, nullptr, this);
         }
     }
 }

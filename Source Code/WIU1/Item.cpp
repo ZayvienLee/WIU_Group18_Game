@@ -1,7 +1,5 @@
-#include <vector>
-#include "Item.h"
 #include <string>
-#include "Player.h"
+#include "Item.h"
 
 Item::Item()
 {
@@ -27,6 +25,11 @@ Item::Item(std::string n, std::string desc, int xPos, int yPos, char sym, int wg
 	quantity = qty;
 }
 
+Item::~Item()
+{
+
+}
+
 bool Item::isConsumable() const
 {
 	return true;
@@ -45,11 +48,6 @@ void Item::setQuantity(int qty)
 int Item::getWeight() const
 {
 	return weight;
-}
-
-std::string Item::getDescription() const
-{
-	return description;
 }
 
 void Item::syncWithPlayer(int playerX, int playerY)

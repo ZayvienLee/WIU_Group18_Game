@@ -1,6 +1,6 @@
-#include "Quest.h"
 #include <string>
 #include <iostream>
+#include "Quest.h"
 
 void Quest::completeQuest() {
 

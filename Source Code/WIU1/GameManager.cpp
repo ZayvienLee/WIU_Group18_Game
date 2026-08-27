@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cctype>
 #include <random>
@@ -15,15 +16,15 @@
 #include "KeyCard.h"
 #include "Ammunition.h"
 #include "Medicine.h"
-#include "Weapon.h"
 #include "AccessCard.h"
+
 
 // To add later on with the map and location, etc. To fix the warning and errors and add the 
 // necessary logic for each of them.
 
 GameManager::GameManager()
 {
-    player = new Player("Name", "The Player", 'P', 100, 100, 100, 100, 10, true, 10);
+    player = new Player("Alex", "A survivor whose objective is to survive and reach the evacuation point at Haeven-7", 'P', 100, 100, 100, 100, 10, true, 10);
 	isInBuilding = false;
 	currentBuilding = nullptr;
 	savedOutdoorX = 20;
@@ -85,6 +86,8 @@ GameManager::GameManager()
 
 GameManager::~GameManager()
 {
+    currentBuilding = nullptr;
+
     delete player;
 }
 
@@ -227,6 +230,27 @@ void GameManager::checkGroundItemInspection()
                                << "  Qty: " << groundItem->getQuantity() << " | Weight: " << groundItem->getWeight() << " g" << std::endl
                                << "  Info: " << groundItem->getDescription() << std::endl
                                << "  -> Press [E] to pick up this item." << std::endl;
+    }
+}
+
+void GameManager::checkNPCInspection()
+{
+    if (!isInBuilding) {
+        return;
+    }
+
+    int pX = player->getIndoorX();
+    int pY = player->getIndoorY();
+
+    NPC* npc = currentBuilding->getNPCat(pX, pY);
+
+    if (npc != nullptr)
+    {
+        std::cout << std::endl
+            << "[NPC] This NPC would like to speak to you." << std::endl
+            << "  Name: " << npc->getName() << std::endl
+            << "  Info: " << npc->getDescription() << std::endl
+            << "  -> Press [E] to interact with him/her." << std::endl;
     }
 }
 
@@ -414,6 +438,22 @@ void GameManager::handlePlayerAttack(char choice)
     {
         int currentX = positionX + (dx * step);
         int currentY = positionY + (dy * step);
+
+        char space = ' ';
+        if (isInBuilding) {
+            space = currentBuilding->getTileAt(currentX, currentY);
+        }
+        else {
+            space = outdoorMap.getTileAt(currentX, currentY);
+        }
+
+
+        // Check if there is a wall or obstacle in the way
+        if (space == '#' || space == 'C' || space == 'r' || space == '~')
+        {
+            std::cout << "[ATTACK] There is an obstruction! Attack cannot proceed." << std::endl;
+            return;
+        }
 
         // Search the adjacent tiles to check if a zombie is nearby
         Zombie* target = isInBuilding ? currentBuilding->getZombieAt(currentX, currentY) : outdoorMap.getZombieAt(currentX, currentY);

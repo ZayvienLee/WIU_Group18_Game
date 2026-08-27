@@ -5,16 +5,21 @@
 // To differntiate the different objects in the game
 namespace Colour
 {
-	const std::string RESET = "\033[0m";
-	const std::string RED = "\033[31m";
-	const std::string GREEN = "\033[32m";
-	const std::string YELLOW = "\033[33m";
-	const std::string BLUE = "\033[34m";
-	const std::string MAGENTA = "\033[35m";
-	const std::string CYAN = "\033[36m";
-	const std::string BOLD_CYAN = "\033[1;36m";
-	const std::string WHITE = "\033[37m";
-	const std::string BOLD_RED = "\033[1;31m";
+	inline constexpr char RESET[] = "\033[0m";
+	inline constexpr char RED[] = "\033[31m";
+	inline constexpr char GREEN[] = "\033[32m";
+	inline constexpr char YELLOW[] = "\033[33m";
+	inline constexpr char BLUE[] = "\033[34m";
+	inline constexpr char MAGENTA[] = "\033[35m";
+	inline constexpr char CYAN[] = "\033[36m";
+	inline constexpr char WHITE[] = "\033[37m";
+	inline constexpr char BOLD_RED[] = "\033[1;31m";
+	inline constexpr char BOLD_GREEN[] = "\033[1;32m";
+	inline constexpr char BOLD_YELLOW[] = "\033[1;33m";
+	inline constexpr char BOLD_BLUE[] = "\033[1;34m";
+	inline constexpr char BOLD_MAGENTA[] = "\033[1;35m";
+	inline constexpr char BOLD_CYAN[] = "\033[1;36m";
+	inline constexpr char BOLD_WHITE[] = "\033[1;37m";
 }
 
 class GameObject
@@ -30,9 +35,11 @@ protected:
 public:
 	GameObject();
 	GameObject(std::string n, std::string desc, int x, int y, char sym, std::string colour = Colour::WHITE);
+	virtual ~GameObject();
 
 	/* Accessor Functions */
 	std::string getName() const;
+	std::string getDescription() const;
 	char getSymbol() const;
 	std::string getColouredSymbol() const;
 

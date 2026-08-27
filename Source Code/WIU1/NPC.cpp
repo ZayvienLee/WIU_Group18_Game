@@ -20,6 +20,11 @@ NPC::NPC(std::string n, std::string desc, int x, int y, char sym, Quest* qst, st
     dialogueComplete = dialComplete;
 }
 
+NPC::~NPC()
+{
+
+}
+
 void NPC::talk()
 {  
     if (quest != nullptr)
