@@ -12,6 +12,7 @@ private:
     Quest* quest;
  
 public:
+    NPC();
     NPC(std::string n, std::string desc, int x, int y, char sym, Quest* qst, std::string dial, std::string dialProgress = "?", std::string dialComplete = "?");
     ~NPC();
     void talk();

@@ -40,7 +40,7 @@ static void instructionControls()
 static void showLegend()
 {
     std::cout << std::endl
-        << "Legend: " << std::endl
+        << "Legend (1/2): " << std::endl
         << "  " << Colour::GREEN << "P" << Colour::RESET << " - Player" << std::endl
         << "  " << Colour::BOLD_RED << "Z" << Colour::RESET << " - Zombie" << std::endl
         << "  A - Apartment (Starting Point)" << std::endl
@@ -52,18 +52,37 @@ static void showLegend()
         << "  F - Safe House" << std::endl
         << "  M - Military Base" << std::endl
         << "  E - Evacuation Point" << std::endl
+        << "  _ - Outdoor Walkable Path" << std::endl
+        << "  . - Outdoor: Building Entrance / Inddor: Inddor Walkable Path" << std::endl
+        << "  # - Building Wall / Furniture" << std::endl
+        << "  X - Inaccessable Building Area" << std::endl;
+
+    std::cout << std::endl << "Press Enter for next page" << std::endl;
+        
+    std::cin.clear();
+    std::cin.get();
+
+    clearConsole();
+
+    std::cout << std::endl
+        << "Legend (2/2): " << std::endl
         << "  " << Colour::GREEN << "f" << Colour::RESET << " - Food" << std::endl
         << "  " << Colour::BLUE << "w" << Colour::RESET << " - Water" << std::endl
         << "  " << Colour::CYAN << "m" << Colour::RESET << " - Medicine" << std::endl
         << "  " << Colour::YELLOW << "a" << Colour::RESET << " - Ammunition" << std::endl
         << "  " << Colour::MAGENTA << "g" << Colour::RESET << " - Gun / Firearm" << std::endl
         << "  " << Colour::MAGENTA << "k" << Colour::RESET << " - Knife" << std::endl
-        << "  " << Colour::BOLD_CYAN << "k" << Colour::RESET << " - Key Card" << std::endl
-        << "  " << Colour::BOLD_CYAN << "a" << Colour::RESET << " - Access Card" << std::endl
+        << "  " << Colour::BOLD_MAGENTA << "t" << Colour::RESET << " - Temozolomide" << std::endl
+        << "  " << Colour::BOLD_MAGENTA << "p" << Colour::RESET << " - Toolbox Parts" << std::endl
+        << "  " << Colour::BOLD_CYAN << "K" << Colour::RESET << " - Key Card" << std::endl
+        << "  " << Colour::BOLD_CYAN << "A" << Colour::RESET << " - Access Card" << std::endl
         << "  " << Colour::CYAN << "i" << Colour::RESET << " - NPC Iris" << std::endl
         << "  " << Colour::CYAN << "h" << Colour::RESET << " - NPC Hank (Police Officer)" << std::endl
         << "  " << Colour::CYAN << "t" << Colour::RESET << " - NPC Timothy" << std::endl
-        << "  " << Colour::CYAN << "d" << Colour::RESET << " - NPC Dr. Chen" << std::endl;
+        << "  " << Colour::CYAN << "d" << Colour::RESET << " - NPC Dr. Chen" << std::endl
+        << "  " << Colour::CYAN << "n" << Colour::RESET << " - NPC Marco" << std::endl
+        << "  " << Colour::CYAN << "j" << Colour::RESET << " - NPC Captain Reyes" << std::endl
+        << "  " << Colour::CYAN << "q" << Colour::RESET << " - NPC Marissa" << std::endl;
 
     std::cout << std::endl;
 }
@@ -89,7 +108,8 @@ int main(void)
 
             << std::endl << std::endl;
 
-        std::cout << "                                                      1. Start Game" << std::endl
+        std::cout
+            << "                                                      1. Start Game" << std::endl
             << "                                                      2. Legend" << std::endl << std::endl
             << "                                                      Enter your choice: ";
 
@@ -116,7 +136,7 @@ int main(void)
             bool isRunning = true;
 
             // Add the obstacles to the map
-            game.getMap().generateRandomLayout(120, 20); // Stating the number of obstacles and items to include
+            game.getMap().generateRandomLayout(300, 20); // Stating the number of obstacles and items to include
             game.getMap().randomiseLocationLayouts(0.10f, 0.04f); // This is based on the density of the location (area)
             game.getMap().spawnRandomZombies(35);
 
@@ -127,6 +147,9 @@ int main(void)
 
             clearConsole();
 
+            // The starting line for the game
+            std::cout << "Alex: Haven-7. That's my only shot at salvation and freedom. I better start making my move." << std::endl;
+
             while (isRunning)
             {
 
@@ -136,10 +159,10 @@ int main(void)
 
                 std::cout
                     << std::endl
-                    << Colour::BOLD_RED << "Health: " << game.getPlayer()->getHealth() << "/100" << Colour::RESET << " | "
+                    << Colour::BOLD_RED << "Health: " << game.getPlayer()->getHealth() << "/" << game.getPlayer()->getMaxHealth() << Colour::RESET << " | "
                     << Colour::BOLD_GREEN << "Hunger: " << game.getPlayer()->getHunger() << "/100" << Colour::RESET << " | "
                     << Colour::BOLD_BLUE << "Thirst: " << game.getPlayer()->getThirst() << "/100" << Colour::RESET << " | "
-                    << Colour::BOLD_YELLOW << "Quests Done: " << game.getStoryManager().getCompletedQuestsCount() << "/3" << Colour::RESET << std::endl // For Quest UI
+                    << Colour::BOLD_YELLOW << "Quests Done: " << game.getStoryManager().getCompletedQuestsCount() << "/5" << Colour::RESET << std::endl // For Quest UI
                     << Colour::BOLD_MAGENTA << "Total Zombies Killed: " << game.getStoryManager().getZombiesKilled() << Colour::RESET << std::endl
                     << Colour::BOLD_YELLOW << "Ammunition: " << game.getPlayer()->getAmmoCount() << Colour::RESET << std::endl;
 
@@ -149,8 +172,6 @@ int main(void)
                 // Get the input from the player
                 input = _getch();
                 input = static_cast<char>(toupper(input));
-
-                std::cout << std::endl << "Action executed: " << input << std::endl;
 
                 // Process commands
                 if (input == 'X')
@@ -223,7 +244,7 @@ int main(void)
                     clearConsole();
 
                     game.getPlayer()->showInventory();
-                    std::cout << std::endl << "Enter item slot number to USE / EQUIP (1-10): ";
+                    std::cout << std::endl << "Enter item slot number to USE / EQUIP (1-" << game.getPlayer()->getInventoryCapacity() << "): ";
                     int slot;
                     if (std::cin >> slot)
                     {
@@ -354,6 +375,9 @@ int main(void)
                     std::cout << "[INVALID] Input not recognized." << std::endl;
                 }
 
+                // Shows the action executed
+                std::cout << std::endl << "Action executed: " << input << std::endl;
+
                 std::cout << std::endl;
 
                 /* End conditions */
@@ -402,14 +426,7 @@ int main(void)
 
     }
 
-    if (_CrtDumpMemoryLeaks())
-    {
-        std::cout << "\n[DEBUG] Memory leaks were detected — check the Output window for details.\n";
-    }
-    else
-    {
-        std::cout << "\n[DEBUG] No memory leaks detected.\n";
-    }
+    _CrtDumpMemoryLeaks(); // Remove checks before submission
 
     return 0;
 }

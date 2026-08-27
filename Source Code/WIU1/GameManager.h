@@ -44,7 +44,7 @@ public:
 	void rewardPlayerFromNPC(Player& playerRef, Map& mapRef, Item* questReward) const;
 	void handlePlayerAttack(char choice);
 
-	// Renders either the camera viewport or building interior
+	// Renders the camera viewport
 	void render(int viewWidth = 15, int viewHeight = 9) const;
 
 	/* Variable Acessors */
@@ -55,6 +55,9 @@ public:
 
 	/* NPC Interaction */
 	void interactWithNPC();
+
+	/* Dialogue and Player interaction*/
+	void tickRadio();
 
 	/* Win Conditions */
 	bool checkEvacuationScreening();

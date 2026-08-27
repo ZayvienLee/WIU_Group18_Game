@@ -17,5 +17,5 @@ Ammunition::Ammunition()
 
 void Ammunition::consume(Player& player)
 {
-	player.setAmmoCount(player.getAmmoCount() + quantity);
+	player.setAmmoCount(player.getAmmoCount() + 5);
 }

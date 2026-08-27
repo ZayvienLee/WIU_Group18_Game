@@ -11,9 +11,11 @@ private:
 
 
 public:
+    Quest();
+    Quest(std::string name, std::string description);
+
     void completeQuest();
     bool isCompleted() const;
-    Quest(std::string name, std::string description);
 
     void accept();
     bool isAccepted() const;

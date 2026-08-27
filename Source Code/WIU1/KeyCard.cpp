@@ -8,7 +8,7 @@ KeyCard::KeyCard()
 	name = "Key Card";
 	description = "Grants access to the Safe House.";
 	x = -1; y = -1;
-	symbol = 'k'; // It is the same symbol as knife, but will be of different colour
+	symbol = 'K'; // It is the almost same symbol as knife, but will be of different colour
 	inInventory = true;
 	weight = 50;
 	quantity = 1;

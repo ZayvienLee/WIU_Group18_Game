@@ -43,7 +43,9 @@ public:
 	bool isEntrance(int x, int y) const;
 	char getTileAt(int x, int y) const;
 
-	
+	/* Get the dimensions of the Map*/
+	int getWidth() const;
+	int getHeight() const;
 
 	// Render the map based on the position of the player
 	void displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Player& player) const;

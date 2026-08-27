@@ -4,6 +4,22 @@
 #include "GameObject.h"
 #include "Quest.h"
 
+NPC::NPC()
+{
+    name = "Unknown NPC";
+    description = "The NPC that provides quest to the player";
+    positionX = -1;
+    positionY = -1;
+    symbol = '?';
+    quest = nullptr;
+    colourCode = Colour::CYAN;
+
+    // Dialogue to convey to player
+    dialogue = "I do not have any quest";
+    dialogueProgress = "There's nothing to progress";
+    dialogueComplete = "You've achieved nothing";
+}
+
 NPC::NPC(std::string n, std::string desc, int x, int y, char sym, Quest* qst, std::string dial, std::string dialProgress, std::string dialComplete)
 {
     name = n;
@@ -46,9 +62,7 @@ void NPC::talk()
         }
     }
     else {
-        if (name == "Timothy") {
-            std::cout << name << ": " << dialogue << std::endl;
-        }
+        std::cout << name << ": " << dialogue << std::endl;
     }
 }
 

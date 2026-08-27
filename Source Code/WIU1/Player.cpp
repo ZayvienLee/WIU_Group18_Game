@@ -1,11 +1,11 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <cstdlib>
 #include "Player.h"
 #include "Item.h"
 #include "Weapon.h"
 #include "GameObject.h"
-
 
 Player::Player(std::string n, std::string desc, char sym, int h, int maxH, int hung, int thir, int atk, bool alive, int capacity)
 {
@@ -34,6 +34,9 @@ Player::Player(std::string n, std::string desc, char sym, int h, int maxH, int h
 	indoorY = 5;
 
 	colourCode = Colour::GREEN;
+
+	hasWarnedHungerThirst = false;
+	hasWarnedLowHealth = false;
 
 	// Inventory system
 	if (maxItems <= 0) // Should the number be not a positive number, set to default accordingly
@@ -353,4 +356,83 @@ void Player::setThirst(int Thirst)
 void Player::setAmmoCount(int amount)
 {
 	ammoCount = amount;
+}
+
+void Player::increaseInventoryCapacity(int amount)
+{
+	if (amount <= 0) return;
+
+	int newMax = maxItems + amount;
+	Item** newInventory = new Item * [newMax];
+
+	// Transfer the items into the expanded Inventory
+	for (int i = 0; i < newMax; ++i)
+	{
+		newInventory[i] = (i < maxItems) ? inventory[i] : nullptr;
+	}
+
+	delete[] inventory; // only frees the pointer array since the Items themselves are untouched/still owned correctly
+	inventory = newInventory;
+	maxItems = newMax;
+
+	std::cout << "[UPGRADE]: Youre inventory increased by " << amount << " slots!" << std::endl;
+}
+
+void Player::increaseMaxHealth(int amount)
+{
+	if (amount <= 0) return;
+
+	maxHealth += amount;
+	health += amount; // grant the bonus HP immediately too
+
+	std::cout << "[UPGRADE] Your maximum health increased by " << amount << "!" << std::endl;
+}
+
+void Player::speakLowHealth() const
+{
+	static const std::string lines[] =
+	{
+		"Alex: I need to patch myself up, fast.",
+		"Alex: This isn't good. I can barely stand.",
+		"Alex: Come on, hang in there..."
+	};
+
+	if (!hasWarnedLowHealth)
+	{
+		std::cout << lines[rand() % 3] << std::endl;
+	}
+}
+
+void Player::speakLowHungerThirst() const
+{
+	static const std::string lines[] = {
+		"Alex: My stomach's killing me. I need food or water.",
+		"Alex: I can't keep going like this...",
+		"Alex: Water... I really need water."
+	};
+	
+	if (!hasWarnedHungerThirst)
+	{
+		std::cout << lines[rand() % 3] << std::endl;
+	}
+}
+
+void Player::speakOnKill() const
+{
+	static const std::string lines[] = {
+		"Alex: One less of them to worry about.",
+		"Alex: Stay down.",
+		"Alex: Sorry. Had to be done."
+	};
+	std::cout << lines[rand() % 3] << std::endl;
+}
+
+void Player::setWarningHungerThirst(bool status)
+{
+	hasWarnedHungerThirst = status;
+}
+
+void Player::setWarningHealth(bool status)
+{
+	hasWarnedLowHealth = status;
 }

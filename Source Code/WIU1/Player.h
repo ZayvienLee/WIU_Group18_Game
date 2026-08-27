@@ -22,6 +22,9 @@ class Player : public Entity
 		int outdoorX, outdoorY;
 		int indoorX, indoorY;
 
+		bool hasWarnedHungerThirst;
+		bool hasWarnedLowHealth;
+
 	public:
 		Player(std::string n, std::string desc, char sym, int h, int maxH, int hung, int thir, int atk, bool alive, int capacity); // Overloaded constructor for Player
 		~Player(); // Deconstructor to prevent memory leaks
@@ -59,4 +62,14 @@ class Player : public Entity
 		void setHunger(int Hunger);
 		void setThirst(int Thirst);
 		void setAmmoCount(int amount);
+		void increaseInventoryCapacity(int amount);
+		void increaseMaxHealth(int amount);
+
+		/* Player voice lines */
+		void speakLowHealth() const;
+		void speakLowHungerThirst() const;
+		void speakOnKill() const;
+
+		void setWarningHungerThirst(bool status);
+		void setWarningHealth(bool status);
 };

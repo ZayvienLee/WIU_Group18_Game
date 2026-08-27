@@ -69,6 +69,11 @@ int Entity::getHealth() const
 	return health;
 }
 
+int Entity::getMaxHealth() const
+{
+	return maxHealth;
+}
+
 int Entity::getAttackPower() const
 {
 	return attackPower;

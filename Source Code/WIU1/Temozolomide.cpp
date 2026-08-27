@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Temozolomide.h"
 #include "Player.h"
+#include "GameObject.h"
 
 Temozolomide::Temozolomide()
 {
@@ -12,6 +13,7 @@ Temozolomide::Temozolomide()
 	inInventory = false;
 	weight = 500;
 	quantity = 1;
+	colourCode = Colour::BOLD_MAGENTA;
 }
 
 void Temozolomide::consume(Player& player)

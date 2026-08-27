@@ -13,7 +13,7 @@ QuestItem::QuestItem()
 	inInventory = true;
 	weight = 100;
 	quantity = 1;
-	colourCode = Colour::MAGENTA;
+	colourCode = Colour::BOLD_MAGENTA;
 }
 
 QuestItem::QuestItem(std::string n, std::string desc, char sym)
@@ -25,7 +25,7 @@ QuestItem::QuestItem(std::string n, std::string desc, char sym)
 	inInventory = true;
 	weight = 100;
 	quantity = 1;
-	colourCode = Colour::MAGENTA;
+	colourCode = Colour::BOLD_MAGENTA;
 }
 
 void QuestItem::consume(Player & player)

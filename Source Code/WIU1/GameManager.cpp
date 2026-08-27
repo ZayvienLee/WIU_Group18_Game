@@ -17,6 +17,7 @@
 #include "Ammunition.h"
 #include "Medicine.h"
 #include "AccessCard.h"
+#include "QuestItem.h"
 
 
 // To add later on with the map and location, etc. To fix the warning and errors and add the 
@@ -24,7 +25,7 @@
 
 GameManager::GameManager()
 {
-    player = new Player("Alex", "A survivor whose objective is to survive and reach the evacuation point at Haeven-7", 'P', 100, 100, 100, 100, 10, true, 10);
+    player = new Player("Alex", "A survivor whose objective is to survive and reach the evacuation point at Haeven-7", 'P', 100, 100, 100, 100, 10, true, 5);
 	isInBuilding = false;
 	currentBuilding = nullptr;
 	savedOutdoorX = 20;
@@ -36,9 +37,13 @@ GameManager::GameManager()
     Location* hospital = outdoorMap.getLocationByName("Hospital");
     Location* safehouse = outdoorMap.getLocationByName("Safe House");
     Location* school = outdoorMap.getLocationByName("School");
+    Location* gasStation = outdoorMap.getLocationByName("Gas Station");
+    Location* militaryBase = outdoorMap.getLocationByName("Military Base");
 
+    // Adding the necessary NPCs and items into the respective Locations
     if (supermarket != nullptr) {
         supermarket->addNPC(&storyManager.getZombieNPC());
+
         Temozolomide* temozolomide = new Temozolomide();
 
         std::random_device rd;
@@ -68,6 +73,37 @@ GameManager::GameManager()
 
     if (school != nullptr) {
         school->addNPC(&storyManager.getTimothyNPC());
+    }
+
+    if (gasStation != nullptr) {
+        gasStation->addNPC(&storyManager.getMechanicNPC());
+
+        QuestItem* toolboxParts = new QuestItem("Toolbox Parts", "Scavenged mechanical parts Marco needs.", 'p');
+
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> distrX(0, outdoorMap.getWidth() - 1);
+        std::uniform_int_distribution<int> distrY(0, outdoorMap.getHeight() - 1);
+
+        int randX = 0;
+        int randY = 0;
+
+        do
+        {
+            randX = distrX(gen);
+            randY = distrY(gen);
+        } while (!outdoorMap.isWalkable(randX, randY));
+
+        toolboxParts->setPosition(randX, randY);
+        outdoorMap.addGroundItem(toolboxParts);
+    }
+
+    if (militaryBase != nullptr) {
+        militaryBase->addNPC(&storyManager.getMilitaryCaptainNPC());
+    }
+
+    if (safehouse != nullptr) {
+        safehouse->addNPC(&storyManager.getSafeHouseCoordinatorNPC());
     }
 
     /* The player gets the necessary placements in the game accordingly. */
@@ -119,11 +155,23 @@ void GameManager::handlePlayerInput(char moveCommand)
                 std::cout << "[INFO] Exiting building..." << std::endl;
                 exitBuilding();
             }
-            else if (currentBuilding->getSymbol() == 'V' && currentBuilding->getTileAt(nextX, nextY) == '^') // Special Case: The player has to get to the '^' exit to win the game
+            else if (currentBuilding->getSymbol() == 'V') // Special Case: The player has to get to the '^' exit to win the game
             {
-                if (checkReachedEndGoal())
+                if (currentBuilding->getTileAt(nextX, nextY) == '^')
                 {
-                    hasWon = true;
+                    if (checkReachedEndGoal())
+                    {
+                        hasWon = true;
+                    }
+                }
+                else
+                {
+                    /* Below is the exception, where the player loses hunger and thirst inside the demilitarised zone */
+
+                    // Decrease hunger and thirst accordingly
+                    player->setHunger(player->getHunger() - 1);
+                    player->setThirst(player->getThirst() - 1);
+                    applySurvivalPenalties();   // starving/dehydrated damage, if applicable
                 }
             }
         }
@@ -180,21 +228,6 @@ void GameManager::handlePlayerInput(char moveCommand)
                     else
                     {
                         enterBuilding(targetBuilding);
-
-                        if (player->findItemByName("Access Card") == nullptr)
-                        {
-                            AccessCard* accessCard = new AccessCard();
-                            if (player->addItem(accessCard))
-                            {
-                                std::cout << "[SAFE HOUSE] Your keycard grants you an Access Card for Haven-7!" << std::endl;
-                            }
-                            else
-                            {
-                                accessCard->setPosition(player->getIndoorX(), player->getIndoorY());
-                                currentBuilding->addFloorItem(accessCard);
-                                std::cout << "[SAFE HOUSE] Your bags are full — an Access Card was left on the ground." << std::endl;
-                            }
-                        }
                     }
                 }
                 else if (targetBuilding->getName() == "Evacuation Point (Demilitarised)")
@@ -213,8 +246,9 @@ void GameManager::handlePlayerInput(char moveCommand)
         }
     }
 
-    updateZombiePositions();
-    checkZombieAttacks();       // zombies now next to you get a hit in
+    updateZombiePositions(); // Update the zombies' positions based on the relevant context
+    checkZombieAttacks();   // Zombies next to you get a hit in
+    tickRadio();
 }
 
 void GameManager::checkGroundItemInspection()
@@ -320,6 +354,21 @@ void GameManager::applySurvivalPenalties()
 {
     if (player->getHunger() <= 10 || player->getThirst() <= 10) {
         player->takeDamage(2);
+        player->speakLowHungerThirst();
+        player->setWarningHungerThirst(true);
+    }
+    else
+    {
+        player->setWarningHungerThirst(false);
+    }
+
+    if (player->getHealth() <= 20 && player->getIsAlive()) {
+        player->speakLowHealth();
+        player->setWarningHealth(true);
+    }
+    else
+    {
+        player->setWarningHealth(false);
     }
 }
 
@@ -344,6 +393,11 @@ void GameManager::handleItemPickup()
 
             std::cout << "You found the Temozolomide!" << std::endl;
             std::cout << "Return to " << storyManager.getpharmacyNPC().getName() << std::endl;
+        }
+        else if (groundItem->getName() == "Tool Parts" && storyManager.getScavengePartsQuest().isAccepted())
+        {
+            std::cout << "You found the Toolbox Parts!" << std::endl;
+            std::cout << "Return to " << storyManager.getMechanicNPC().getName() << std::endl;
         }
     }
     else
@@ -467,6 +521,7 @@ void GameManager::handlePlayerAttack(char choice)
             {
                 std::cout << "[KILL] " << target->getName() << " destroyed!" << std::endl;
                 storyManager.addZombieKill();
+                player->speakOnKill();
                 isInBuilding ? currentBuilding->removeZombie(target) : outdoorMap.removeZombie(target);
             }
             else
@@ -489,7 +544,7 @@ void GameManager::render(int viewWidth, int viewHeight) const
 {
     if (isInBuilding && currentBuilding != nullptr)
     {
-        // Renders 10x10 interior grid centered on player indoor coordinates
+        // Renders the interior grid without changing the viewport
         currentBuilding->displayInterior(player->getIndoorX(), player->getIndoorY(), *player);
     }
     else
@@ -657,6 +712,73 @@ void GameManager::interactWithNPC()
             npc->talk();
         }
     }
+    else if (npc == &storyManager.getMechanicNPC())
+    {
+        Quest& quest = storyManager.getScavengePartsQuest();
+        Item* turnInItem = player->findItemByName("Toolbox Parts");
+
+        if (!quest.isAccepted()) {
+            npc->talk();
+        }
+        else if (turnInItem != nullptr && quest.isAccepted() && !quest.isCompleted()) {
+            quest.completeQuest();
+
+            player->removeItem(turnInItem);
+            delete turnInItem;
+            turnInItem = nullptr;
+
+            npc->talk();
+
+            player->increaseInventoryCapacity(5);
+        }
+        else {
+            npc->talk();
+        }
+    }
+    else if (npc == &storyManager.getMilitaryCaptainNPC())
+    {
+        Quest& quest = storyManager.getKillGreaterZombieQuest();
+
+        if (!quest.isAccepted()) {
+            npc->talk();
+        }
+        else if (storyManager.getZombiesKilled() >= 25 && !quest.isCompleted()) {
+            quest.completeQuest();
+            npc->talk();
+            player->increaseMaxHealth(30);
+        }
+        else {
+            npc->talk();
+            std::cout << "Zombies killed: " << storyManager.getZombiesKilled() << " / 20." << std::endl;
+        }
+    }
+    else if (npc == &storyManager.getSafeHouseCoordinatorNPC())
+    {
+        if (!storyManager.allQuestsCompleted())
+        {
+            npc->talk();
+        }
+        else if (player->findItemByName("Access Card") == nullptr)
+        {
+            std::cout << npc->getName() << ": You've done it. You have proven to be an extraordinary survivior. Here - this is your ticket to Haven-7." << std::endl;
+
+            AccessCard* accessCard = new AccessCard();
+            if (player->addItem(accessCard))
+            {
+                std::cout << "[SAFE HOUSE] You received an Access Card!" << std::endl;
+            }
+            else
+            {
+                accessCard->setPosition(player->getIndoorX(), player->getIndoorY());
+                currentBuilding->addFloorItem(accessCard);
+                std::cout << "[SAFE HOUSE] Your bags are full — an Access Card was left on the ground." << std::endl;
+            }
+        }
+        else
+        {
+            std::cout << npc->getName() << ": Good luck out there. Haven-7 is waiting." << std::endl;
+        }
+    }
     
     if (reward != nullptr)
     {
@@ -664,9 +786,9 @@ void GameManager::interactWithNPC()
     }
 
     /* This is to check if all of the quests are completed. This only executes once */
-    if (storyManager.allQuestsCompleted() && player->findItemByName("Key Card") == nullptr && !storyManager.completionStatus())
+    if (storyManager.allQuestsCompleted() && player->findItemByName("Key Card") == nullptr && !storyManager.checkHasAlreadyRecievedCard())
     {
-        storyManager.setCompletionStatus();
+        storyManager.setRecievedCard();
 
         KeyCard* keycard = new KeyCard();
 
@@ -684,5 +806,19 @@ void GameManager::interactWithNPC()
             isInBuilding ? currentBuilding->addFloorItem(keycard) : outdoorMap.addGroundItem(keycard);
             std::cout << std::endl << "[RADIO] All objectives complete! A keycard was dropped at your feet, as your bags are full." << std::endl;
         }
+    }
+}
+
+void GameManager::tickRadio()
+{
+    if (storyManager.GetTimeToNextEvent() <= 0)
+    {
+        storyManager.SetMessageRand();
+        storyManager.RadioMessage(player->getHealth());
+        storyManager.SetTimeToNextEvent();
+    }
+    else
+    {
+        storyManager.decrementTimeToNextEvent();
     }
 }

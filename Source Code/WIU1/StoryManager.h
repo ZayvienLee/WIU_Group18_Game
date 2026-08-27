@@ -5,27 +5,28 @@
 class StoryManager
 {
 private:
-    Quest killZombieQuest;
-    Quest findMissingPersonQuest;
-    Quest findPharmacyQuest;
+    Quest killZombieQuest; // In the supermarket
+    Quest findMissingPersonQuest; // In the Police Station
+    Quest findPharmacyQuest; // In the Hospital
+    Quest scavengePartsQuest; // In the Gas Station
+    Quest killGreaterZombieQuest; // In the Military Base
 
     NPC zombieNPC; // The NPC which gives the quest to kill zombies
     NPC missingpersonNPC; // Gives the player a quest to find a missing person
     NPC pharmacyNPC; // gives quest to find Temozolomide in the pharmacy
-    NPC timothyNPC;
+    NPC timothyNPC; // He is required for one of the quests above
+    NPC mechanicNPC; // Gives a quest to pass mechanical parts
+    NPC militaryCaptainNPC; // Similar to the above NPC, but stricter with higher number of zombie kills
+    NPC safeHouseCoordinatorNPC; // The person whom the player meets at the final stages of the game
 
-    int zombiesKilled = 0;
-    bool timothyFound = false;
-    bool temozolomideFound = false;
-    bool alreadyCompleted = false;
+    int zombiesKilled;
+    bool timothyFound;
+    bool temozolomideFound;
+    bool hasAlreadyRecievedCard;
 
-    int TimeToNextEvent = 0;
-    int MessageRand = 0;
-    int DoneSideQuests = 0;
-
-protected:
-    int EventTimer = 0;
-    int SideQuest = 0;
+    int TimeToNextEvent;
+    int MessageRand;
+    int DoneSideQuests;
 
 public:
     StoryManager();
@@ -36,10 +37,15 @@ public:
     NPC& getmissingpersonNPC();
     NPC& getpharmacyNPC();
     NPC& getTimothyNPC();
+    NPC& getMechanicNPC();
+    NPC& getMilitaryCaptainNPC();
+    NPC& getSafeHouseCoordinatorNPC();
 
     Quest& getkillZombieQuest();
     Quest& getfindMissingPersonQuest();
     Quest& getfindPharmacyQuest();
+    Quest& getScavengePartsQuest();
+    Quest& getKillGreaterZombieQuest();
 
     void addZombieKill();
     int getZombiesKilled() const;
@@ -51,8 +57,8 @@ public:
     bool isTemozolomideFound() const;
 
     bool allQuestsCompleted() const;
-    void setCompletionStatus();
-    bool completionStatus() const;
+    void setRecievedCard();
+    bool checkHasAlreadyRecievedCard() const;
 
     int getCompletedQuestsCount() const;
 
@@ -62,5 +68,6 @@ public:
     int GetMessageRand() const;
     void SetTimeToNextEvent();
     void SetMessageRand();
-    void RadioMessage();
+    void decrementTimeToNextEvent();
+    void RadioMessage(int playerHealth = 100); // This is prone to change
 };

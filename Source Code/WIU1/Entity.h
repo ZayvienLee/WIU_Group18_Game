@@ -31,6 +31,7 @@ public:
     // Accessory Functions
     bool getIsAlive() const;
     int getHealth() const;
+    int getMaxHealth() const;
     int getAttackPower() const;
 
     void setHealth(int Health);

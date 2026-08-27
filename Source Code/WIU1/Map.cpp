@@ -138,6 +138,16 @@ char Map::getTileAt(int x, int y) const
 	return activeGrid[y][x];
 }
 
+int Map::getWidth() const
+{
+	return WIDTH;
+}
+
+int Map::getHeight() const
+{
+	return HEIGHT;
+}
+
 void Map::generateRandomLayout(int obstacleCount, int itemCount)
 {
 	// The lines needed to randomize the numbers
@@ -277,6 +287,12 @@ void Map::randomiseLocationLayouts(float furnitureDensity, float itemDensity)
 			locationItems *= 0.25;
 		}
 
+		if (location->getSymbol() == 'F')
+		{
+			locationFurnitures *= 0.25;
+			locationItems *= 2.0;
+		}
+
 		int area = location->getInteriorFloorArea();
 		location->generateRandomLayout(static_cast<int>(area * locationFurnitures), static_cast<int>(area * locationItems));
 	}
@@ -367,12 +383,13 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Pl
 	int camX = std::clamp(rawCamX, 0, WIDTH - viewWidth);
 	int camY = std::clamp(rawCamY, 0, HEIGHT - viewHeight);
 
-	std::cout << "========================================" << std::endl;
+	std::cout << "=====================================" << std::endl;
 	for (int r = camY; r < camY + viewHeight; ++r)
 	{
+		std::cout << "    "; // Extra spaces to align the cam to the center
+
 		for (int c = camX; c < camX + viewWidth; ++c)
 		{
-
 			Item* grounditem = getGroundItemAt(c, r);
 			Zombie* zombie = getZombieAt(c, r);
 
@@ -391,7 +408,7 @@ void Map::displayMap(int playerX, int playerY, int viewWidth, int viewHeight, Pl
 		}
 		std::cout << std::endl;
 	}
-	std::cout << "========================================" << std::endl;
+	std::cout << "=====================================" << std::endl;
 }
 
 Location* Map::getBuildingAt(int x, int y)
