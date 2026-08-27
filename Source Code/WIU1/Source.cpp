@@ -2,13 +2,6 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-#ifdef _DEBUG
-    #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-    // Replace the standard new operator for leak tracking
-    #define new DBG_NEW
-#endif
-
-
 #include <iostream>
 #include <cctype>
 #include <conio.h>
